@@ -85,6 +85,10 @@ export class ReportsComponent implements OnInit {
   }
 
   nsbaExhibitorReport: any;
+  Classes:boolean = true;
+  Exhibitors:boolean = true;
+  Sponsors:boolean = true;
+  YearlyMaintenance:boolean = true;
 
   constructor(private reportService: ReportService, private dialog: MatDialog,
     private classService: ClassService,
@@ -2003,5 +2007,39 @@ downloadAllNonExhibtorSponsorAdReport(){
     //     this.UnassignedStallNumbers = [];
     //   }
     // });
+  }
+
+  getPerspective(val){
+    debugger
+    if (val == "All") {
+      this.Classes = true;
+      this.Exhibitors = true;
+      this.Sponsors = true;
+      this.YearlyMaintenance = true;
+    }
+    else if (val == "Classes") {
+      this.Classes = true;
+      this.Exhibitors = false;
+      this.Sponsors = false;
+      this.YearlyMaintenance = false;
+    }
+    else if (val == "Exhibitors") {
+      this.Classes = false;
+      this.Exhibitors = true;
+      this.Sponsors = false;
+      this.YearlyMaintenance = false;
+    }
+    else if (val == "Sponsors") {
+      this.Classes = false;
+      this.Exhibitors = false;
+      this.Sponsors = true;
+      this.YearlyMaintenance = false;
+    }
+    else if (val == "YearlyMaintenance") {
+      this.Classes = false;
+      this.Exhibitors = false;
+      this.Sponsors = false;
+      this.YearlyMaintenance = true;
+    }
   }
 }

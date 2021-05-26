@@ -1,8 +1,22 @@
 <div class="sortData mb-4">
     <h4>Modules Reports Menu</h4>
-    <button type="button" (click)="openStallDiagram('tack')"
-                                                            class="btn btn-red btnCss roundBtn whitebg">
-                                                            Stall</button>
+<div class="row">
+    <div class="col-md-6">
+        <label for="PerspectiveList" class="mr-4">Choose a Perspective:</label>
+        <select name="Perspective" id="PerspectiveId" class="form-group" (change)="getPerspective($event.target.value)">
+            <option value="All">All</option>
+            <option value="Classes">Classes</option>
+            <option value="Exhibitors">Exhibitors</option>
+            <option value="Sponsors">Sponsors</option>
+            <option value="YearlyMaintenance">Yearly Maintenance</option>
+        </select>
+    </div>
+    <div class="col-md-6">
+        <button type="button" (click)="openStallDiagram('tack')" class="btn btn-red btnCss roundBtn whitebg">
+            Other Reports</button>
+    </div>
+</div>
+    
 </div>
 <form #reportForm="ngForm" (ngSubmit)="reportForm.valid && download()">
     <div class="gridTable addBlueStrip">
@@ -17,7 +31,7 @@
               
                     <tbody>
 
-                        <tr>
+                        <tr *ngIf="Classes">
                             <td (click)="selectReport(0,'result')" [ngClass]="{'blueRow': selectedRowIndex == 0}">
                                 <div class="mmReportList">Class Results ( #102 )
                                     <span id="downarrow102" style="display: block;"  (click)="showpopupbox('showpopupbox102','downarrow102','uparrow102')">
@@ -89,7 +103,7 @@
 
                         </tr>
 
-                        <tr>
+                        <tr *ngIf="Classes">
                             <td  (click)="selectReport(1,'nsbaclassresult')" 
                             [ngClass]="{'blueRow': selectedRowIndex == 1}">
                                 <div class="mmReportList">NSBA Classes Results ( #102a )
@@ -117,7 +131,7 @@
 
                         </tr>
 
-                        <tr>
+                        <tr *ngIf="Classes">
                             <td (click)="selectReport(2,'entries')" [ngClass]="{'blueRow': selectedRowIndex == 2}">
                                 <div class="mmReportList">Entries Per Class ( #27 )</div>
                             </td>
@@ -140,7 +154,7 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr *ngIf="Classes">
                             <td (click)="selectReport(3,'paddock')" [ngClass]="{'blueRow': selectedRowIndex == 3}">
                                 <div class="mmReportList">Paddock Sheet ( #23 )
                                     <span id="downarrow23" style="display: block;"  (click)="showpopupbox('showpopupbox23','downarrow23','uparrow23')">
@@ -214,7 +228,7 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr *ngIf="Sponsors">
                             <td (click)="selectReport(4,'patron')" [ngClass]="{'blueRow': selectedRowIndex == 4}">
                                 <div class="mmReportList">Patrons List ( #103 )</div>
                             </td>
@@ -237,7 +251,7 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr *ngIf="Classes">
                             <td (click)="selectReport(5,'program')" [ngClass]="{'blueRow': selectedRowIndex == 5}">
                                 <div class="mmReportList">Program Sheet ( #25 )
                                     <span id="downarrow25" style="display: block;"  (click)="showpopupbox('showpopupbox25','downarrow25','uparrow25')">
@@ -307,7 +321,7 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr *ngIf="YearlyMaintenance">
                             <td (click)="selectReport(6,'summary')" [ngClass]="{'blueRow': selectedRowIndex == 6}">
                                 <div class="mmReportList">Year Show Summary ( #105 )</div>
                             </td>
@@ -330,7 +344,7 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr *ngIf="YearlyMaintenance">
                             <td (click)="selectReport(7,'administrative')" [ngClass]="{'blueRow': selectedRowIndex == 7}">
                                 <div class="mmReportList">Yearly Maintenance Report ( #107 )</div>
                             </td>
@@ -353,7 +367,7 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr *ngIf="Exhibitors">
                             <td (click)="selectReport(8,'nsba')" [ngClass]="{'blueRow': selectedRowIndex == 8}">
                                 <div class="mmReportList">NSBA Exhibitor Fee Totals Report ( #108 )</div>
                             </td>
@@ -400,7 +414,7 @@
                             </td>
                         </tr> -->
 
-                        <tr>
+                        <!-- <tr>
 
                             <td (click)="selectReport(10,'nonExhibitorSponsorDistributionList')" [ngClass]="{'blueRow': selectedRowIndex == 10}">
                                 <div class="mmReportList"> Non-Exhibitor Sponsors Distribution List( #109 )
@@ -467,10 +481,10 @@
                                 (click)="setreportType('download','nonExhibitorSponsorDistributionList')" class="icon"><span></span> 
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
-                        </tr>
+                        </tr> -->
 
 
-                        <tr>
+                        <!-- <tr>
                             <td (click)="selectReport(11,'nonexhibitorsummarysponsordistribution')" [ngClass]="{'blueRow': selectedRowIndex == 11}">
                                 <div class="mmReportList">Non-Exhibitor Summary Sponsors Distribution Totals ( #110 )</div>
                             </td>
@@ -491,9 +505,9 @@
                                 (click)="setreportType('download','nonexhibitorsummarysponsordistribution')" class="icon"><span></span> 
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
-                        </tr>
+                        </tr> -->
                        
-                        <tr>
+                        <!-- <tr>
                             <td (click)="selectReport(12,'nonexhibitorsummarysponsordistribution')" [ngClass]="{'blueRow': selectedRowIndex == 12}">
                                 <div class="mmReportList">Exhibitor Sponsored Ads Report( #111 )</div>
                             </td>
@@ -514,9 +528,9 @@
                                 (click)="setreportType('download','exhibitorSponsoredAds')" class="icon"><span></span> 
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
-                        </tr>
+                        </tr> -->
  
-                        <tr>
+                        <!-- <tr>
                             <td (click)="selectReport(13,'nonexhibitoradssponsor')" [ngClass]="{'blueRow': selectedRowIndex == 13}">
                                 <div class="mmReportList">Non -Exhibitor Sponsored Ads Report( #111a )</div>
                             </td>
@@ -537,9 +551,9 @@
                                 (click)="setreportType('download','nonexhibitoradssponsor')" class="icon"><span></span> 
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
-                        </tr>
+                        </tr> -->
 
-                        <tr>
+                        <tr *ngIf="Exhibitors">
 
                             <td (click)="selectReport(14,'exhibitoradssponsor')" [ngClass]="{'blueRow': selectedRowIndex == 14}">
                                 <div class="mmReportList">Exhibitor Back Number Sponsored Ads ( #112 )</div>
