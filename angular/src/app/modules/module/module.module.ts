@@ -8,11 +8,12 @@ import { ReportsComponent } from './components/reports/reports.component';
 import { ScansComponent } from './components/scans/scans.component';
 import { StatementsComponent } from './components/statements/statements.component';
 import { FinancialsComponent } from './components/financials/financials.component';
+import { OtherReportsComponent } from './components/other-reports/other-reports.component';
 
 
 
 @NgModule({
-  declarations: [YearlyMaintenanceComponent, ReportsComponent, StallAssignmentComponent, ScansComponent, StatementsComponent, FinancialsComponent],
+  declarations: [YearlyMaintenanceComponent, ReportsComponent, StallAssignmentComponent, ScansComponent, StatementsComponent, FinancialsComponent, OtherReportsComponent],
   imports: [
     CommonModule,
     SharedModule,

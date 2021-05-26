@@ -2895,7 +2895,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td (click)="assignStall(2209)" id="stall_2209">2209</td>
-                                                                
+                                                                <td (click)="assignStall(2222)" id="stall_2222">2222</td>
                                                             </tr>
                                                             <tr>
                                                                 <td (click)="assignStall(2210)" id="stall_2210">2210</td>
@@ -2932,7 +2932,6 @@
                                                             </tr>
                                                             <tr>
                                                                 <td (click)="assignStall(2221)" id="stall_2221">2221</td>
-                                                                <td (click)="assignStall(2222)" id="stall_2222">2222</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -2954,65 +2953,13 @@
                 <div class="modal-footer text-center">
                     <button type="button" (click)="onSubmit()" class="btn btn-default"
                         data-dismiss="modal">Submit</button>
-
-                        <!--div class="hoverContent hcCol-1" id="hoverbox">
-                            <table>
-                                <tr>
-                                    <td colspan="2">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" (click)="closehoverbox()">&times;</button>
-                                            <h4>Stall Info</h4>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>                                    
-                                    <td>                                        
-                                        <div class="labelCol">
-                                            <label>Stall Id : </label><span>{{hoverStallId}}</span>
-                                        </div>
-                                        <div class="labelCol">
-                                            <label>Name : </label><span>{{hoverStallName}}</span>
-                                        </div>
-                                    </td>
-                                    <td>                                        
-                                        <div class="labelCol">
-                                            <label>Type : </label><span>{{hoverBookedByType}}</span>
-                                        </div>
-                                        <div class="labelCol">
-                                            <label>Assignment Type : </label><span>{{hoverStallType}}</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table> 
-                            
-                        </div-->
                 </div>
             </div>
 
         </div>
     </div>
 </div>
-<div class="loaderWrappers" *ngIf="loading">
-    <div class="loaders"></div>
-</div>
 
-
-<div class="hoverContent" id="hoverbox">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" (click)="closehoverbox()">&times;</button>
-        <h4>Stall Info</h4>
-    </div>
-    <div class="labelCol">
-        <label>Stall Id : </label><span>{{hoverStallId}}</span>
-        </div>
-    <div class="labelCol">
-    <label>Name : </label><span>{{hoverStallName}}</span>
-    </div>
-    <div class="labelCol">
-    <label>Type : </label><span>{{hoverBookedByType}}</span>
-    </div>
-    <div class="labelCol">
-    <label>Assignment Type : </label><span>{{hoverStallType}}</span>
-    </div>
-    
+<div class="loaderWrapper" *ngIf="loading">
+    <div class="loader"></div>
 </div>

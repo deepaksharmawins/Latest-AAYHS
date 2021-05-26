@@ -11,17 +11,16 @@ import { formatDate } from '@angular/common';
 import { ClassService } from 'src/app/core/services/class.service';
 import { BaseRecordFilterRequest } from 'src/app/core/models/base-record-filter-request-model';
 import { MatSnackbarComponent } from 'src/app/shared/ui/mat-snackbar/mat-snackbar.component';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { SponsorService } from '../../../../core/services/sponsor.service';
-import { OtherReportsComponent } from '../other-reports/other-reports.component';
 
 @Component({
-  selector: 'app-reports',
-  templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.scss']
+  selector: 'app-other-reports',
+  templateUrl: './other-reports.component.html',
+  styleUrls: ['./other-reports.component.scss']
 })
-export class ReportsComponent implements OnInit {
+export class OtherReportsComponent implements OnInit {
   loading = false;
   entriesPerClassReport: any;
   classesList: any;
@@ -1951,57 +1950,5 @@ downloadAllNonExhibtorSponsorAdReport(){
       )
     }
 
-  }
-
-
-  openStallDiagram(buttontype: string) {
-    let config = new MatDialogConfig();
-    config = {
-      position: {
-        top: '10px',
-        right: '10px'
-      },
-      height: '98%',
-      width: '100vw',
-      maxWidth: '100vw',
-      maxHeight: '100vh',
-      panelClass: 'full-screen-modal',
-      // data: {
-      //   exhibitorStallAssignment: this.exhibitorStallAssignmentResponses,
-      //   StallTypes: this.StallTypes,
-      //   unassignedStallNumbers: this.UnassignedStallNumbers,
-      //   buttontype: buttontype
-      // },
-
-    };
-
-    const dialogRef = this.dialog.open(OtherReportsComponent, config,
-
-    );
-    // dialogRef.afterClosed().subscribe(dialogResult => {
-
-    //   const result: any = dialogResult;
-    //   if (result && result.submitted == true) {
-    //     this.exhibitorStallAssignmentResponses = [];
-    //     this.exhibitorStallAssignmentResponses = result.data.exhibitorAssignedStalls;
-    //     this.UnassignedStallNumbers = result.data.unassignedStallNumbers;
-
-    //     var horseStalltype = this.StallTypes.filter(x => x.CodeName == "HorseStall");
-    //     var tackStalltype = this.StallTypes.filter(x => x.CodeName == "TackStall");
-    //     if (this.exhibitorStallAssignmentResponses != null && this.exhibitorStallAssignmentResponses.length > 0) {
-    //       this.horsestalllength = this.exhibitorStallAssignmentResponses.filter(x => x.StallAssignmentTypeId
-    //         == horseStalltype[0].GlobalCodeId).length;
-    //       this.tackstalllength = this.exhibitorStallAssignmentResponses.filter(x => x.StallAssignmentTypeId
-    //         == tackStalltype[0].GlobalCodeId).length;
-    //     }
-    //     else {
-    //       this.horsestalllength = 0;
-    //       this.tackstalllength = 0;
-    //     }
-    //   }
-    //   else {
-    //     this.UnassignedStallNumbers = [];
-    //   }
-    // });
   }
 }

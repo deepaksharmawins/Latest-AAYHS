@@ -1,5 +1,8 @@
 <div class="sortData mb-4">
     <h4>Modules Reports Menu</h4>
+    <button type="button" (click)="openStallDiagram('tack')"
+                                                            class="btn btn-red btnCss roundBtn whitebg">
+                                                            Stall</button>
 </div>
 <form #reportForm="ngForm" (ngSubmit)="reportForm.valid && download()">
     <div class="gridTable addBlueStrip">
