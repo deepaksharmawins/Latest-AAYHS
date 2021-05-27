@@ -12,6 +12,7 @@ namespace AAYHS.Service.IService
     {
         MainResponse AddUpdateExhibitor(ExhibitorRequest request,string actionBy);
         MainResponse GetAllExhibitors(BaseRecordFilterRequest filterRequest);
+        MainResponse GetFilterExhibitors(FilterExhibitorRequest filterExhibitorRequest);
         MainResponse GetExhibitorById(int exhibitorId);
         MainResponse DeleteExhibitor(int exhibitorId, string actionBy);     
         MainResponse GetExhibitorHorses(int exhibitorId);
@@ -26,6 +27,7 @@ namespace AAYHS.Service.IService
         MainResponse UpdateScratch(UpdateScratch updateScratch, string actionBy);
         MainResponse AddExhibitorToClass(AddExhibitorToClass addExhibitorToClass, string actionBy);
         MainResponse GetAllSponsorsOfExhibitor(int exhibitorId);
+        MainResponse GetAllSponsorsOfExhibitors();
         MainResponse RemoveSponsorFromExhibitor(int sponsorExhibitorId, string actionBy);
         MainResponse GetAllSponsor(int exhibitorId);
         MainResponse GetSponsorDetail(int sponsorId);

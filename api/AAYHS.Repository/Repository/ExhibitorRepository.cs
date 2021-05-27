@@ -40,7 +40,6 @@ namespace AAYHS.Repository.Repository
             IEnumerable<ExhibitorResponse> exhibitorResponses = null;
             ExhibitorListResponse exhibitorListResponses = new ExhibitorListResponse();
             exhibitorResponses = (from exhibitor in _context.Exhibitors
-                                  where exhibitor.IsActive == true && exhibitor.IsDeleted == false
                                   select new ExhibitorResponse
                                   {
                                       ExhibitorId = exhibitor.ExhibitorId,
@@ -84,6 +83,39 @@ namespace AAYHS.Repository.Repository
                 }
             }
             
+            return exhibitorListResponses;
+        }
+
+        public FilterExhibitorResponseListResponse GetFilterExhibitors(FilterExhibitorRequest filterExhibitorRequest)
+        {
+            IEnumerable<FilterExhibitorResponse> exhibitorResponses = null;
+            FilterExhibitorResponseListResponse exhibitorListResponses = new FilterExhibitorResponseListResponse();
+            exhibitorResponses = (from exhibitor in _context.Exhibitors
+                                  join address in _context.Addresses on exhibitor.AddressId equals address.AddressId
+                                  join state in _context.States on address.StateId equals state.StateId
+                                  where exhibitor.IsActive == true && exhibitor.IsDeleted == false
+                                  where exhibitor.IsActive == true && exhibitor.IsDeleted == false
+                                  select new FilterExhibitorResponse
+                                  {
+                                      ExhibitorId = exhibitor.ExhibitorId,
+                                      AddressId = exhibitor.AddressId,
+                                      FirstName = exhibitor.FirstName,
+                                      LastName = exhibitor.LastName,
+                                      BackNumber = exhibitor.BackNumber,
+                                      BirthYear = exhibitor.BirthYear,
+                                      IsNSBAMember = exhibitor.IsNSBAMember,
+                                      IsDoctorNote = exhibitor.IsDoctorNote,
+                                      QTYProgram = exhibitor.QTYProgram,
+                                      PrimaryEmail = exhibitor.PrimaryEmail,
+                                      SecondaryEmail = exhibitor.SecondaryEmail,
+                                      Phone = exhibitor.Phone,
+                                      Address = address.Address + ", " + address.City + ", " + state.Name + ", " + address.ZipCode
+                                  }).ToList();
+            if (exhibitorResponses.Count() > 0)
+            {
+                exhibitorListResponses.exhibitorResponses = exhibitorResponses.ToList();
+            }
+
             return exhibitorListResponses;
         }
 
@@ -285,7 +317,93 @@ namespace AAYHS.Repository.Repository
             }
             return getAllSponsorsOfExhibitor;
         }
-     
+
+
+        public GetAllSponsorsOfExhibitor GetAllSponsorsOfExhibitors()
+        {
+            List<GetSponsorsOfExhibitor> getSponsorsOfExhibitors = new List<GetSponsorsOfExhibitor>();
+            List<GetSponsorsOfExhibitor> getSponsorsOfExhibitors1 = new List<GetSponsorsOfExhibitor>();
+            GetAllSponsorsOfExhibitor getAllSponsorsOfExhibitor = new GetAllSponsorsOfExhibitor();
+            var sponsorTypes = (from gcc in _context.GlobalCodeCategories
+                                join gc in _context.GlobalCodes on gcc.GlobalCodeCategoryId equals gc.CategoryId
+                                where gcc.CategoryName == "SponsorTypes" && gc.IsDeleted == false && gc.IsActive == true
+                                select new GlobalCodeResponse
+                                {
+                                    GlobalCodeId = gc.GlobalCodeId,
+                                    CodeName = (gc.CodeName == null ? "" : gc.CodeName),
+                                    Description = (gc.Description == null ? String.Empty : gc.Description),
+                                    GlobalCodeCategory = gcc.CategoryName,
+                                    CategoryId = gc.CategoryId,
+                                }).ToList();
+            var adSponsorTypeId = 0;
+            var classSponsorTypeId = 0;
+            if (sponsorTypes != null && sponsorTypes.Count > 0)
+            {
+                adSponsorTypeId = sponsorTypes.Where(x => x.CodeName == "Ad").Select(x => x.GlobalCodeId).FirstOrDefault();
+                classSponsorTypeId = sponsorTypes.Where(x => x.CodeName == "Class").Select(x => x.GlobalCodeId).FirstOrDefault();
+            }
+
+
+            getSponsorsOfExhibitors = (from sponsorExhibitor in _context.SponsorExhibitor
+                                       join sponsor in _context.Sponsors on sponsorExhibitor.SponsorId equals sponsor.SponsorId
+                                       join exhibitorName in _context.Exhibitors on sponsorExhibitor.ExhibitorId equals exhibitorName.ExhibitorId
+                                       join address in _context.Addresses on sponsor.AddressId equals address.AddressId into address1
+                                       from address2 in address1.DefaultIfEmpty()
+                                       join state in _context.States on address2.StateId equals state.StateId into state1
+                                       from state2 in state1.DefaultIfEmpty()
+                                       where sponsorExhibitor.IsActive == true && sponsorExhibitor.IsDeleted == false &&
+                                       sponsor.IsActive == true && sponsor.IsDeleted == false
+                                       select new GetSponsorsOfExhibitor
+                                       {
+                                           SponsorExhibitorId = exhibitorName.ExhibitorId,
+                                           SponsorId = sponsor.SponsorId,
+                                           Sponsor = sponsor.SponsorName,
+                                           ContactName = exhibitorName.FirstName +" "+ exhibitorName.LastName,
+                                           Phone = sponsor.Phone,
+                                           Address = address2 != null ? address2.Address : "",
+                                           City = address2 != null ? address2.City : "",
+                                           State = state2 != null ? state2.Name : "",
+                                           Zipcode = address2 != null ? Convert.ToInt32(address2.ZipCode) : 0,
+                                           Email = sponsor.Email,
+                                           SponsorAmount = sponsorExhibitor.SponsorAmount,
+                                           Amount = sponsor != null ? Convert.ToDecimal(sponsor.AmountReceived) : 0,
+                                           AmountPaid = 0,
+                                           Balance = 0,
+                                           SponsorTypeId = sponsorExhibitor.SponsorTypeId,
+                                           HorseId = sponsorExhibitor.HorseId,
+                                           HorseName = (from horse in _context.Horses where horse.HorseId == sponsorExhibitor.HorseId select horse.Name).FirstOrDefault(),
+                                           SponsorTypeName = (from code in _context.GlobalCodes where code.GlobalCodeId == sponsorExhibitor.SponsorTypeId select code.CodeName).FirstOrDefault(),
+                                           AdTypeName = (from fee in _context.YearlyMaintainenceFee where fee.YearlyMaintainenceFeeId == sponsorExhibitor.AdTypeId select fee.FeeName).FirstOrDefault(),
+                                           IdNumber = sponsorExhibitor.SponsorTypeId == Convert.ToInt32(classSponsorTypeId) ? Convert.ToString(_context.Classes.Where(x => x.ClassId == Convert.ToInt32(sponsorExhibitor.TypeId)).Select(x => x.ClassNumber).FirstOrDefault())
+                                               : Convert.ToString(sponsorExhibitor.TypeId),
+                                           
+                                       }).ToList();
+            if (getSponsorsOfExhibitors.Count() != 0)
+            {
+                foreach (var item in getSponsorsOfExhibitors)
+                {
+                    var paidsponsorexhibitor = Convert.ToDecimal(_context.SponsorExhibitor.Where(x => x.SponsorId == item.SponsorId && x.IsDeleted == false).Select(x => x.SponsorAmount).Sum());
+                    var paidsponsornonexhibitor = Convert.ToDecimal(_context.SponsorDistributions.Where(x => x.SponsorId == item.SponsorId && x.IsDeleted == false).Select(x => x.TotalDistribute).Sum());
+                    item.AmountPaid = paidsponsorexhibitor + paidsponsornonexhibitor;
+                    item.Balance = item.Amount - item.AmountPaid;
+
+                    if (item.Balance < 0)
+                    {
+                        item.Balance = 0;
+
+                    }
+                    getSponsorsOfExhibitors1.Add(item);
+                }
+                var data  = getSponsorsOfExhibitors1.GroupBy(x => x.SponsorExhibitorId).ToList();
+
+                getAllSponsorsOfExhibitor.getSponsorsOfExhibitors = getSponsorsOfExhibitors1;
+
+
+                getAllSponsorsOfExhibitor.TotalRecords = getSponsorsOfExhibitors.Count();
+            }
+            return getAllSponsorsOfExhibitor;
+        }
+
         public GetSponsorForExhibitor GetSponsorDetail(int sponsorId)
         {
             IEnumerable<GetSponsorForExhibitor> data = null;

@@ -10,10 +10,12 @@ namespace AAYHS.Repository.IRepository
    public interface IExhibitorRepository : IGenericRepository<Exhibitors>
     {
         ExhibitorListResponse GetAllExhibitors(BaseRecordFilterRequest filterRequest);
+        FilterExhibitorResponseListResponse GetFilterExhibitors(FilterExhibitorRequest filterExhibitorRequest);
         ExhibitorListResponse GetExhibitorById(int exhibitorId);        
         ExhibitorHorsesResponse GetExhibitorHorses(int exhibitorId);
         GetAllClassesOfExhibitor GetAllClassesOfExhibitor(int exhibitorId);
         GetAllSponsorsOfExhibitor GetAllSponsorsOfExhibitor(int exhibitorId);
+        GetAllSponsorsOfExhibitor GetAllSponsorsOfExhibitors();
         GetSponsorForExhibitor GetSponsorDetail(int sponsorId);
         GetExhibitorFinancials GetExhibitorFinancials(int exhibitorId);
         GetAllUploadedDocuments GetUploadedDocuments(int exhibitorId);

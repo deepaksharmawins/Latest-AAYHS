@@ -68,7 +68,22 @@ namespace AAYHS.API.Controllers
             _mainResponse = _exhibitorService.GetAllExhibitors(filterRequest); 
               _jsonString = Mapper.Convert<ExhibitorListResponse> (_mainResponse);
             return new OkObjectResult(_jsonString);
-        }   
+        }
+
+        /// <summary>
+        /// This API is used to get all Exhibitors.
+        /// </summary>
+        /// <param name="No parameter is required"></param>
+        /// <returns>All Exhibitors list</returns>
+        [HttpPost]
+        public ActionResult GetFilterExhibitors(FilterExhibitorRequest filterExhibitorRequest)
+        {
+
+            _mainResponse = _exhibitorService.GetFilterExhibitors(filterExhibitorRequest);
+            _jsonString = Mapper.Convert<FilterExhibitorResponseListResponse>(_mainResponse);
+            return new OkObjectResult(_jsonString);
+        }
+
         /// <summary>
         /// This API is used to get  Exhibitor by Exhibitor id.
         /// </summary>
@@ -256,6 +271,20 @@ namespace AAYHS.API.Controllers
             _jsonString = Mapper.Convert<GetAllSponsorsOfExhibitor>(_mainResponse);
             return new OkObjectResult(_jsonString);
         }
+
+        /// <summary>
+        /// This api used to get all sponsors of exhibitor
+        /// </summary>
+        /// <param name="exhibitorId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetAllSponsorsOfExhibitors()
+        {
+            _mainResponse = _exhibitorService.GetAllSponsorsOfExhibitors();
+            _jsonString = Mapper.Convert<GetAllSponsorsOfExhibitor>(_mainResponse);
+            return new OkObjectResult(_jsonString);
+        }
+
         /// <summary>
         /// This api used to removed the sponsor of a exhibitor
         /// </summary>

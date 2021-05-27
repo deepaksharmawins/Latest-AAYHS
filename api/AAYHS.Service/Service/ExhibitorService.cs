@@ -246,6 +246,8 @@ namespace AAYHS.Service.Service
                             groupExhibitor.GroupId = request.GroupId;
                             groupExhibitor.ModifiedBy = actionBy;
                             groupExhibitor.ModifiedDate = DateTime.Now;
+                            groupExhibitor.IsActive = true;
+                            groupExhibitor.IsDeleted = false;
                             _groupExhibitorRepository.Update(groupExhibitor);
                         }
                         else
@@ -289,6 +291,23 @@ namespace AAYHS.Service.Service
             if (exhibitorList.exhibitorResponses != null && exhibitorList.TotalRecords > 0)
             {
                 _mainResponse.ExhibitorListResponse = exhibitorList;
+                _mainResponse.Message = Constants.RECORD_FOUND;
+                _mainResponse.Success = true;
+            }
+            else
+            {
+                _mainResponse.Message = Constants.NO_RECORD_FOUND;
+                _mainResponse.Success = false;
+            }
+            return _mainResponse;
+        }
+
+        public MainResponse GetFilterExhibitors(FilterExhibitorRequest filterExhibitorRequest)
+        {
+            var exhibitorList = _exhibitorRepository.GetFilterExhibitors(filterExhibitorRequest);
+            if (exhibitorList.exhibitorResponses != null)
+            {
+                _mainResponse.FilterExhibitorResponseListResponse = exhibitorList;
                 _mainResponse.Message = Constants.RECORD_FOUND;
                 _mainResponse.Success = true;
             }
@@ -643,6 +662,24 @@ namespace AAYHS.Service.Service
         public MainResponse GetAllSponsorsOfExhibitor(int exhibitorId)
         {
             var allsponsor = _exhibitorRepository.GetAllSponsorsOfExhibitor(exhibitorId);
+
+            if (allsponsor.getSponsorsOfExhibitors != null && allsponsor.TotalRecords > 0)
+            {
+                _mainResponse.GetAllSponsorsOfExhibitor = allsponsor;
+                _mainResponse.GetAllSponsorsOfExhibitor.TotalRecords = allsponsor.TotalRecords;
+                _mainResponse.Success = true;
+            }
+            else
+            {
+                _mainResponse.Message = Constants.NO_RECORD_FOUND;
+                _mainResponse.Success = false;
+            }
+            return _mainResponse;
+        }
+
+        public MainResponse GetAllSponsorsOfExhibitors()
+        {
+            var allsponsor = _exhibitorRepository.GetAllSponsorsOfExhibitors();
 
             if (allsponsor.getSponsorsOfExhibitors != null && allsponsor.TotalRecords > 0)
             {

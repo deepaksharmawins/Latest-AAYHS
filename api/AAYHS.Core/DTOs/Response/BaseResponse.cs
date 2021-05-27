@@ -94,7 +94,7 @@ namespace AAYHS.Core.DTOs.Response
         public GetLocation GetLocation { get; set; }   
         public GetExhibitorRegistrationReport GetExhibitorRegistrationReport { get; set; }   
         public GetExhibitorGroupInformationReport GetExhibitorGroupInformationReport { get; set; }
-        
+        public FilterExhibitorResponseListResponse FilterExhibitorResponseListResponse{ get; set; }
         public GetExhibitorGroupInformationReportForAllGroups GetExhibitorGroupInformationReportForAllGroups { get; set; }
         public GetExhibitorSponsorConfirmationReportForAllExhibitors GetExhibitorSponsorConfirmationReportForAllExhibitors { get; set; }
         public GetExhibitorSponsorConfirmationReport GetExhibitorSponsorConfirmationReport { get; set; }
