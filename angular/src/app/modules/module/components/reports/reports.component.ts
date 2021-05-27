@@ -15,6 +15,13 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { SponsorService } from '../../../../core/services/sponsor.service';
 import { OtherReportsComponent } from '../other-reports/other-reports.component';
+import { StallService } from 'src/app/core/services/stall.service';
+
+export class StallModel {
+  StallNo: number;
+  Occupant: string;
+  Type: string;
+}
 
 @Component({
   selector: 'app-reports',
@@ -90,14 +97,18 @@ export class ReportsComponent implements OnInit {
   Sponsors:boolean = true;
   YearlyMaintenance:boolean = true;
 
+
   constructor(private reportService: ReportService, private dialog: MatDialog,
     private classService: ClassService,
     private snackBar: MatSnackbarComponent,
-    private sponsorService: SponsorService) { }
+    private sponsorService: SponsorService,
+    private stallService: StallService
+    ) { }
 
   ngOnInit(): void {
     this.getAllClasses();
     this.getAllSponsors();
+    this.getAllAssignedStalls();
   }
 
 
@@ -2041,5 +2052,60 @@ downloadAllNonExhibtorSponsorAdReport(){
       this.Sponsors = false;
       this.YearlyMaintenance = true;
     }
+  }
+
+
+  AssignedStallsData:Array<StallModel> = [];
+  AllStallsData:Array<StallModel> = [];
+
+  getAllAssignedStalls() {
+    this.stallService.getAllAssignedStalls().subscribe((data: any) => {
+      if (data) {
+        debugger
+
+       data.Data.stallResponses.forEach(element => {
+         let stall = new StallModel();
+              stall.Occupant= element.BookedByName
+              stall.StallNo = element.StallId
+              stall.Type = element.BookedByType
+        this.AssignedStallsData.push(stall);
+       });
+        console.log("getAllAssignedStalls", this.AssignedStallsData)
+        this.allStalls();
+      }
+    })
+  }
+  allStalls() {
+    for (let index = 1; index <= 1012; index++) {
+      let stall = new StallModel();
+      
+      let checkIfFound:any = this.AssignedStallsData.filter(x => x.StallNo == index);
+      debugger
+      if (checkIfFound != null) {
+        stall.Occupant = checkIfFound.Occupant;
+        stall.StallNo = checkIfFound.StallNo;
+        stall.Type = checkIfFound.Type;
+        this.AllStallsData.push(stall)
+      }
+      else
+      {
+        stall.Occupant = "";
+        stall.StallNo = index+1;
+        stall.Type = "";
+        this.AllStallsData.push(stall)
+      }
+
+      // this.AssignedStallsData.map(x => {
+      //   if (x.StallNo == index) {
+      //     this.AllStallsData.push(x);
+      //   }
+      //   else {
+      //     stall.StallNo =index
+      //       this.AllStallsData.push(stall);
+      //   }
+
+      // })
+    }
+    console.log("allStalls", this.AllStallsData);
   }
 }

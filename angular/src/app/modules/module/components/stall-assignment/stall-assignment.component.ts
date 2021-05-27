@@ -70,6 +70,10 @@ export class StallAssignmentComponent implements OnInit {
 
   }
   
+counter(i: number) {
+  return new Array(i);
+}
+  
   changeTab() {
     if (this.allAssignedStalls != null && this.allAssignedStalls != undefined && this.allAssignedStalls.length > 0) {
       this.allAssignedStalls.forEach(data => {

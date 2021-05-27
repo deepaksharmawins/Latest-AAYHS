@@ -31,6 +31,70 @@
               
                     <tbody>
 
+
+                        <tr >
+                            <td (click)="selectReport(0,'result')" [ngClass]="{'blueRow': selectedRowIndex == 0}">
+                                <div class="mmReportList">Stall Assignments List (#114)
+                                    <span id="downarrow102" style="display: block;"  (click)="showpopupbox('showpopupbox102','downarrow102','uparrow102')">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </span>
+                                    <span id="uparrow102" style="display: none;" (click)="hidepopupbox('showpopupbox102','uparrow102','downarrow102')">
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </span>
+    
+                                    <div class="mmHoverContent" id="showpopupbox102">
+                                        <div class="prePostField mb-4 multiCheckBtn">
+                                            <div class="form-group">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="all"
+                                                        (change)="checkChange($event.target.value,'result')" name="mmr">
+                                                    <span class="checkmark"></span>All Stalls
+                                                </label>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="all"
+                                                        (change)="checkChange($event.target.value,'result')" name="mmr">
+                                                    <span class="checkmark"></span>Assigned Stalls Only
+                                                </label>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="all"
+                                                        (change)="checkChange($event.target.value,'result')" name="mmr">
+                                                    <span class="checkmark"></span>Unassigned Stalls Only
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <button type="button"
+                                (click)="setreportType('display','result')" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('email','result')" class="icon"><span></span>
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('print','result')" class="icon"><span></span>
+                                <i class="fa fa-print" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('download','result')" class="icon"><span></span> 
+                                <i class="fa fa-download" aria-hidden="true"></i></button>
+                            </td>
+
+                        </tr>
+
+
+
+
                         <tr *ngIf="Classes">
                             <td (click)="selectReport(0,'result')" [ngClass]="{'blueRow': selectedRowIndex == 0}">
                                 <div class="mmReportList">Class Results ( #102 )
