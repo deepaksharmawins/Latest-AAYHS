@@ -11,7 +11,7 @@ import { formatDate } from '@angular/common';
 import { ClassService } from 'src/app/core/services/class.service';
 import { BaseRecordFilterRequest } from 'src/app/core/models/base-record-filter-request-model';
 import { MatSnackbarComponent } from 'src/app/shared/ui/mat-snackbar/mat-snackbar.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { SponsorService } from '../../../../core/services/sponsor.service';
 
@@ -88,13 +88,19 @@ export class OtherReportsComponent implements OnInit {
   constructor(private reportService: ReportService, private dialog: MatDialog,
     private classService: ClassService,
     private snackBar: MatSnackbarComponent,
-    private sponsorService: SponsorService) { }
+    private sponsorService: SponsorService,
+    public dialogRef: MatDialogRef<OtherReportsComponent>,
+    ) { }
 
   ngOnInit(): void {
     this.getAllClasses();
     this.getAllSponsors();
   }
 
+  onOtherDismiss(): void {
+    this.dialogRef.close({
+    });
+  }
 
   downloadEntriesPerClassReport() {
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;

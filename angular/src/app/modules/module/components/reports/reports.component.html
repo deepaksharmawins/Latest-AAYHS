@@ -32,61 +32,224 @@
                     <tbody>
 
 
-                        <tr >
-                            <td (click)="selectReport(0,'result')" [ngClass]="{'blueRow': selectedRowIndex == 0}">
-                                <div class="mmReportList">Stall Assignments List (#114)
-                                    <span id="downarrow102" style="display: block;"  (click)="showpopupbox('showpopupbox102','downarrow102','uparrow102')">
+                        <tr *ngIf="Exhibitors">
+                            <td (click)="selectReport(17,'AllSponsor')" [ngClass]="{'blueRow': selectedRowIndex == 17}">
+                                <div class="mmReportList">Exhibitor Sponsor Incentive Report (#115)
+                                    <span id="downarrow33" style="display: block;"  (click)="showpopupbox('showpopupbox33','downarrow33','uparrow33')">
                                         <i class="fa fa-caret-down" aria-hidden="true"></i>
                                     </span>
-                                    <span id="uparrow102" style="display: none;" (click)="hidepopupbox('showpopupbox102','uparrow102','downarrow102')">
+                                    <span id="uparrow33" style="display: none;" (click)="hidepopupbox('showpopupbox33','uparrow33','downarrow33')">
                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
                                     </span>
     
-                                    <div class="mmHoverContent" id="showpopupbox102">
+                                    <div class="mmHoverContent" id="showpopupbox33">
                                         <div class="prePostField mb-4 multiCheckBtn">
-                                            <div class="form-group">
+                                           <div class="row">
+                                            <div class="form-group col-md-6">
                                                 <label class="radioBtn">
                                                     <input type="radio" value="all"
-                                                        (change)="checkChange($event.target.value,'result')" name="mmr">
-                                                    <span class="checkmark"></span>All Stalls
+                                                        (change)="checkChange($event.target.value,'getallStallList')" name="mmr">
+                                                    <span class="checkmark"></span>All
                                                 </label>
                                             </div>
-                                            
-                                            <div class="form-group">
+                                            <div class="form-group col-md-6">
                                                 <label class="radioBtn">
-                                                    <input type="radio" value="all"
-                                                        (change)="checkChange($event.target.value,'result')" name="mmr">
-                                                    <span class="checkmark"></span>Assigned Stalls Only
+                                                    <input type="radio" value="one" name="mmr"
+                                                        (change)="checkChange($event.target.value,'getUnassignStallList')">
+                                                    <span class="checkmark"></span>One
                                                 </label>
                                             </div>
-
-                                            <div class="form-group">
-                                                <label class="radioBtn">
-                                                    <input type="radio" value="all"
-                                                        (change)="checkChange($event.target.value,'result')" name="mmr">
-                                                    <span class="checkmark"></span>Unassigned Stalls Only
-                                                </label>
-                                            </div>
+                                           </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </td>
 
                             <td>
+                                <!-- <button type="button"
+                                (click)="setreportType('display','result')" class="icon"><span></span>getUnassignStallList
+                                <i class="fa fa-eye" aria-hidden="true"></i></button> -->
+                                <!-- <button type="button"
+                                (click)="getAssignedStallList()" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true">Assign</i></button>
+
                                 <button type="button"
-                                (click)="setreportType('display','result')" class="icon"><span></span>
+                                (click)="getallStallList()" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true">All Stall</i></button>
+
+                                <button type="button"
+                                (click)="getUnassignStallList()" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true">UnAssign Stall</i></button> -->
+
+                                <button type="button"
+                                (click)="setreportType('display','Stall')" class="icon"><span></span>
                                 <i class="fa fa-eye" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('email','result')" class="icon"><span></span>
+                                (click)="setreportType('email','Stall')" class="icon"><span></span>
                                 <i class="fa fa-envelope-o" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('print','result')" class="icon"><span></span>
+                                (click)="setreportType('print','Stall')" class="icon"><span></span>
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','result')" class="icon"><span></span> 
+                                (click)="setreportType('download','Stall')" class="icon"><span></span> 
+                                <i class="fa fa-download" aria-hidden="true"></i></button>
+                            </td>
+
+                        </tr>
+
+
+                        <tr *ngIf="Exhibitors">
+                            <td (click)="selectReport(16,'Stall')" [ngClass]="{'blueRow': selectedRowIndex == 16}">
+                                <div class="mmReportList">Stall Assignments List (#114)
+                                    <span id="downarrow99" style="display: block;"  (click)="showpopupbox('showpopupbox99','downarrow99','uparrow99')">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </span>
+                                    <span id="uparrow99" style="display: none;" (click)="hidepopupbox('showpopupbox99','uparrow99','downarrow99')">
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </span>
+    
+                                    <div class="mmHoverContent" id="showpopupbox99">
+                                        <div class="prePostField mb-4 multiCheckBtn">
+                                           <div class="row">
+                                            <div class="form-group col-md-2">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="all"
+                                                        (change)="checkChange($event.target.value,'getallStallList')" name="mmr">
+                                                    <span class="checkmark"></span>All
+                                                </label>
+                                            </div>
+                                            <div class="form-group col-md-5">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="one" name="mmr"
+                                                        (change)="checkChange($event.target.value,'getUnassignStallList')">
+                                                    <span class="checkmark"></span>Unassigned
+                                                </label>
+                                            </div>
+                                            <div class="form-group col-md-5">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="one" name="mmr"
+                                                        (change)="checkChange($event.target.value,'getAssignedStallList')">
+                                                    <span class="checkmark"></span>Assigned
+                                                </label>
+                                            </div>
+                                           </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <!-- <button type="button"
+                                (click)="setreportType('display','result')" class="icon"><span></span>getUnassignStallList
+                                <i class="fa fa-eye" aria-hidden="true"></i></button> -->
+                                <!-- <button type="button"
+                                (click)="getAssignedStallList()" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true">Assign</i></button>
+
+                                <button type="button"
+                                (click)="getallStallList()" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true">All Stall</i></button>
+
+                                <button type="button"
+                                (click)="getUnassignStallList()" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true">UnAssign Stall</i></button> -->
+
+                                <button type="button"
+                                (click)="setreportType('display','Stall')" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('email','Stall')" class="icon"><span></span>
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('print','Stall')" class="icon"><span></span>
+                                <i class="fa fa-print" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('download','Stall')" class="icon"><span></span> 
+                                <i class="fa fa-download" aria-hidden="true"></i></button>
+                            </td>
+
+                        </tr>
+
+
+                        <tr *ngIf="Exhibitors">
+                            <td (click)="selectReport(15,'Stall')" [ngClass]="{'blueRow': selectedRowIndex == 15}">
+                                <div class="mmReportList">Stall Assignments List (#114)
+                                    <span id="downarrow99" style="display: block;"  (click)="showpopupbox('showpopupbox99','downarrow99','uparrow99')">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </span>
+                                    <span id="uparrow99" style="display: none;" (click)="hidepopupbox('showpopupbox99','uparrow99','downarrow99')">
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </span>
+    
+                                    <div class="mmHoverContent" id="showpopupbox99">
+                                        <div class="prePostField mb-4 multiCheckBtn">
+                                           <div class="row">
+                                            <div class="form-group col-md-2">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="all"
+                                                        (change)="checkChange($event.target.value,'getallStallList')" name="mmr">
+                                                    <span class="checkmark"></span>All
+                                                </label>
+                                            </div>
+                                            <div class="form-group col-md-5">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="one" name="mmr"
+                                                        (change)="checkChange($event.target.value,'getUnassignStallList')">
+                                                    <span class="checkmark"></span>Unassigned
+                                                </label>
+                                            </div>
+                                            <div class="form-group col-md-5">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="one" name="mmr"
+                                                        (change)="checkChange($event.target.value,'getAssignedStallList')">
+                                                    <span class="checkmark"></span>Assigned
+                                                </label>
+                                            </div>
+                                           </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <!-- <button type="button"
+                                (click)="setreportType('display','result')" class="icon"><span></span>getUnassignStallList
+                                <i class="fa fa-eye" aria-hidden="true"></i></button> -->
+                                <!-- <button type="button"
+                                (click)="getAssignedStallList()" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true">Assign</i></button>
+
+                                <button type="button"
+                                (click)="getallStallList()" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true">All Stall</i></button>
+
+                                <button type="button"
+                                (click)="getUnassignStallList()" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true">UnAssign Stall</i></button> -->
+
+                                <button type="button"
+                                (click)="setreportType('display','Stall')" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('email','Stall')" class="icon"><span></span>
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('print','Stall')" class="icon"><span></span>
+                                <i class="fa fa-print" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('download','Stall')" class="icon"><span></span> 
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
 

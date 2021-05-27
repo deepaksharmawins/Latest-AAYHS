@@ -303,9 +303,7 @@
                                                     <option [ngValue]="null" disabled="true">
                                                         Select Group
                                                     </option>
-                                                    <option [ngValue]="0" >
-                                                      None of these
-                                                  </option>
+                                                   
                                                     <option *ngFor="let group of groups" [value]="group.GroupId">
                                                         {{group.GroupName}}
                                                     </option>

@@ -19,7 +19,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <!-- <tr>
                                     <td (click)="selectReport(0,'result')"
                                         [ngClass]="{'blueRow': selectedRowIndex == 0}">
                                         <div class="mmReportList">Class Results ( #102 )
@@ -95,9 +95,9 @@
                                             <i class="fa fa-download" aria-hidden="true"></i></button>
                                     </td>
 
-                                </tr>
+                                </tr> -->
 
-                                <tr>
+                                <!-- <tr>
                                     <td (click)="selectReport(1,'nsbaclassresult')"
                                         [ngClass]="{'blueRow': selectedRowIndex == 1}">
                                         <div class="mmReportList">NSBA Classes Results ( #102a )
@@ -123,9 +123,9 @@
                                     </td>
 
 
-                                </tr>
+                                </tr> -->
 
-                                <tr>
+                                <!-- <tr>
                                     <td (click)="selectReport(2,'entries')"
                                         [ngClass]="{'blueRow': selectedRowIndex == 2}">
                                         <div class="mmReportList">Entries Per Class ( #27 )</div>
@@ -147,9 +147,9 @@
                                             class="icon"><span></span>
                                             <i class="fa fa-download" aria-hidden="true"></i></button>
                                     </td>
-                                </tr>
+                                </tr> -->
 
-                                <tr>
+                                <!-- <tr>
                                     <td (click)="selectReport(3,'paddock')"
                                         [ngClass]="{'blueRow': selectedRowIndex == 3}">
                                         <div class="mmReportList">Paddock Sheet ( #23 )
@@ -226,9 +226,9 @@
                                             class="icon"><span></span>
                                             <i class="fa fa-download" aria-hidden="true"></i></button>
                                     </td>
-                                </tr>
+                                </tr> -->
 
-                                <tr>
+                                <!-- <tr>
                                     <td (click)="selectReport(4,'patron')"
                                         [ngClass]="{'blueRow': selectedRowIndex == 4}">
                                         <div class="mmReportList">Patrons List ( #103 )</div>
@@ -250,9 +250,9 @@
                                             class="icon"><span></span>
                                             <i class="fa fa-download" aria-hidden="true"></i></button>
                                     </td>
-                                </tr>
+                                </tr> -->
 
-                                <tr>
+                                <!-- <tr>
                                     <td (click)="selectReport(5,'program')"
                                         [ngClass]="{'blueRow': selectedRowIndex == 5}">
                                         <div class="mmReportList">Program Sheet ( #25 )
@@ -325,9 +325,9 @@
                                             class="icon"><span></span>
                                             <i class="fa fa-download" aria-hidden="true"></i></button>
                                     </td>
-                                </tr>
+                                </tr> -->
 
-                                <tr>
+                                <!-- <tr>
                                     <td (click)="selectReport(6,'summary')"
                                         [ngClass]="{'blueRow': selectedRowIndex == 6}">
                                         <div class="mmReportList">Year Show Summary ( #105 )</div>
@@ -349,9 +349,9 @@
                                             class="icon"><span></span>
                                             <i class="fa fa-download" aria-hidden="true"></i></button>
                                     </td>
-                                </tr>
+                                </tr> -->
 
-                                <tr>
+                                <!-- <tr>
                                     <td (click)="selectReport(7,'administrative')"
                                         [ngClass]="{'blueRow': selectedRowIndex == 7}">
                                         <div class="mmReportList">Yearly Maintenance Report ( #107 )</div>
@@ -373,7 +373,7 @@
                                             class="icon"><span></span>
                                             <i class="fa fa-download" aria-hidden="true"></i></button>
                                     </td>
-                                </tr>
+                                </tr> -->
 
                                 <tr>
                                     <td (click)="selectReport(8,'nsba')"
@@ -588,7 +588,7 @@
                                     </td>
                                 </tr>
 
-                                <tr>
+                                <!-- <tr>
 
                                     <td (click)="selectReport(14,'exhibitoradssponsor')"
                                         [ngClass]="{'blueRow': selectedRowIndex == 14}">
@@ -613,7 +613,7 @@
                                             class="icon"><span></span>
                                             <i class="fa fa-download" aria-hidden="true"></i></button>
                                     </td>
-                                </tr>
+                                </tr> -->
 
 
 
@@ -628,7 +628,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" (click)="onOtherDismiss()" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>

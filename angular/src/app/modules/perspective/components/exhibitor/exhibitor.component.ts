@@ -454,7 +454,7 @@ export class ExhibitorComponent implements OnInit {
   }
 
   addUpdateExhibitor() {
-
+debugger
     if (this.exhibitorInfo.StateId == null || this.exhibitorInfo.StateId == undefined || this.exhibitorInfo.StateId <= 0) {
       return;
     }
@@ -530,7 +530,11 @@ export class ExhibitorComponent implements OnInit {
   getAllGroups() {
     this.loading = true;
     this.exhibitorService.getGroups().subscribe(response => {
-      this.groups = response.Data.getGroups;
+      debugger
+      response.Data.getGroups.unshift({GroupId: 0, GroupName: "NONE OF THESE"})
+      this.groups= response.Data.getGroups;
+      console.log("this.groups res", this.groups)
+
       this.loading = false;
     }, error => {
       this.loading = false;

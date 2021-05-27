@@ -16,6 +16,7 @@ import * as moment from 'moment';
 import { SponsorService } from '../../../../core/services/sponsor.service';
 import { OtherReportsComponent } from '../other-reports/other-reports.component';
 import { StallService } from 'src/app/core/services/stall.service';
+import { ExhibitorService } from 'src/app/core/services/exhibitor.service';
 
 export class StallModel {
   StallNo: number;
@@ -35,7 +36,7 @@ export class ReportsComponent implements OnInit {
   classresultsclassesList: any;
   paddocksheetclassesList: any;
   programsheetclassesList: any;
-  sponsorsList:any;
+  sponsorsList: any;
   resultClassId: any = null;
   selectedresultClasssname = "";
   allResultClass: boolean = true;
@@ -49,15 +50,15 @@ export class ReportsComponent implements OnInit {
   selectedprogramClasssname = "";
   allProgramClass: boolean = true;
 
-  nonExhibitorSponsorDistributorId:any=null;
-  selectednonExhibitorSponsorDistributorName="";
-  allnonExhibitorSponsorDistributors:boolean=true;
+  nonExhibitorSponsorDistributorId: any = null;
+  selectednonExhibitorSponsorDistributorName = "";
+  allnonExhibitorSponsorDistributors: boolean = true;
 
-  nonExhibitorSponsorDistributorReport : any;
-  filteredSponsorList:any;
+  nonExhibitorSponsorDistributorReport: any;
+  filteredSponsorList: any;
 
-  exhibitorSponsoredAdslist:any;
-  allNonExhibitorSponsorAdlist:any;
+  exhibitorSponsoredAdslist: any;
+  allNonExhibitorSponsorAdlist: any;
 
   selectedRowIndex: any;
   reportName: any;
@@ -81,7 +82,11 @@ export class ReportsComponent implements OnInit {
 
   };
 
-  
+  filterBaseRequest: any = {
+    OrderBy: '',
+  };
+
+
   baseSponsorRequest: BaseRecordFilterRequest = {
     Page: 1,
     Limit: 5,
@@ -92,23 +97,28 @@ export class ReportsComponent implements OnInit {
   }
 
   nsbaExhibitorReport: any;
-  Classes:boolean = true;
-  Exhibitors:boolean = true;
-  Sponsors:boolean = true;
-  YearlyMaintenance:boolean = true;
-
+  Classes: boolean = true;
+  Exhibitors: boolean = true;
+  Sponsors: boolean = true;
+  YearlyMaintenance: boolean = true;
+  TypeOfStallReport: any;
+  exhibitorsList: any;
+  exhibitorsSponsors: any;
 
   constructor(private reportService: ReportService, private dialog: MatDialog,
     private classService: ClassService,
     private snackBar: MatSnackbarComponent,
     private sponsorService: SponsorService,
-    private stallService: StallService
-    ) { }
+    private stallService: StallService,
+    private exhibitorService: ExhibitorService,
+  ) { }
 
   ngOnInit(): void {
     this.getAllClasses();
     this.getAllSponsors();
     this.getAllAssignedStalls();
+    this.getFilterExhibitors();
+    this.getAllSponsorsOfExhibitors();
   }
 
 
@@ -150,7 +160,7 @@ export class ReportsComponent implements OnInit {
     })
 
 
-    this.setPrintReportOptions("EntriesPerClass",this.reportType,doc);
+    this.setPrintReportOptions("EntriesPerClass", this.reportType, doc);
 
 
   }
@@ -178,7 +188,7 @@ export class ReportsComponent implements OnInit {
       this.loading = true;
       this.sponsorService.getAllSponsers(this.baseSponsorRequest).subscribe(response => {
         this.sponsorsList = response.Data.sponsorResponses;
-        this.filteredSponsorList=response.Data.sponsorResponses;
+        this.filteredSponsorList = response.Data.sponsorResponses;
         this.loading = false;
       }, error => {
         this.loading = false;
@@ -289,7 +299,17 @@ export class ReportsComponent implements OnInit {
       else if (this.reportName == "nonexhibitorsummarysponsordistribution") {
         this.GetNonExhibiorSummarySponsorDistributionsReport()
       }
-
+      else if (this.reportName == "Stall") {
+        if (this.TypeOfStallReport == "getallStallList") {
+        this.getallStallList();
+        }
+        else if (this.TypeOfStallReport == "getUnassignStallList") {
+        this.getUnassignStallList()
+        }
+        else if (this.TypeOfStallReport == "getAssignedStallList") {
+        this.getAssignedStallList();
+        }
+      }
     }
   }
 
@@ -299,7 +319,7 @@ export class ReportsComponent implements OnInit {
       this.nonexhibitorsummarySponsoreddistributionReport = null;
       this.reportService.GetNonExhibiorSummarySponsorDistributionsReport().subscribe(response => {
         debugger;
-        this.nonexhibitorsummarySponsoreddistributionReport=response.Data;
+        this.nonexhibitorsummarySponsoreddistributionReport = response.Data;
         this.downloadNonExhibiorSummarySponsorDistributionsReport();
       }, error => {
         this.loading = false;
@@ -319,7 +339,7 @@ export class ReportsComponent implements OnInit {
       this.exhibitorAdsSponsoredReport = null;
       this.reportService.GetExhibiorAdsSponsorReport().subscribe(response => {
         debugger;
-        this.exhibitorAdsSponsoredReport=response.Data;
+        this.exhibitorAdsSponsoredReport = response.Data;
         this.downloadExhibiorAdsSponsorReport();
       }, error => {
         this.loading = false;
@@ -369,53 +389,53 @@ export class ReportsComponent implements OnInit {
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(15);
 
-      var text = "Non-Exhibitor Summary Sponsors Distribution Totals (#110)";
-      
-     
-      doc.text(text, 35, 10);
+    var text = "Non-Exhibitor Summary Sponsors Distribution Totals (#110)";
 
-      doc.setFontSize(10);
-      this.nonexhibitorsummarySponsoreddistributionReport.nonExhibiorSummarySponsorDistributionsResponses.forEach(item => {
-      item.NewAmountReceived="$"+item.AmountReceived;
-      item.NewNonExhibitorContribution="$"+item.NonExhibitorContribution;
-      item.NewExhibitorContribution="$"+item.ExhibitorContribution;
-      item.NewRemaining="$"+item.Remaining;
+
+    doc.text(text, 35, 10);
+
+    doc.setFontSize(10);
+    this.nonexhibitorsummarySponsoreddistributionReport.nonExhibiorSummarySponsorDistributionsResponses.forEach(item => {
+      item.NewAmountReceived = "$" + item.AmountReceived;
+      item.NewNonExhibitorContribution = "$" + item.NonExhibitorContribution;
+      item.NewExhibitorContribution = "$" + item.ExhibitorContribution;
+      item.NewRemaining = "$" + item.Remaining;
     });
 
 
-      doc.autoTable({
-        body: this.nonexhibitorsummarySponsoreddistributionReport.nonExhibiorSummarySponsorDistributionsResponses,
-        columns:
-          [ 
-            { header: 'Sponsor Id', dataKey: 'SponsorId' },
-            { header: 'Sponsor Name', dataKey: 'SponsorName' },
-            { header: 'Amount Received', dataKey: 'NewAmountReceived' },
-            { header: 'Non Exhibitor Distribution', dataKey: 'NewNonExhibitorContribution' },
-            { header: 'Exhibitor Distribution', dataKey: 'NewExhibitorContribution' },
-            { header: 'Remaining', dataKey: 'NewRemaining' },
-          ],
-        margin: { vertical: 35, horizontal: 10 },
-        startY:  25
-      })
-    var  finaly = (doc as any).lastAutoTable.finalY+5;
-    
-    
+    doc.autoTable({
+      body: this.nonexhibitorsummarySponsoreddistributionReport.nonExhibiorSummarySponsorDistributionsResponses,
+      columns:
+        [
+          { header: 'Sponsor Id', dataKey: 'SponsorId' },
+          { header: 'Sponsor Name', dataKey: 'SponsorName' },
+          { header: 'Amount Received', dataKey: 'NewAmountReceived' },
+          { header: 'Non Exhibitor Distribution', dataKey: 'NewNonExhibitorContribution' },
+          { header: 'Exhibitor Distribution', dataKey: 'NewExhibitorContribution' },
+          { header: 'Remaining', dataKey: 'NewRemaining' },
+        ],
+      margin: { vertical: 35, horizontal: 10 },
+      startY: 25
+    })
+    var finaly = (doc as any).lastAutoTable.finalY + 5;
+
+
     doc.setFontType("bold");
-   
-    doc.text("Amount Received Total:",90, finaly+10);
-    doc.text("$"+String(this.nonexhibitorsummarySponsoreddistributionReport.TotalReceived),170, finaly+10);
 
-    doc.text("Non Exhibitor Distribution Total:", 90, finaly+17);
-    doc.text("$"+String(this.nonexhibitorsummarySponsoreddistributionReport.TotalNonExhibitorContribution), 170, finaly+17);
+    doc.text("Amount Received Total:", 90, finaly + 10);
+    doc.text("$" + String(this.nonexhibitorsummarySponsoreddistributionReport.TotalReceived), 170, finaly + 10);
 
-    doc.text("Exhibitor Distribution Total:", 90, finaly+24);
-    doc.text("$"+String(this.nonexhibitorsummarySponsoreddistributionReport.TotalExhibitorContribution), 170, finaly+24);
+    doc.text("Non Exhibitor Distribution Total:", 90, finaly + 17);
+    doc.text("$" + String(this.nonexhibitorsummarySponsoreddistributionReport.TotalNonExhibitorContribution), 170, finaly + 17);
 
-    doc.text("Remaining Total:", 90, finaly+31);
-    doc.text("$"+String(this.nonexhibitorsummarySponsoreddistributionReport.TotalRemaining), 170, finaly+31);
+    doc.text("Exhibitor Distribution Total:", 90, finaly + 24);
+    doc.text("$" + String(this.nonexhibitorsummarySponsoreddistributionReport.TotalExhibitorContribution), 170, finaly + 24);
 
-  
-    this.setPrintReportOptions("nonexhibitorsummarysponsordistribution",this.reportType,doc);
+    doc.text("Remaining Total:", 90, finaly + 31);
+    doc.text("$" + String(this.nonexhibitorsummarySponsoreddistributionReport.TotalRemaining), 170, finaly + 31);
+
+
+    this.setPrintReportOptions("nonexhibitorsummarysponsordistribution", this.reportType, doc);
 
   }
 
@@ -423,46 +443,46 @@ export class ReportsComponent implements OnInit {
     let doc = new jsPDF("l", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(15);
 
-      var text = "Exhibitor Back Number Sponsored Ads (#112)";
-      
-     
-      doc.text(text, 85, 10);
+    var text = "Exhibitor Back Number Sponsored Ads (#112)";
 
-      doc.setFontSize(10);
-      this.exhibitorAdsSponsoredReport.exhibiorAdsSponsorReportResponses.forEach(item => {
-      item.NewAmount="$"+item.Amount;
+
+    doc.text(text, 85, 10);
+
+    doc.setFontSize(10);
+    this.exhibitorAdsSponsoredReport.exhibiorAdsSponsorReportResponses.forEach(item => {
+      item.NewAmount = "$" + item.Amount;
     });
-      doc.autoTable({
-        body: this.exhibitorAdsSponsoredReport.exhibiorAdsSponsorReportResponses,
-        columns:
-          [ 
-            { header: 'Exhibitor Id', dataKey: 'ExhibitorId' },
-             { header: 'Exhibitor Name', dataKey: 'ExhibitorName' },
-            { header: 'Back#', dataKey: 'BackNumber' },
-            { header: 'Exhibitor Contact', dataKey: 'ExhibitorEmail' },
-            { header: 'Ad Id', dataKey: 'AdId' },
-            { header: 'Sponsor Name', dataKey: 'SponsorName' },
-            { header: 'Amount', dataKey: 'NewAmount' },
-            
-          ],
-        margin: { vertical: 35, horizontal: 10 },
-        startY:  25
-      })
-    var  finaly = (doc as any).lastAutoTable.finalY+15;
-    
-   
+    doc.autoTable({
+      body: this.exhibitorAdsSponsoredReport.exhibiorAdsSponsorReportResponses,
+      columns:
+        [
+          { header: 'Exhibitor Id', dataKey: 'ExhibitorId' },
+          { header: 'Exhibitor Name', dataKey: 'ExhibitorName' },
+          { header: 'Back#', dataKey: 'BackNumber' },
+          { header: 'Exhibitor Contact', dataKey: 'ExhibitorEmail' },
+          { header: 'Ad Id', dataKey: 'AdId' },
+          { header: 'Sponsor Name', dataKey: 'SponsorName' },
+          { header: 'Amount', dataKey: 'NewAmount' },
+
+        ],
+      margin: { vertical: 35, horizontal: 10 },
+      startY: 25
+    })
+    var finaly = (doc as any).lastAutoTable.finalY + 15;
+
+
 
     doc.setFontSize(13);
     doc.setFontType("bold");
-    doc.text("Total:      $"+ String(this.exhibitorAdsSponsoredReport.TotalAmount.toFixed(2)), 180, finaly);
+    doc.text("Total:      $" + String(this.exhibitorAdsSponsoredReport.TotalAmount.toFixed(2)), 180, finaly);
 
-    this.setPrintReportOptions("exhibitoradssponsor",this.reportType,doc);
+    this.setPrintReportOptions("exhibitoradssponsor", this.reportType, doc);
 
   }
 
 
 
-   
+
 
 
   downloadProgramSheet(): void {
@@ -554,7 +574,7 @@ export class ReportsComponent implements OnInit {
     });
 
 
-    this.setPrintReportOptions("ProgramSheet",this.reportType,doc);
+    this.setPrintReportOptions("ProgramSheet", this.reportType, doc);
 
   }
 
@@ -596,7 +616,7 @@ export class ReportsComponent implements OnInit {
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(10);
     let y = 15;
-    var number : number=0;
+    var number: number = 0;
 
     var reportdata = [];
     if (this.allPaddockClass == true) {
@@ -627,17 +647,17 @@ export class ReportsComponent implements OnInit {
       doc.line(0, y + 20, 300, y + 20);
       doc.setLineWidth(5.0);
 
-      
+
       report.classDetails.forEach(ele => {
-        number=number + 1
-        ele.serialNumber=number
+        number = number + 1
+        ele.serialNumber = number
       });
 
       doc.autoTable({
         body: report.classDetails,
         columns:
           [
-            {header  : '#',dataKey:'serialNumber'},
+            { header: '#', dataKey: 'serialNumber' },
             { header: 'Back#', dataKey: 'BackNumber' },
             { header: 'Scratch', dataKey: 'Scratch' },
             { header: 'NSBA', dataKey: 'NSBA' },
@@ -650,7 +670,7 @@ export class ReportsComponent implements OnInit {
         margin: { vertical: 35, horizontal: 10 },
         startY: y + 30
       })
-      number=0;
+      number = 0;
       var lastrecord = this.paddockReport[this.paddockReport.length - 1];
       if (lastrecord === report) {
 
@@ -663,7 +683,7 @@ export class ReportsComponent implements OnInit {
 
     });
 
-    this.setPrintReportOptions("Paddocksheet",this.reportType,doc);
+    this.setPrintReportOptions("Paddocksheet", this.reportType, doc);
 
   }
 
@@ -690,6 +710,15 @@ export class ReportsComponent implements OnInit {
     else if (type == "nonExhibitorSponsorDistributionList") {
       this.allnonExhibitorSponsorDistributors = value == "all" ? true : false
       this.reportName = "nonExhibitorSponsorDistributionList"
+    }
+    else if (type == "getallStallList") {
+      this.TypeOfStallReport = type;
+    }
+    else if (type == "getUnassignStallList") {
+      this.TypeOfStallReport = type;
+    }
+    else if (type == "getAssignedStallList") {
+      this.TypeOfStallReport = type;
     }
   }
 
@@ -823,8 +852,8 @@ export class ReportsComponent implements OnInit {
       margin: { vertical: 35, horizontal: 10 },
       startY: yaxis + 10
     })
-    this.setPrintReportOptions("ClassResult",this.reportType,doc);
-  
+    this.setPrintReportOptions("ClassResult", this.reportType, doc);
+
   }
 
   downloadClassResultsReport() {
@@ -852,7 +881,7 @@ export class ReportsComponent implements OnInit {
           + this.classResults[i].getClassesInfoAndResult[j].ClassName + " "
           + this.classResults[i].getClassesInfoAndResult[j].AgeGroup, 85, y + 10);
         // write sponsors of the class
-     
+
 
 
         if (this.classResults[i].getClassesInfoAndResult[j].getClassesSponsors != null
@@ -879,7 +908,7 @@ export class ReportsComponent implements OnInit {
         }
 
         // Append datatable
-     
+
         doc.line(0, y + 20, 300, y + 20);
         doc.setLineWidth(5.0);
 
@@ -898,9 +927,9 @@ export class ReportsComponent implements OnInit {
           margin: { vertical: 35, horizontal: 10 },
           startY: yaxis + 10
         })
-        y = (doc as any).lastAutoTable.finalY+10;
-       
-        doc.line(0, (doc as any).lastAutoTable.finalY+5, 300, (doc as any).lastAutoTable.finalY+5);
+        y = (doc as any).lastAutoTable.finalY + 10;
+
+        doc.line(0, (doc as any).lastAutoTable.finalY + 5, 300, (doc as any).lastAutoTable.finalY + 5);
         doc.setLineWidth(5.0);
 
         //  doc.addPage()
@@ -908,7 +937,7 @@ export class ReportsComponent implements OnInit {
       doc.addPage()
     }
 
-    this.setPrintReportOptions("ClassResults",this.reportType,doc);
+    this.setPrintReportOptions("ClassResults", this.reportType, doc);
 
   }
 
@@ -965,7 +994,7 @@ export class ReportsComponent implements OnInit {
       }
 
     }
-    this.setPrintReportOptions("NSBAClassesResults",this.reportType,doc);
+    this.setPrintReportOptions("NSBAClassesResults", this.reportType, doc);
 
 
   }
@@ -1089,7 +1118,7 @@ export class ReportsComponent implements OnInit {
       margin: { vertical: 35, horizontal: 10 },
       startY: yaxis + 10
     })
-    this.setPrintReportOptions("SponsorPatron",this.reportType,doc);
+    this.setPrintReportOptions("SponsorPatron", this.reportType, doc);
 
   }
 
@@ -1099,7 +1128,7 @@ export class ReportsComponent implements OnInit {
     const base64data = await this.blobToData(blob)
     var url = URL.createObjectURL(blob);
     var dwldLink: HTMLAnchorElement
-    let html='&emsp;' + '&emsp;' + '&emsp;' + '&emsp;' + '&emsp;'  + String(new Date().getFullYear()) + ' -' + ' ' + 'ALL AMERICAN YOUTH HORSE SHOW PATRONS'+'<br><br>';;
+    let html = '&emsp;' + '&emsp;' + '&emsp;' + '&emsp;' + '&emsp;' + String(new Date().getFullYear()) + ' -' + ' ' + 'ALL AMERICAN YOUTH HORSE SHOW PATRONS' + '<br><br>';;
     for (let i = 0; i < data.length; i++) {
       let line = data[i].SponsorName + '<br>';
       html += line;
@@ -1218,14 +1247,17 @@ export class ReportsComponent implements OnInit {
     doc.fromHTML('<b>Fees & Categories</b> :', 10, 25)
     doc.fromHTML(String('<b>Ad Fee</b>'), textOffset, 38)
 
-if(this.administrativeReport.getFeeCategories.getAdFees !=null)
-{
+    if (this.administrativeReport.getFeeCategories.getAdFees != null) {
 
-    this.administrativeReport.getFeeCategories.getAdFees.forEach(ele => {
-      ele.FormattedAmount = "$" + String(ele.Amount)
-    });
+      //console.log("this.administrativeReport.getFeeCategories.getAdFee != null", this.administrativeReport.getFeeCategories.getAdFees)
+      //console.log("this.administrativeReport.getFeeCategories", this.administrativeReport.getFeeCategories)
 
-  }
+      this.administrativeReport.getFeeCategories.getAdFees.forEach(ele => {
+        ele.FormattedAmount = "$" + String(ele.Amount)
+      });
+
+    }
+    //console.log("this.administrativeReport.getFeeCategories.getAdFee", this.administrativeReport.getFeeCategories.getAdFees)
     doc.autoTable({
       body: this.administrativeReport.getFeeCategories.getAdFees,
       columns:
@@ -1252,14 +1284,13 @@ if(this.administrativeReport.getFeeCategories.getAdFees !=null)
 
     finalY = (doc as any).lastAutoTable.finalY;
     doc.fromHTML(String('<b>General Fee</b>'), textOffset, finalY + 10)
-    if(this.administrativeReport.getFeeCategories.getGeneralFees !=null)
-{
+    if (this.administrativeReport.getFeeCategories.getGeneralFees != null) {
 
-    this.administrativeReport.getFeeCategories.getGeneralFees.forEach(ele => {
-      ele.FormattedAmount = "$" + String(ele.Amount)
-    });
+      this.administrativeReport.getFeeCategories.getGeneralFees.forEach(ele => {
+        ele.FormattedAmount = "$" + String(ele.Amount)
+      });
 
-  }
+    }
     doc.autoTable({
       body: this.administrativeReport.getFeeCategories.getGeneralFees,
       columns:
@@ -1275,16 +1306,15 @@ if(this.administrativeReport.getFeeCategories.getAdFees !=null)
 
     finalY = (doc as any).lastAutoTable.finalY;
     doc.fromHTML(String('<b>Scratch Refunds</b>'), textOffset, finalY + 10)
-    if(this.administrativeReport.getFeeCategories.getScratchRefunds !=null)
-{
+    if (this.administrativeReport.getFeeCategories.getScratchRefunds != null) {
 
-    this.administrativeReport.getFeeCategories.getScratchRefunds.forEach(ele => {
-      ele.FormattedRefund = "$" + String(ele.Refund)
-      ele.FormattedDateAfter = String(moment(ele.DateAfter).format('MM-DD-yyyy'))
-      ele.FormattedDateBefore = String(moment(ele.DateBefore).format('MM-DD-yyyy'))
-    });
+      this.administrativeReport.getFeeCategories.getScratchRefunds.forEach(ele => {
+        ele.FormattedRefund = "$" + String(ele.Refund)
+        ele.FormattedDateAfter = String(moment(ele.DateAfter).format('MM-DD-yyyy'))
+        ele.FormattedDateBefore = String(moment(ele.DateBefore).format('MM-DD-yyyy'))
+      });
 
-  }
+    }
     doc.autoTable({
       body: this.administrativeReport.getFeeCategories.getScratchRefunds,
       columns:
@@ -1301,14 +1331,13 @@ if(this.administrativeReport.getFeeCategories.getAdFees !=null)
 
     finalY = (doc as any).lastAutoTable.finalY;
     doc.fromHTML(String('<b>Sponsor Incentive Refunds</b>'), textOffset, finalY + 10)
-    if(this.administrativeReport.getFeeCategories.getIncentiveRefunds !=null)
-{
+    if (this.administrativeReport.getFeeCategories.getIncentiveRefunds != null) {
 
-    this.administrativeReport.getFeeCategories.getIncentiveRefunds.forEach(ele => {
-      ele.FormattedAmount = "$" + String(ele.SponsorAmount)
-    });
+      this.administrativeReport.getFeeCategories.getIncentiveRefunds.forEach(ele => {
+        ele.FormattedAmount = "$" + String(ele.SponsorAmount)
+      });
 
-  }
+    }
     doc.autoTable({
       body: this.administrativeReport.getFeeCategories.getIncentiveRefunds,
       columns:
@@ -1320,10 +1349,10 @@ if(this.administrativeReport.getFeeCategories.getAdFees !=null)
       startY: finalY + 22
     })
 
-    finalY =10;
+    finalY = 10;
     if (this.administrativeReport.getStatement != null) {
       doc.addPage()
-      doc.fromHTML(String('<b>Statement Text</b>'), textOffset,5)
+      doc.fromHTML(String('<b>Statement Text</b>'), textOffset, 5)
       for (let i = 0; i < this.administrativeReport.getStatement.sponsorRefundStatements.length - 1; i++) {
         doc.text("StatementName : " + this.administrativeReport.getStatement.sponsorRefundStatements[i].StatementName, 5, finalY + 5)
         // doc.text(this.administrativeReport.getStatement.sponsorRefundStatements[i].StatementName,5,finalY + 5)
@@ -1427,10 +1456,113 @@ if(this.administrativeReport.getFeeCategories.getAdFees !=null)
       doc.text(this.administrativeReport.getAAYHSInfo.confirmationEntriesAndStalls.ZipCode != null && this.administrativeReport.getAAYHSInfo.confirmationEntriesAndStalls.ZipCode != undefined ? String(this.administrativeReport.getAAYHSInfo.confirmationEntriesAndStalls.ZipCode) : '', 55, 165)
 
     }
-    this.setPrintReportOptions("administrativereport",this.reportType,doc);
+    this.setPrintReportOptions("administrativereport", this.reportType, doc);
 
 
-    
+
+  }
+
+
+  getAssignedStallList(){
+    let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
+    doc.setFontSize(8);
+    let y = 8;
+    doc.text('Print Date :', 160, 8)
+    doc.text(String(moment(new Date()).format('MM-DD-yyyy')), 180, 8)
+    doc.line(0, 10, 300, 10);
+
+    //var text = String('&nbsp<b>Stall and Occupants</b>');
+    var text = String('&nbsp<b>Assigned</b>');
+    var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+    doc.fromHTML(text, textOffset, 10);
+
+    let pageHeight = doc.internal.pageSize.height;
+    //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>Stall and Occupants</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
+
+    doc.autoTable({
+      body: this.AssignedStallsData,
+      columns:
+        [
+          { header: 'Stall No', dataKey: 'StallId' },
+          { header: 'Occupant', dataKey: 'BookedByName' },
+          { header: 'Type', dataKey: 'BookedByType' },
+        ],
+      margin: { vertical: 35, horizontal: 10 },
+      startY: 30
+    })
+
+    this.setPrintReportOptions("assignedstallsreport", this.reportType, doc);
+  }
+
+  getallStallList(){
+    let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
+    doc.setFontSize(8);
+    let y = 8;
+    doc.text('Print Date :', 160, 8)
+    doc.text(String(moment(new Date()).format('MM-DD-yyyy')), 180, 8)
+    doc.line(0, 10, 300, 10);
+
+    //var text = String('&nbsp<b>Stall and Occupants</b>');
+    var text = String('&nbsp<b>All</b>');
+    var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+    doc.fromHTML(text, textOffset, 10);
+
+    let pageHeight = doc.internal.pageSize.height;
+    //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>Stall and Occupants</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
+
+    doc.autoTable({
+      body: this.AllStallsData,
+      columns:
+        [
+          { header: 'Stall No', dataKey: 'StallId' },
+          { header: 'Occupant', dataKey: 'BookedByName' },
+          { header: 'Type', dataKey: 'BookedByType' },
+        ],
+      margin: { vertical: 35, horizontal: 10 },
+      startY: 30
+    })
+
+    this.setPrintReportOptions("allstallsreport", this.reportType, doc);
+  }
+
+  getUnassignStallList(){
+    let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
+    doc.setFontSize(8);
+    let y = 8;
+    doc.text('Print Date :', 160, 8)
+    doc.text(String(moment(new Date()).format('MM-DD-yyyy')), 180, 8)
+    doc.line(0, 10, 300, 10);
+
+    //var text = String('&nbsp<b>Stall and Occupants</b>');
+    var text = String('&nbsp<b>Unassigned Stalls</b>');
+    var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+    doc.fromHTML(text, textOffset, 10);
+
+    let pageHeight = doc.internal.pageSize.height;
+    //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>Stall and Occupants</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
+
+    doc.autoTable({
+      body: this.UnAssignedStallData,
+      columns:
+        [
+          { header: 'Stall No', dataKey: 'StallId' },
+          { header: 'Occupant', dataKey: 'BookedByName' },
+          { header: 'Type', dataKey: 'BookedByType' },
+        ],
+      margin: { vertical: 35, horizontal: 10 },
+      startY: 30
+    })
+
+    this.setPrintReportOptions("allstallsreport", this.reportType, doc);
   }
 
   getNsbaExhibitorReport() {
@@ -1469,11 +1601,10 @@ if(this.administrativeReport.getFeeCategories.getAdFees !=null)
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(10);
     var text = '<b>NSBA Exhibitor Fee Totals</b>';
-    if(this.reportName=="nsbaclasses")
-    {
+    if (this.reportName == "nsbaclasses") {
       text = '<b>NSBA Classes Exhibitor Fee Totals</b>';
     }
-    
+
     var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
     var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
     doc.fromHTML(text, textOffset, 10);
@@ -1496,8 +1627,8 @@ if(this.administrativeReport.getFeeCategories.getAdFees !=null)
       startY: yaxis + 10
     })
 
-    this.setPrintReportOptions("nsbaExhibitorReport",this.reportType,doc);
-  
+    this.setPrintReportOptions("nsbaExhibitorReport", this.reportType, doc);
+
   }
 
   blobToData = (blob: Blob) => {
@@ -1555,9 +1686,9 @@ if(this.administrativeReport.getFeeCategories.getAdFees !=null)
     doc.text('Total Entries:', 15, 61)
 
     if (this.YearShowSummary.numberOfClasses != null) {
-      doc.text(this.YearShowSummary.numberOfClasses.TotalPreEntries != null && this.YearShowSummary.numberOfClasses.TotalPreEntries != undefined ?  String(this.YearShowSummary.numberOfClasses.TotalPreEntries) : '', 55, 48)
-      doc.text(this.YearShowSummary.numberOfClasses.TotalPostEntries != null && this.YearShowSummary.numberOfClasses.TotalPostEntries != undefined ?  String(this.YearShowSummary.numberOfClasses.TotalPostEntries) : '', 55, 53)
-      doc.text(this.YearShowSummary.numberOfClasses.TotalEntries != null && this.YearShowSummary.numberOfClasses.TotalEntries != undefined ?  String(this.YearShowSummary.numberOfClasses.TotalEntries) : '', 55, 61)
+      doc.text(this.YearShowSummary.numberOfClasses.TotalPreEntries != null && this.YearShowSummary.numberOfClasses.TotalPreEntries != undefined ? String(this.YearShowSummary.numberOfClasses.TotalPreEntries) : '', 55, 48)
+      doc.text(this.YearShowSummary.numberOfClasses.TotalPostEntries != null && this.YearShowSummary.numberOfClasses.TotalPostEntries != undefined ? String(this.YearShowSummary.numberOfClasses.TotalPostEntries) : '', 55, 53)
+      doc.text(this.YearShowSummary.numberOfClasses.TotalEntries != null && this.YearShowSummary.numberOfClasses.TotalEntries != undefined ? String(this.YearShowSummary.numberOfClasses.TotalEntries) : '', 55, 61)
     }
 
     //NSBA
@@ -1568,9 +1699,9 @@ if(this.administrativeReport.getFeeCategories.getAdFees !=null)
     doc.text('Total Entries :', 15, 88)
 
     if (this.YearShowSummary.numberOfNSBAClasses != null) {
-      doc.text(this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != null && this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != undefined ?  String(this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries) : '', 55, 75)
-      doc.text(this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != null && this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != undefined ?  String(this.YearShowSummary.numberOfNSBAClasses.TotalPostEntries) : '', 55, 80)
-      doc.text(this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != null && this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != undefined ?  String(this.YearShowSummary.numberOfNSBAClasses.TotalEntries) : '', 55, 88)
+      doc.text(this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != null && this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != undefined ? String(this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries) : '', 55, 75)
+      doc.text(this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != null && this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != undefined ? String(this.YearShowSummary.numberOfNSBAClasses.TotalPostEntries) : '', 55, 80)
+      doc.text(this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != null && this.YearShowSummary.numberOfNSBAClasses.TotalPreEntries != undefined ? String(this.YearShowSummary.numberOfNSBAClasses.TotalEntries) : '', 55, 88)
     }
 
     //General Fees
@@ -1579,7 +1710,7 @@ if(this.administrativeReport.getFeeCategories.getAdFees !=null)
     doc.text('Box Stall Fees :', 15, 112)
     doc.text('Tack Stall Fees:', 15, 117)
     doc.text('Program Fees :', 15, 122)
-    doc.text('NSBA Entry Fee :',15,127)
+    doc.text('NSBA Entry Fee :', 15, 127)
     doc.line(15, 130, 100, 130);
     doc.text('Total Fees:', 15, 135)
 
@@ -1600,17 +1731,17 @@ if(this.administrativeReport.getFeeCategories.getAdFees !=null)
     doc.text('Total Stalls:', 15, 175)
 
     if (this.YearShowSummary.numberOfStall != null) {
-      doc.text(this.YearShowSummary.numberOfStall.TotalPortableStalls != null && this.YearShowSummary.numberOfStall.TotalPortableStalls != undefined ?  String(this.YearShowSummary.numberOfStall.TotalPortableStalls) : '', 55, 162)
-      doc.text(this.YearShowSummary.numberOfStall.TotalPermanentStalls != null && this.YearShowSummary.numberOfStall.TotalPermanentStalls != undefined ?  String(this.YearShowSummary.numberOfStall.TotalPermanentStalls) : '', 55, 167)
-      doc.text(this.YearShowSummary.numberOfStall.TotalStalls != null && this.YearShowSummary.numberOfStall.TotalStalls != undefined ?  String(this.YearShowSummary.numberOfStall.TotalStalls) : '', 55, 175)
+      doc.text(this.YearShowSummary.numberOfStall.TotalPortableStalls != null && this.YearShowSummary.numberOfStall.TotalPortableStalls != undefined ? String(this.YearShowSummary.numberOfStall.TotalPortableStalls) : '', 55, 162)
+      doc.text(this.YearShowSummary.numberOfStall.TotalPermanentStalls != null && this.YearShowSummary.numberOfStall.TotalPermanentStalls != undefined ? String(this.YearShowSummary.numberOfStall.TotalPermanentStalls) : '', 55, 167)
+      doc.text(this.YearShowSummary.numberOfStall.TotalStalls != null && this.YearShowSummary.numberOfStall.TotalStalls != undefined ? String(this.YearShowSummary.numberOfStall.TotalStalls) : '', 55, 175)
     }
-   
-    this.setPrintReportOptions("yearshowsummaryreport",this.reportType,doc);
+
+    this.setPrintReportOptions("yearshowsummaryreport", this.reportType, doc);
 
   }
-  
-  showpopupbox(elementid: string, hidearrow: string,showarrow: string) {
-debugger
+
+  showpopupbox(elementid: string, hidearrow: string, showarrow: string) {
+    debugger
     var popboxes = document.getElementsByClassName("mmHoverContent");
     if (popboxes != null && popboxes != undefined && popboxes.length > 0) {
       for (var i = 0; i < popboxes.length; i++) {
@@ -1625,7 +1756,7 @@ debugger
       element.classList.add("showmybox");
     }
 
-    
+
     var hideElement = document.getElementById(hidearrow);
     if (hideElement != null && hideElement != undefined) {
       hideElement.classList.add("hidemybox");
@@ -1640,7 +1771,7 @@ debugger
 
   }
 
-  hidepopupbox(elementid: string, hidearrow: string,showarrow: string) {
+  hidepopupbox(elementid: string, hidearrow: string, showarrow: string) {
 
     var element = document.getElementById(elementid);
     if (element != null && element != undefined) {
@@ -1666,8 +1797,8 @@ debugger
     return new Promise((resolve, reject) => {
       this.loading = true;
       this.reportService.getNonExhibitorSponsorsDistributionList(id).subscribe(response => {
-        this.nonExhibitorSponsorDistributorReport= response.Data;
-         this.downloadSingleExhibtorSponsorsDistributionListReport();
+        this.nonExhibitorSponsorDistributorReport = response.Data;
+        this.downloadSingleExhibtorSponsorsDistributionListReport();
       }, error => {
         this.loading = false;
 
@@ -1681,7 +1812,7 @@ debugger
     return new Promise((resolve, reject) => {
       this.loading = true;
       this.reportService.getAllNonExhibitorSponsorsDistributionList().subscribe(response => {
-        this.nonExhibitorSponsorDistributorReport= response.Data;
+        this.nonExhibitorSponsorDistributorReport = response.Data;
         this.downloadAllExhibtorSponsorsDistributionListReport();
       }, error => {
         this.loading = false;
@@ -1692,10 +1823,10 @@ debugger
     });
   }
 
-  downloadAllExhibtorSponsorsDistributionListReport(){
+  downloadAllExhibtorSponsorsDistributionListReport() {
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(10);
-    var pageHeight= doc.internal.pageSize.height;
+    var pageHeight = doc.internal.pageSize.height;
 
     var text = '<b>Non-Exhibitor Sponsors Distribution List</b>';
     var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
@@ -1703,50 +1834,50 @@ debugger
     doc.fromHTML(text, textOffset, 10);
 
     for (let i = 0; i < this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors.length; i++) {
-    let yaxis = 30;
-    doc.fromHTML('<b>Sponsor Name</b> : ' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].SponsorName, 20, yaxis)
-    doc.fromHTML('<b>Sponsor Total</b> : $' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].Total, 20, yaxis + 5)
+      let yaxis = 30;
+      doc.fromHTML('<b>Sponsor Name</b> : ' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].SponsorName, 20, yaxis)
+      doc.fromHTML('<b>Sponsor Total</b> : $' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].Total, 20, yaxis + 5)
 
-    if(this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].nonExhibitorSponsorTypes !=null ){
-      this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].nonExhibitorSponsorTypes.forEach(ele => {
-        ele.FormattedAmount = "$" + String(ele.Contribution)
-      });
-      doc.autoTable({
-        body: this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].nonExhibitorSponsorTypes,
-        columns:
-          [
-            { header: 'Sponsor Type', dataKey: 'SponsorType' },
-            { header: 'Distribution', dataKey: 'FormattedAmount' },
-            { header: 'ID No.', dataKey: 'IDNumber' },
-            { header: 'Ad Size', dataKey: 'AdSize' },
-          ],
-        margin: { vertical: 35, horizontal: 15 },
-        startY: yaxis + 20
-      })
-      let finalY = (doc as any).lastAutoTable.finalY + 10;
+      if (this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].nonExhibitorSponsorTypes != null) {
+        this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].nonExhibitorSponsorTypes.forEach(ele => {
+          ele.FormattedAmount = "$" + String(ele.Contribution)
+        });
+        doc.autoTable({
+          body: this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].nonExhibitorSponsorTypes,
+          columns:
+            [
+              { header: 'Sponsor Type', dataKey: 'SponsorType' },
+              { header: 'Distribution', dataKey: 'FormattedAmount' },
+              { header: 'ID No.', dataKey: 'IDNumber' },
+              { header: 'Ad Size', dataKey: 'AdSize' },
+            ],
+          margin: { vertical: 35, horizontal: 15 },
+          startY: yaxis + 20
+        })
+        let finalY = (doc as any).lastAutoTable.finalY + 10;
 
-    if(finalY > pageHeight){
+        if (finalY > pageHeight) {
+          doc.addPage()
+          doc.fromHTML('<b>Total</b> : $' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].TotalDistribution, 160, 10)
+        }
+        else {
+          doc.fromHTML('<b>Total</b> : $' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].TotalDistribution, 160, finalY)
+        }
+        if (finalY + 5 > pageHeight) {
+          doc.addPage()
+          doc.fromHTML('<b>Remaining</b> : $' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].Remaining, 160, 10 + 5)
+        }
+        else {
+          doc.fromHTML('<b>Remaining</b> : $' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].Remaining, 160, finalY + 5)
+        }
+      }
       doc.addPage()
-      doc.fromHTML('<b>Total</b> : $' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].TotalDistribution, 160, 10)
-    }
-    else{
-      doc.fromHTML('<b>Total</b> : $' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].TotalDistribution, 160, finalY)
-    }
-    if(finalY + 5 > pageHeight){
-      doc.addPage()
-      doc.fromHTML('<b>Remaining</b> : $' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].Remaining, 160, 10 + 5)
-    }
-    else{
-      doc.fromHTML('<b>Remaining</b> : $' + this.nonExhibitorSponsorDistributorReport.getNonExhibitorSponsors[i].Remaining, 160, finalY + 5)
-    }
-    }
-    doc.addPage()
 
     }
-    this.setPrintReportOptions("ExhibtorSponsorsDistribution",this.reportType,doc);
+    this.setPrintReportOptions("ExhibtorSponsorsDistribution", this.reportType, doc);
 
   }
-  downloadSingleExhibtorSponsorsDistributionListReport(){
+  downloadSingleExhibtorSponsorsDistributionListReport() {
 
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(10);
@@ -1760,34 +1891,33 @@ debugger
     doc.fromHTML('<b>Sponsor Name</b> : ' + this.nonExhibitorSponsorDistributorReport.SponsorName, 20, yaxis)
     doc.fromHTML('<b>Sponsor Total</b> : $' + this.nonExhibitorSponsorDistributorReport.Total, 20, yaxis + 5)
 
-    if(this.nonExhibitorSponsorDistributorReport.nonExhibitorSponsorTypes !=null)
-    {
-      if(this.nonExhibitorSponsorDistributorReport.nonExhibitorSponsorTypes !=null ){
+    if (this.nonExhibitorSponsorDistributorReport.nonExhibitorSponsorTypes != null) {
+      if (this.nonExhibitorSponsorDistributorReport.nonExhibitorSponsorTypes != null) {
         this.nonExhibitorSponsorDistributorReport.nonExhibitorSponsorTypes.forEach(ele => {
           ele.FormattedAmount = "$" + String(ele.Contribution)
         });
-    doc.autoTable({
-      body: this.nonExhibitorSponsorDistributorReport.nonExhibitorSponsorTypes,
-      columns:
-        [
-          { header: 'Sponsor Type', dataKey: 'SponsorType' },
-          { header: 'Distribution', dataKey: 'FormattedAmount' },
-          { header: 'ID No.', dataKey: 'IDNumber' },
-          { header: 'Ad Size', dataKey: 'AdSize' },
-        ],
-      margin: { vertical: 35, horizontal: 15 },
-      startY: yaxis + 20
-    })
+        doc.autoTable({
+          body: this.nonExhibitorSponsorDistributorReport.nonExhibitorSponsorTypes,
+          columns:
+            [
+              { header: 'Sponsor Type', dataKey: 'SponsorType' },
+              { header: 'Distribution', dataKey: 'FormattedAmount' },
+              { header: 'ID No.', dataKey: 'IDNumber' },
+              { header: 'Ad Size', dataKey: 'AdSize' },
+            ],
+          margin: { vertical: 35, horizontal: 15 },
+          startY: yaxis + 20
+        })
 
-    let finalY = (doc as any).lastAutoTable.finalY + 10;
-    doc.fromHTML('<b>Total</b> : $' + this.nonExhibitorSponsorDistributorReport.TotalDistribution, 160, finalY)
-    doc.fromHTML('<b>Remaining</b> : $' + this.nonExhibitorSponsorDistributorReport.Remaining, 160, finalY + 5)
+        let finalY = (doc as any).lastAutoTable.finalY + 10;
+        doc.fromHTML('<b>Total</b> : $' + this.nonExhibitorSponsorDistributorReport.TotalDistribution, 160, finalY)
+        doc.fromHTML('<b>Remaining</b> : $' + this.nonExhibitorSponsorDistributorReport.Remaining, 160, finalY + 5)
+      }
+      this.setPrintReportOptions("ExhibtorSponsorsDistribution", this.reportType, doc);
+    }
+
   }
-    this.setPrintReportOptions("ExhibtorSponsorsDistribution",this.reportType,doc);
-  }
-  
-  }
-  downloadExhibtorSponsoredAdsReport(){
+  downloadExhibtorSponsoredAdsReport() {
 
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(10);
@@ -1796,173 +1926,173 @@ debugger
     var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
     var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
     doc.fromHTML(text, textOffset, 10);
-    var pageHeight= doc.internal.pageSize.height;
+    var pageHeight = doc.internal.pageSize.height;
 
     let yaxis = 30;
 
-    if(this.exhibitorSponsoredAdslist.getExhibitorSponsoredAds !=null){
-        this.exhibitorSponsoredAdslist.getExhibitorSponsoredAds.forEach(ele => {
-          ele.FormattedAmount = "$" + String(ele.Amount)
-        });
-    
-    doc.autoTable({
-      body: this.exhibitorSponsoredAdslist.getExhibitorSponsoredAds,
-      columns:
-        [
-          { header: 'Exhibitor ID', dataKey: 'ExhibitorId' },
-          { header: 'Exhibitor Name', dataKey: 'ExhibitorName' },
-          { header: 'AD ID', dataKey: 'AdNumber' },
-          { header: 'Sponsor Name', dataKey: 'SponsorName' },
-          { header: 'Amount', dataKey: 'FormattedAmount' },
-        ],
-      margin: { vertical: 35, horizontal: 15 },
-      // useCss: true,
-      startY: yaxis 
-    })
+    if (this.exhibitorSponsoredAdslist.getExhibitorSponsoredAds != null) {
+      this.exhibitorSponsoredAdslist.getExhibitorSponsoredAds.forEach(ele => {
+        ele.FormattedAmount = "$" + String(ele.Amount)
+      });
 
-    let finalY = (doc as any).lastAutoTable.finalY + 10;
+      doc.autoTable({
+        body: this.exhibitorSponsoredAdslist.getExhibitorSponsoredAds,
+        columns:
+          [
+            { header: 'Exhibitor ID', dataKey: 'ExhibitorId' },
+            { header: 'Exhibitor Name', dataKey: 'ExhibitorName' },
+            { header: 'AD ID', dataKey: 'AdNumber' },
+            { header: 'Sponsor Name', dataKey: 'SponsorName' },
+            { header: 'Amount', dataKey: 'FormattedAmount' },
+          ],
+        margin: { vertical: 35, horizontal: 15 },
+        // useCss: true,
+        startY: yaxis
+      })
 
-    if(finalY > pageHeight){
-      doc.addPage()
-      doc.fromHTML('<b>Total</b> : $' + this.exhibitorSponsoredAdslist.TotalAmount, 160, 10)
+      let finalY = (doc as any).lastAutoTable.finalY + 10;
+
+      if (finalY > pageHeight) {
+        doc.addPage()
+        doc.fromHTML('<b>Total</b> : $' + this.exhibitorSponsoredAdslist.TotalAmount, 160, 10)
+      }
+      else {
+        doc.fromHTML('<b>Total</b> : $' + this.exhibitorSponsoredAdslist.TotalAmount, 160, finalY)
+      }
     }
-    else{
-      doc.fromHTML('<b>Total</b> : $' + this.exhibitorSponsoredAdslist.TotalAmount, 160, finalY)
-    }
-  }
-    this.setPrintReportOptions("ExhibtorSponsoredAdsReport",this.reportType,doc);
-  }
-
-filterNonExhibitorSponsor(val, makeresultclassnull) {
-  if (makeresultclassnull == true) {
-    this.resultClassId = null;
+    this.setPrintReportOptions("ExhibtorSponsoredAdsReport", this.reportType, doc);
   }
 
-  if (this.sponsorsList != null && this.sponsorsList != undefined && this.sponsorsList.length > 0) {
-    this.filteredSponsorList = this.sponsorsList.filter(option =>
-      option.SponsorName.toLowerCase().includes(val.toLowerCase()));
+  filterNonExhibitorSponsor(val, makeresultclassnull) {
+    if (makeresultclassnull == true) {
+      this.resultClassId = null;
+    }
+
+    if (this.sponsorsList != null && this.sponsorsList != undefined && this.sponsorsList.length > 0) {
+      this.filteredSponsorList = this.sponsorsList.filter(option =>
+        option.SponsorName.toLowerCase().includes(val.toLowerCase()));
+    }
+
   }
 
-}
-
-getExhibtorSponsoredAdds() {
-  return new Promise((resolve, reject) => {
-    this.loading = true;
-    this.reportService.getExhibitorSponsoredAds().subscribe(response => {
-      this.exhibitorSponsoredAdslist= response.Data;
-      this.downloadExhibtorSponsoredAdsReport();
-    }, error => {
-      this.loading = false;
-      this.exhibitorSponsoredAdslist = null;
-    }
-    )
-    resolve();
-  });
-}
-getFilteredNonExhibitorSponsor(value){
-  this.nonExhibitorSponsorDistributorId = Number(value)
-
-}
-
-getAllNonExhibitorSponsorAd() {
-  return new Promise((resolve, reject) => {
-    this.loading = true;
-    this.reportService.getAllNonExhibitorSponsorAd().subscribe(response => {
-      this.allNonExhibitorSponsorAdlist= response.Data;
-      this.downloadAllNonExhibtorSponsorAdReport();
-    }, error => {
-      this.loading = false;
-      this.exhibitorSponsoredAdslist = null;
-    }
-    )
-    resolve();
-  });
-}
-
-downloadAllNonExhibtorSponsorAdReport(){
-
-  let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
-  doc.setFontSize(10);
-
-  var text = '<b>Non Exhibitor Sponsored Ads</b>';
-  var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-  var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
-  doc.fromHTML(text, textOffset, 10);
-  var pageHeight= doc.internal.pageSize.height;
-
-  if(this.allNonExhibitorSponsorAdlist.getNonExhibitorSponsorAds !=null){
-    this.allNonExhibitorSponsorAdlist.getNonExhibitorSponsorAds.forEach(ele => {
-      ele.FormattedAmount = "$" + String(ele.Amount)
+  getExhibtorSponsoredAdds() {
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+      this.reportService.getExhibitorSponsoredAds().subscribe(response => {
+        this.exhibitorSponsoredAdslist = response.Data;
+        this.downloadExhibtorSponsoredAdsReport();
+      }, error => {
+        this.loading = false;
+        this.exhibitorSponsoredAdslist = null;
+      }
+      )
+      resolve();
     });
-  
-  let yaxis = 30;
-  doc.autoTable({
-    body: this.allNonExhibitorSponsorAdlist.getNonExhibitorSponsorAds,
-    columns:
-      [
-        { header: 'Sponsor Name', dataKey: 'SponsorName' },
-        { header: 'AD ID', dataKey: 'AdId' },
-        { header: 'Amount', dataKey: 'FormattedAmount' },
-      ],
-    margin: { vertical: 35, horizontal: 15 },
-    startY: yaxis 
-  })
-
-  let finalY = (doc as any).lastAutoTable.finalY + 10;
-
-  if(finalY > pageHeight){
-    doc.addPage()
-    doc.fromHTML('<b>Total</b> : $' + this.allNonExhibitorSponsorAdlist.TotalAmount, 160, 10)
   }
-  else{
-    doc.fromHTML('<b>Total</b> : $' + this.allNonExhibitorSponsorAdlist.TotalAmount, 160, finalY)
-  }
-}
-  this.setPrintReportOptions("ExhibtorSponsoredAdsReport",this.reportType,doc);
-}
+  getFilteredNonExhibitorSponsor(value) {
+    this.nonExhibitorSponsorDistributorId = Number(value)
 
-  setPrintReportOptions(reportname:string,type:string,doc: any){
-  
+  }
+
+  getAllNonExhibitorSponsorAd() {
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+      this.reportService.getAllNonExhibitorSponsorAd().subscribe(response => {
+        this.allNonExhibitorSponsorAdlist = response.Data;
+        this.downloadAllNonExhibtorSponsorAdReport();
+      }, error => {
+        this.loading = false;
+        this.exhibitorSponsoredAdslist = null;
+      }
+      )
+      resolve();
+    });
+  }
+
+  downloadAllNonExhibtorSponsorAdReport() {
+
+    let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
+    doc.setFontSize(10);
+
+    var text = '<b>Non Exhibitor Sponsored Ads</b>';
+    var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+    doc.fromHTML(text, textOffset, 10);
+    var pageHeight = doc.internal.pageSize.height;
+
+    if (this.allNonExhibitorSponsorAdlist.getNonExhibitorSponsorAds != null) {
+      this.allNonExhibitorSponsorAdlist.getNonExhibitorSponsorAds.forEach(ele => {
+        ele.FormattedAmount = "$" + String(ele.Amount)
+      });
+
+      let yaxis = 30;
+      doc.autoTable({
+        body: this.allNonExhibitorSponsorAdlist.getNonExhibitorSponsorAds,
+        columns:
+          [
+            { header: 'Sponsor Name', dataKey: 'SponsorName' },
+            { header: 'AD ID', dataKey: 'AdId' },
+            { header: 'Amount', dataKey: 'FormattedAmount' },
+          ],
+        margin: { vertical: 35, horizontal: 15 },
+        startY: yaxis
+      })
+
+      let finalY = (doc as any).lastAutoTable.finalY + 10;
+
+      if (finalY > pageHeight) {
+        doc.addPage()
+        doc.fromHTML('<b>Total</b> : $' + this.allNonExhibitorSponsorAdlist.TotalAmount, 160, 10)
+      }
+      else {
+        doc.fromHTML('<b>Total</b> : $' + this.allNonExhibitorSponsorAdlist.TotalAmount, 160, finalY)
+      }
+    }
+    this.setPrintReportOptions("ExhibtorSponsoredAdsReport", this.reportType, doc);
+  }
+
+  setPrintReportOptions(reportname: string, type: string, doc: any) {
+
     if (type == "display") {
       window.open(doc.output('bloburl'), '_blank');
       this.loading = false;
     }
-  
+
     if (type == "download") {
-      doc.save(reportname+'.pdf');
+      doc.save(reportname + '.pdf');
       this.loading = false;
     }
-  
+
     if (type == "print") {
-      var printFile= window.open(doc.output('bloburl'))
+      var printFile = window.open(doc.output('bloburl'))
       setTimeout(function () {
         printFile.print();
       }, 2000);
       this.loading = false;
     }
-  
+
     if (type == "email") {
       this.loading = true;
       var datauristring = doc.output('datauristring');
-  
+
       var data = {
         emailid: this.reportemailid,
         reportfile: datauristring
       }
-  
+
       this.reportService.SaveAndEmail(data).subscribe(response => {
         if (response != null || response != undefined) {
-  
+
           this.snackBar.openSnackBar(response.message, 'Close', 'green-snackbar');
         }
         this.loading = false;
       },
-  
+
         error => {
           this.snackBar.openSnackBar("Error!", 'Close', 'red-snackbar');
           this.loading = false;
         }
-  
+
       )
     }
 
@@ -1993,7 +2123,7 @@ downloadAllNonExhibtorSponsorAdReport(){
     const dialogRef = this.dialog.open(OtherReportsComponent, config,
 
     );
-    // dialogRef.afterClosed().subscribe(dialogResult => {
+    dialogRef.afterClosed().subscribe(dialogResult => {})
 
     //   const result: any = dialogResult;
     //   if (result && result.submitted == true) {
@@ -2020,7 +2150,7 @@ downloadAllNonExhibtorSponsorAdReport(){
     // });
   }
 
-  getPerspective(val){
+  getPerspective(val) {
     debugger
     if (val == "All") {
       this.Classes = true;
@@ -2055,57 +2185,139 @@ downloadAllNonExhibtorSponsorAdReport(){
   }
 
 
-  AssignedStallsData:Array<StallModel> = [];
-  AllStallsData:Array<StallModel> = [];
-
+  AssignedStallsData: any[]=[];
+  AllStallsData: any[]=[];
+  UnAssignedStallData: any[]=[];
   getAllAssignedStalls() {
     this.stallService.getAllAssignedStalls().subscribe((data: any) => {
       if (data) {
         debugger
 
-       data.Data.stallResponses.forEach(element => {
-         let stall = new StallModel();
-              stall.Occupant= element.BookedByName
-              stall.StallNo = element.StallId
-              stall.Type = element.BookedByType
-        this.AssignedStallsData.push(stall);
-       });
-        console.log("getAllAssignedStalls", this.AssignedStallsData)
+        data.Data.stallResponses.forEach(element => {
+          // let stall = new StallModel();
+          // stall.Occupant = element.BookedByName
+          // stall.StallNo = element.StallId
+          // stall.Type = element.BookedByType
+          this.AssignedStallsData.push(element);
+        });
+       
+        //console.log("getAllAssignedStalls", this.AssignedStallsData)
         this.allStalls();
       }
     })
   }
+
+  
   allStalls() {
     for (let index = 1; index <= 1012; index++) {
-      let stall = new StallModel();
-      
-      let checkIfFound:any = this.AssignedStallsData.filter(x => x.StallNo == index);
       debugger
-      if (checkIfFound != null) {
-        stall.Occupant = checkIfFound.Occupant;
-        stall.StallNo = checkIfFound.StallNo;
-        stall.Type = checkIfFound.Type;
-        this.AllStallsData.push(stall)
-      }
-      else
-      {
-        stall.Occupant = "";
-        stall.StallNo = index+1;
-        stall.Type = "";
-        this.AllStallsData.push(stall)
-      }
 
-      // this.AssignedStallsData.map(x => {
-      //   if (x.StallNo == index) {
-      //     this.AllStallsData.push(x);
-      //   }
-      //   else {
-      //     stall.StallNo =index
-      //       this.AllStallsData.push(stall);
-      //   }
+      let checkIfFound:any[]
+        checkIfFound   = this.AssignedStallsData.filter(x => x.StallId == index);
+      debugger
+      if (checkIfFound.length>0) {
+        // let stall = new StallModel();
+        // stall.Occupant = checkIfFound.Occupant;
+        // stall.StallNo = checkIfFound.StallNo;
+        // stall.Type = checkIfFound.Type;
+        let foundObj = {BookedByName: checkIfFound[0].BookedByName,
+        BookedByType: checkIfFound[0].BookedByType,
+        ExhibitorId: checkIfFound[0].ExhibitorId,
+        GroupId: checkIfFound[0].GroupId,
+        StallAssignmentId: checkIfFound[0].StallAssignmentId,
+        StallAssignmentTypeId: checkIfFound[0].StallAssignmentTypeId,
+        StallId: checkIfFound[0].StallId}
 
-      // })
+        this.AllStallsData.push(foundObj)
+      }
+      else {
+        // let stall = new StallModel();
+        // stall.Occupant = "";
+        // stall.StallNo = index + 1;
+        // stall.Type = "";
+
+        let notFountobj = {BookedByName: "",
+        BookedByType: "",
+        ExhibitorId: 0,
+        GroupId: 0,
+        StallAssignmentId: 0,
+        StallAssignmentTypeId: 0,
+        StallId: index}
+        this.UnAssignedStallData.push(notFountobj);
+        this.AllStallsData.push(notFountobj);
+      }
     }
-    console.log("allStalls", this.AllStallsData);
+    //console.log("AllStallsData", this.AllStallsData);
   }
+
+
+  getFilterExhibitors() {
+    return new Promise<void>((resolve, reject) => {
+      this.loading = true;
+      this.exhibitorService.getFilterExhibitors(this.filterBaseRequest).subscribe(response => {
+        this.exhibitorsList = response.Data.exhibitorResponses;
+        this.loading = false;
+        //console.log("this.exhibitorsList", this.exhibitorsList);
+      }, error => {
+        this.loading = false;
+      }
+      )
+      resolve();
+    });
+  }
+
+  getAllSponsorsOfExhibitors() {
+    return new Promise<void>((resolve, reject) => {
+      this.loading = true;
+      this.exhibitorService.getAllSponsorsOfExhibitors().subscribe(response => {
+        this.exhibitorsSponsors = response.Data.getSponsorsOfExhibitors;
+        this.loading = false;
+        console.log("this.exhibitorSponsors", this.exhibitorsSponsors)
+        this.SponsorsOfExhibitors();
+      }, error => {
+        this.loading = false;
+        this.exhibitorsSponsors = null;
+      }
+      )
+      resolve();
+    })
+  }
+  
+  SponsorsOfExhibitors(){
+    let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
+    doc.setFontSize(8);
+    let y = 8;
+    doc.text('Print Date :', 160, 8)
+    doc.text(String(moment(new Date()).format('MM-DD-yyyy')), 180, 8)
+    doc.line(0, 10, 300, 10);
+
+    //var text = String('&nbsp<b>Stall and Occupants</b>');
+    // var text = String('&nbsp<b>Unassigned Stalls</b>');
+     var textWidth = doc.getStringUnitWidth("") * doc.internal.getFontSize() / doc.internal.scaleFactor;
+     var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+    // doc.fromHTML(text, textOffset, 10);
+
+    let pageHeight = doc.internal.pageSize.height;
+    //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>Exhibitor Sponsor Incentive Ads (#114)</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
+
+    doc.autoTable({
+      body: this.exhibitorsSponsors,
+      columns:
+        [
+          { header: 'Exhibitor ID', dataKey: 'SponsorExhibitorId' },
+          { header: 'Exhibitor Name', dataKey: 'ContactName' },
+          { header: 'Horse Name', dataKey: 'HorseName' },
+          { header: 'Sponsor Name', dataKey: 'Sponsor' },
+          { header: 'Total Received', dataKey: 'SponsorAmount' },
+          { header: 'Sponsor Type', dataKey: 'SponsorTypeName' },
+        ],
+      margin: { vertical: 35, horizontal: 10 },
+      startY: 30
+    })
+
+    this.setPrintReportOptions("allstallsreport", "display", doc);
+  }
+
 }
