@@ -49,7 +49,7 @@
                 <tr>
                     <td><span class="blueBox"></span><b>Exhibitor Id:</b>
                         <span class="classNameExt">
-                             {{exhibitorInfo.ExhibitorId}} 
+                             {{exhibitorInfo.ExhibitorId}}
                             </span>
                             </td>
                     <td><span class="blueBox"></span><b>Exhibitor Name:</b>
@@ -59,7 +59,7 @@
                         </span>
                         <p class="toolTipText">{{this.exhibitorInfo.FirstName }} {{this.exhibitorInfo.LastName}}</p>
                     </td>
-                    <td><span class="blueBox"></span><b>Group Name: </b> 
+                    <td><span class="blueBox"></span><b>Group Name: </b>
                         <span class="classNameExt">
                             {{this.exhibitorInfo.GroupName}}
                         </span>
@@ -120,18 +120,18 @@
                                                     Name is required</span>
                                             </div>
 
-                                           
-                                          
+
+
 
                                             <div class="form-group">
                                                 <label>State <span>*</span></label>
-                                                <input     
-                                                class="form-control" 
+                                                <input
+                                                class="form-control"
                                                 required
                                                 placeholder="State" name="state"
                                                 #state="ngModel" [(ngModel)]="seletedStateName"
                                                 (keyup)="filterStates($event.target.value,true)"
-                                                value="{{seletedStateName}}" 
+                                                value="{{seletedStateName}}"
                                                 autocomplete="new-password"  type="search" [matAutocomplete]="stateauto">
 
 
@@ -153,19 +153,19 @@
 
                                             <div class="row">
                                                 <div class="col-md-7">
-                                                    
+
 
                                                     <div class="form-group">
                                                         <label>City <span>*</span></label>
-                                                        <!-- <input     
-                                                        class="form-control" 
+                                                        <!-- <input
+                                                        class="form-control"
                                                         required
                                                         placeholder="City" name="city"
                                                         #city="ngModel" [(ngModel)]="seletedCityName"
                                                         (keyup)="filterCities($event.target.value,true)"
-                                                        value="{{seletedCityName}}" 
+                                                        value="{{seletedCityName}}"
                                                         autocomplete="new-password"  type="search" [matAutocomplete]="cityauto">
-          
+
                                                         <mat-autocomplete #cityauto="matAutocomplete">
                                                             <mat-option *ngFor="let option of cityfilteredOptions"
                                                             [value]="option.Name" (onSelectionChange)="getFileredZipCodes(option.Name,option.CityId,$event);">
@@ -288,7 +288,7 @@
                                                 <label>Address </label>
                                                 <input #Address="ngModel" name="Address"
                                                     [(ngModel)]="exhibitorInfo.Address"
-                                                  
+
                                                     type="text" class="form-control" placeholder="Address" />
                                                 <span class="help-block"
                                                     *ngIf="Address.errors?.required && (Address.touched || exhibitorInfoForm.submitted)">Address
@@ -303,6 +303,9 @@
                                                     <option [ngValue]="null" disabled="true">
                                                         Select Group
                                                     </option>
+                                                    <option [ngValue]="0" >
+                                                      None of these
+                                                  </option>
                                                     <option *ngFor="let group of groups" [value]="group.GroupId">
                                                         {{group.GroupName}}
                                                     </option>
@@ -385,8 +388,8 @@
                                                         <td>
 
                                                             <input
-                                                               
-                                                            class="form-control" 
+
+                                                            class="form-control"
                                                             required
                                                             placeholder="Horse Name" name="horsename"
                                                             #horsename="ngModel" [(ngModel)]="seletedhorseName"
@@ -396,16 +399,16 @@
                                                             <span class="help-block"
                                                             *ngIf="linkedHorseId==null && (horsesForm.submitted || horsename.touched)">
                                                             Please select horse</span>
-                                                        
-            
+
+
                                                             <mat-autocomplete #horseauto="matAutocomplete">
                                                                 <mat-option *ngFor="let horse of filteredHorsesOption"
                                                                 [value]="horse.Name" (onSelectionChange)="setFilteredHorse(horse.HorseId,$event);">
-                                                                {{horse.HorseId}}-{{horse.Name}} 
+                                                                {{horse.HorseId}}-{{horse.Name}}
                                                                 </mat-option>
                                                             </mat-autocomplete>
-                                                           
-                                                       
+
+
                                                         </td>
 
 
@@ -429,7 +432,7 @@
                                                         <td>
                                                             <span *ngIf="horseType">
                                                                 <mat-form-field>
-                                                                    <input matInput 
+                                                                    <input matInput
                                                                         [matDatepicker]="horseDatePicker"
                                                                         class="form-control"
                                                                         #horseAddDateControl="ngModel"
@@ -504,7 +507,7 @@
                                                                 <img class="print-element"
                                                                     [src]="class.Scratch===true ? '../assets/images/sizzer-icon.png' : '../assets/images/sizzer-icon-1.png'">
                                                             </div>
-                                                           
+
                                                         </td>
                                                         <td>
                                                             <button type="button" class="icon"
@@ -515,8 +518,8 @@
                                                     </tr>
                                                     <tr>
                                                         <td colspan="2">
-                                                                <input      
-                                                                    class="form-control" 
+                                                                <input
+                                                                    class="form-control"
                                                                     required
                                                                     placeholder="Class Name" name="classname"
                                                                     #classname="ngModel" [(ngModel)]="seletedclassName"
@@ -526,11 +529,11 @@
                                                                     <span class="help-block"
                                                                     *ngIf="linkedClassId==null && (classesForm.submitted || classname.touched)">
                                                                     Please select class</span>
-                                                               
-                    
+
+
                                                                     <mat-autocomplete #classauto="matAutocomplete">
                                                                         <mat-option *ngFor="let class of filteredClassesOption"
-                                                                        [value]="class.Name" 
+                                                                        [value]="class.Name"
                                                                         (onSelectionChange)="setFilteredClass(class.ClassId,$event);">
                                                                         {{class.ClassNumber}} / {{class.Name}} / {{class.AgeGroup}}
                                                                         </mat-option>
@@ -584,7 +587,7 @@
                                                             <div *ngIf="showScratch" class="scratchimage">
                                                                 <img src="/assets/images/sizzer-icon-1.png">
                                                             </div>
-                                                          
+
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -650,10 +653,10 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                           
 
-                                                                 <input     
-                                                                    class="form-control smPad" 
+
+                                                                 <input
+                                                                    class="form-control smPad"
                                                                     required
                                                                     placeholder="Sponsor Name" name="sponsorname"
                                                                     #sponsorname="ngModel" [(ngModel)]="seletedsponsorName"
@@ -663,12 +666,12 @@
                                                                     <span class="help-block"
                                                                     *ngIf="linkedSponsorId==null && (sponsorsForm.submitted || sponsorname.touched)">
                                                                     Please select sponsor</span>
-                                                                
-                    
+
+
                                                                     <mat-autocomplete #sponsorauto="matAutocomplete">
                                                                         <mat-option *ngFor="let sponsor of filteredSponsorOption"
                                                                         [value]="sponsor.SponsorName" (onSelectionChange)="setFilteredSponsor(sponsor.SponsorId,$event);">
-                                                                        {{sponsor.SponsorName}} 
+                                                                        {{sponsor.SponsorName}}
                                                                         </mat-option>
                                                                     </mat-autocomplete>
 
@@ -686,10 +689,10 @@
                                                                     required [(ngModel)]="sponsorAmount"
                                                                     #amountControl="ngModel"
                                                                     (change)="setsponsorAmount($event.target.value)">
-    
-                                                                <span class="help-block" *ngIf="(sponsorsForm.submitted || amountControl.touched) 
+
+                                                                <span class="help-block" *ngIf="(sponsorsForm.submitted || amountControl.touched)
                                                     && amountControl.invalid">Please Enter Sponsor Amount                                                                </span>
-                                                           
+
                                                         </td>
 
                                                         <td>
@@ -701,14 +704,14 @@
                                                             <span class="help-block"
                                                             *ngIf="linkedSponsorHorseId==null && (sponsorsForm.submitted || sponsorhorsename.touched)">
                                                             Please select sponsor horse</span>
-                                                               
+
                                                             <mat-autocomplete #sponsorhorseauto="matAutocomplete">
                                                                 <mat-option *ngFor="let horse of filteredSponsorHorsesOption"
                                                                 [value]="horse.HorseName" (onSelectionChange)="setFilteredSponsorHorse(horse.HorseId,$event);">
-                                                                {{horse.HorseId}}-{{horse.HorseName}} 
+                                                                {{horse.HorseId}}-{{horse.HorseName}}
                                                                 </mat-option>
                                                             </mat-autocomplete>
-                                                                                                                
+
                                                         </td>
 
                                                         <td>
@@ -730,7 +733,7 @@
                                                                     select sponsor type
                                                                 </span>
                                                             </span>
-                                                        </td> 
+                                                        </td>
                                                         <td>
                                                             <span *ngIf="(linkedSponsorId && sponsortypeId && sponsortypeName!='Class')">
                                                                 <input appOnlynumber type="text"
@@ -769,13 +772,13 @@
                                                             <span class="help-block"
                                                             *ngIf="typeId==null && (sponsorsForm.submitted || classesList.touched)">
                                                             Please select class</span>
-                                                        </span>    
+                                                        </span>
                                                             <mat-autocomplete #classesauto="matAutocomplete">
                                                                 <mat-option *ngFor="let class of filteredsponsorClassesList"
                                                                 [value]="class.Name" (onSelectionChange)="setFilteredClassesList(class.ClassId,$event);">
-                                                                {{class.ClassNumber}}-{{class.Name}} 
+                                                                {{class.ClassNumber}}-{{class.Name}}
                                                                 </mat-option>
-                                                            </mat-autocomplete>                                                           
+                                                            </mat-autocomplete>
                                                         </td>
                                                         <td>
                                                             <span *ngIf="(linkedSponsorId && sponsortypeName=='Ad')">
@@ -939,7 +942,7 @@
                                                         <td>{{refund.SponsorName}}</td>
                                                         <td>${{refund.Amount}}</td>
                                                     </tr>
-                                                                                                                                                                                                                                                         
+
                                                 </tbody>
                                             </perfect-scrollbar>
                                         </table>
@@ -949,7 +952,7 @@
                                     <button (click)='tabGroup.selectedIndex = 4'
                                         class="btn btn-red btnCss roundBtn">Previous</button>
                                     <button (click)='tabGroup.selectedIndex = 6'
-                                        class="btn btn-red btnCss roundBtn">Next</button>                                  
+                                        class="btn btn-red btnCss roundBtn">Next</button>
                                 </div>
                             </form>
                         </div>
@@ -987,13 +990,13 @@
                                                                 aria-hidden="true"></i></button>
 
                                                         <button type="button"
-                                                        (click)="setreportType('download','ExhibitorRegistrationReport')" class="icon"><span></span> 
+                                                        (click)="setreportType('download','ExhibitorRegistrationReport')" class="icon"><span></span>
                                                         <i class="fa fa-download"
                                                                 aria-hidden="true"></i></button>
                                                     </td>
 
 
-                                                </tr>                                          
+                                                </tr>
                                                 <tr>
                                                     <td>Exhibitor Sponsor Confirmation Statement(#3)</td>
                                                     <td>
@@ -1013,12 +1016,12 @@
                                                                 aria-hidden="true"></i></button>
 
                                                         <button type="button"
-                                                        (click)="setreportType('download','ExhibitorSponsorConfirmationStatement')" class="icon"><span></span> 
+                                                        (click)="setreportType('download','ExhibitorSponsorConfirmationStatement')" class="icon"><span></span>
                                                         <i class="fa fa-download"
                                                                 aria-hidden="true"></i></button>
                                                     </td>
 
-                                                </tr>                                     
+                                                </tr>
                                                 <tr>
                                                     <td>Exhibitor Sponsor Refund Statement (#3a)</td>
                                                     <td>
@@ -1038,15 +1041,15 @@
                                                                 aria-hidden="true"></i></button>
 
                                                         <button type="button"
-                                                        (click)="setreportType('download','ExhibitorSponsorRefundStatement')" class="icon"><span></span> 
+                                                        (click)="setreportType('download','ExhibitorSponsorRefundStatement')" class="icon"><span></span>
                                                         <i class="fa fa-download"
                                                                 aria-hidden="true"></i></button>
                                                 </td>
-                                                </tr>                                                                         
+                                                </tr>
                                             </tbody>
                                         </perfect-scrollbar>
                                     </table>
-                                   
+
                                 </div>
                             </div>
                             <div class="actionBtn text-right mb-3">
@@ -1074,7 +1077,7 @@
                                                         Select Document
                                                     </option>
                                                     <option *ngFor="let document of documentTypes"
-                                                        [value]="document.GlobalCodeId">{{document.CodeName}} 
+                                                        [value]="document.GlobalCodeId">{{document.CodeName}}
                                                     </option>
                                                 </select>
                                                 <span class="help-block"
