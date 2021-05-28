@@ -109,11 +109,24 @@ namespace AAYHS.Repository.Repository
                                       PrimaryEmail = exhibitor.PrimaryEmail,
                                       SecondaryEmail = exhibitor.SecondaryEmail,
                                       Phone = exhibitor.Phone,
-                                      Address = address.Address + ", " + address.City + ", " + state.Name + ", " + address.ZipCode
+                                      Address = address.Address + ", " + address.City + ", " + state.Name + ", " + address.ZipCode,
+                                      GroupName = (from x in _context.Exhibitors join grpEX in _context.GroupExhibitors on x.ExhibitorId equals grpEX.ExhibitorId 
+                                                   join grp in _context.Groups on grpEX.GroupId equals grp.GroupId where grpEX.ExhibitorId == x.ExhibitorId select grp.GroupName).FirstOrDefault()
                                   }).ToList();
             if (exhibitorResponses.Count() > 0)
             {
-                exhibitorListResponses.exhibitorResponses = exhibitorResponses.ToList();
+                if (filterExhibitorRequest.OrderBy == "orderByBirthYear")
+                {
+                    exhibitorListResponses.exhibitorResponses = exhibitorResponses.OrderBy(x => x.BirthYear).ToList();
+                }
+                else if(filterExhibitorRequest.OrderBy == "orderByLastName")
+                {
+                    exhibitorListResponses.exhibitorResponses = exhibitorResponses.OrderBy(x => x.LastName).ToList();
+                }
+                else if (filterExhibitorRequest.OrderBy == "Id")
+                {
+                    exhibitorListResponses.exhibitorResponses = exhibitorResponses.ToList();
+                }
             }
 
             return exhibitorListResponses;
@@ -356,9 +369,10 @@ namespace AAYHS.Repository.Repository
                                        select new GetSponsorsOfExhibitor
                                        {
                                            SponsorExhibitorId = exhibitorName.ExhibitorId,
-                                           SponsorId = sponsor.SponsorId,
+                                           ContactName = exhibitorName.FirstName + " " + exhibitorName.LastName,
+                                           HorseName = (from horse in _context.Horses where horse.HorseId == sponsorExhibitor.HorseId select horse.Name).FirstOrDefault(),
                                            Sponsor = sponsor.SponsorName,
-                                           ContactName = exhibitorName.FirstName +" "+ exhibitorName.LastName,
+                                           SponsorId = sponsor.SponsorId,
                                            Phone = sponsor.Phone,
                                            Address = address2 != null ? address2.Address : "",
                                            City = address2 != null ? address2.City : "",
@@ -371,12 +385,11 @@ namespace AAYHS.Repository.Repository
                                            Balance = 0,
                                            SponsorTypeId = sponsorExhibitor.SponsorTypeId,
                                            HorseId = sponsorExhibitor.HorseId,
-                                           HorseName = (from horse in _context.Horses where horse.HorseId == sponsorExhibitor.HorseId select horse.Name).FirstOrDefault(),
                                            SponsorTypeName = (from code in _context.GlobalCodes where code.GlobalCodeId == sponsorExhibitor.SponsorTypeId select code.CodeName).FirstOrDefault(),
                                            AdTypeName = (from fee in _context.YearlyMaintainenceFee where fee.YearlyMaintainenceFeeId == sponsorExhibitor.AdTypeId select fee.FeeName).FirstOrDefault(),
                                            IdNumber = sponsorExhibitor.SponsorTypeId == Convert.ToInt32(classSponsorTypeId) ? Convert.ToString(_context.Classes.Where(x => x.ClassId == Convert.ToInt32(sponsorExhibitor.TypeId)).Select(x => x.ClassNumber).FirstOrDefault())
                                                : Convert.ToString(sponsorExhibitor.TypeId),
-                                           
+
                                        }).ToList();
             if (getSponsorsOfExhibitors.Count() != 0)
             {
@@ -394,7 +407,7 @@ namespace AAYHS.Repository.Repository
                     }
                     getSponsorsOfExhibitors1.Add(item);
                 }
-                var data  = getSponsorsOfExhibitors1.GroupBy(x => x.SponsorExhibitorId).ToList();
+                var data = getSponsorsOfExhibitors1.GroupBy(x => x.SponsorExhibitorId).ToList();
 
                 getAllSponsorsOfExhibitor.getSponsorsOfExhibitors = getSponsorsOfExhibitors1;
 
