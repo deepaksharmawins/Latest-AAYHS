@@ -337,6 +337,9 @@ namespace AAYHS.Repository.Repository
             List<GetSponsorsOfExhibitor> getSponsorsOfExhibitors = new List<GetSponsorsOfExhibitor>();
             List<GetSponsorsOfExhibitor> getSponsorsOfExhibitors1 = new List<GetSponsorsOfExhibitor>();
             GetAllSponsorsOfExhibitor getAllSponsorsOfExhibitor = new GetAllSponsorsOfExhibitor();
+            GroupExhibitorSponsorsResponse groupExhibitorSponsorsResponse = new GroupExhibitorSponsorsResponse();
+            List<GroupExhibitorSponsors> groupExhibitorSponsorsList = new List<GroupExhibitorSponsors>();
+
             var sponsorTypes = (from gcc in _context.GlobalCodeCategories
                                 join gc in _context.GlobalCodes on gcc.GlobalCodeCategoryId equals gc.CategoryId
                                 where gcc.CategoryName == "SponsorTypes" && gc.IsDeleted == false && gc.IsActive == true
@@ -356,62 +359,162 @@ namespace AAYHS.Repository.Repository
                 classSponsorTypeId = sponsorTypes.Where(x => x.CodeName == "Class").Select(x => x.GlobalCodeId).FirstOrDefault();
             }
 
-
             getSponsorsOfExhibitors = (from sponsorExhibitor in _context.SponsorExhibitor
                                        join sponsor in _context.Sponsors on sponsorExhibitor.SponsorId equals sponsor.SponsorId
                                        join exhibitorName in _context.Exhibitors on sponsorExhibitor.ExhibitorId equals exhibitorName.ExhibitorId
-                                       join address in _context.Addresses on sponsor.AddressId equals address.AddressId into address1
-                                       from address2 in address1.DefaultIfEmpty()
-                                       join state in _context.States on address2.StateId equals state.StateId into state1
-                                       from state2 in state1.DefaultIfEmpty()
+                                       join horse in _context.Horses on sponsorExhibitor.HorseId equals horse.HorseId
+                                       //join address in _context.Addresses on sponsor.AddressId equals address.AddressId into address1
+                                       //from address2 in address1.DefaultIfEmpty()
+                                       //join state in _context.States on address2.StateId equals state.StateId into state1
+                                       //from state2 in state1.DefaultIfEmpty()
                                        where sponsorExhibitor.IsActive == true && sponsorExhibitor.IsDeleted == false &&
                                        sponsor.IsActive == true && sponsor.IsDeleted == false
                                        select new GetSponsorsOfExhibitor
                                        {
                                            SponsorExhibitorId = exhibitorName.ExhibitorId,
                                            ContactName = exhibitorName.FirstName + " " + exhibitorName.LastName,
-                                           HorseName = (from horse in _context.Horses where horse.HorseId == sponsorExhibitor.HorseId select horse.Name).FirstOrDefault(),
+                                           //HorseName = (from horse in _context.Horses where horse.HorseId == sponsorExhibitor.HorseId select horse.Name).FirstOrDefault(),
+                                           HorseName = horse.Name,
                                            Sponsor = sponsor.SponsorName,
-                                           SponsorId = sponsor.SponsorId,
-                                           Phone = sponsor.Phone,
-                                           Address = address2 != null ? address2.Address : "",
-                                           City = address2 != null ? address2.City : "",
-                                           State = state2 != null ? state2.Name : "",
-                                           Zipcode = address2 != null ? Convert.ToInt32(address2.ZipCode) : 0,
-                                           Email = sponsor.Email,
-                                           SponsorAmount = sponsorExhibitor.SponsorAmount,
-                                           Amount = sponsor != null ? Convert.ToDecimal(sponsor.AmountReceived) : 0,
-                                           AmountPaid = 0,
-                                           Balance = 0,
-                                           SponsorTypeId = sponsorExhibitor.SponsorTypeId,
-                                           HorseId = sponsorExhibitor.HorseId,
                                            SponsorTypeName = (from code in _context.GlobalCodes where code.GlobalCodeId == sponsorExhibitor.SponsorTypeId select code.CodeName).FirstOrDefault(),
                                            AdTypeName = (from fee in _context.YearlyMaintainenceFee where fee.YearlyMaintainenceFeeId == sponsorExhibitor.AdTypeId select fee.FeeName).FirstOrDefault(),
+                                           SponsorId = sponsor.SponsorId,
+                                           //Phone = sponsor.Phone,
+                                           //Address = address2 != null ? address2.Address : "",
+                                           //City = address2 != null ? address2.City : "",
+                                           //State = state2 != null ? state2.Name : "",
+                                           //Zipcode = address2 != null ? Convert.ToInt32(address2.ZipCode) : 0,
+                                           //Email = sponsor.Email,
+                                           SponsorAmount = sponsorExhibitor.SponsorAmount,
+                                           //Amount = sponsor != null ? Convert.ToDecimal(sponsor.AmountReceived) : 0,
+                                           //AmountPaid = 0,
+                                           //Balance = 0,
+                                           //SponsorTypeId = sponsorExhibitor.SponsorTypeId,
+                                           HorseId = sponsorExhibitor.HorseId,
                                            IdNumber = sponsorExhibitor.SponsorTypeId == Convert.ToInt32(classSponsorTypeId) ? Convert.ToString(_context.Classes.Where(x => x.ClassId == Convert.ToInt32(sponsorExhibitor.TypeId)).Select(x => x.ClassNumber).FirstOrDefault())
                                                : Convert.ToString(sponsorExhibitor.TypeId),
 
                                        }).ToList();
+
             if (getSponsorsOfExhibitors.Count() != 0)
             {
                 foreach (var item in getSponsorsOfExhibitors)
                 {
-                    var paidsponsorexhibitor = Convert.ToDecimal(_context.SponsorExhibitor.Where(x => x.SponsorId == item.SponsorId && x.IsDeleted == false).Select(x => x.SponsorAmount).Sum());
-                    var paidsponsornonexhibitor = Convert.ToDecimal(_context.SponsorDistributions.Where(x => x.SponsorId == item.SponsorId && x.IsDeleted == false).Select(x => x.TotalDistribute).Sum());
-                    item.AmountPaid = paidsponsorexhibitor + paidsponsornonexhibitor;
-                    item.Balance = item.Amount - item.AmountPaid;
-
-                    if (item.Balance < 0)
-                    {
-                        item.Balance = 0;
-
-                    }
+                    //var paidsponsorexhibitor = Convert.ToDecimal(_context.SponsorExhibitor.Where(x => x.SponsorId == item.SponsorId && x.IsDeleted == false).Select(x => x.SponsorAmount).Sum());
+                    //var paidsponsornonexhibitor = Convert.ToDecimal(_context.SponsorDistributions.Where(x => x.SponsorId == item.SponsorId && x.IsDeleted == false).Select(x => x.TotalDistribute).Sum());
+                    //item.AmountPaid = paidsponsorexhibitor + paidsponsornonexhibitor;
+                    //item.Balance = item.Amount - item.AmountPaid;
+                    //if (item.Balance < 0)
+                    //{
+                    //item.Balance = 0;
+                    //}
                     getSponsorsOfExhibitors1.Add(item);
                 }
-                var data = getSponsorsOfExhibitors1.GroupBy(x => x.SponsorExhibitorId).ToList();
-
-                getAllSponsorsOfExhibitor.getSponsorsOfExhibitors = getSponsorsOfExhibitors1;
 
 
+                getAllSponsorsOfExhibitor.getSponsorsOfExhibitors = (List<GetSponsorsOfExhibitor>)getSponsorsOfExhibitors1
+                                                                    .GroupBy(x => new { x.SponsorExhibitorId, x.HorseId })
+                                                                    .SelectMany(r => r).ToList();
+
+                foreach (var item in getSponsorsOfExhibitors1)
+                {
+                    if (groupExhibitorSponsorsList.Count == 0)
+                    {
+                        GroupExhibitorSponsors groupExhibitorSponsors = new GroupExhibitorSponsors();
+                        groupExhibitorSponsors.ExhibitorId = item.SponsorExhibitorId;
+                        groupExhibitorSponsors.ExhibitorName = item.ContactName;
+                        groupExhibitorSponsors.HorseName = item.HorseName;
+
+                        groupExhibitorSponsors.GroupSponsors = new List<GroupSponsors>();
+                        groupExhibitorSponsors.GroupHorseSponsor = new List<GroupHorseSponsors>();
+                        GroupSponsors groupSponsors = new GroupSponsors();
+                        groupSponsors.HorseId = item.HorseId;
+                        groupSponsors.HorseName = item.HorseName;
+                        groupSponsors.SponsorName = item.Sponsor;
+                        groupSponsors.SponsorType = item.SponsorTypeName;
+                        groupSponsors.TotalReceived = item.SponsorAmount;
+
+                        groupExhibitorSponsors.GroupSponsors.Add(groupSponsors);
+                        groupExhibitorSponsorsList.Add(groupExhibitorSponsors);
+                    }
+                    else
+                    {
+                        var ifExhibitorIdFound = groupExhibitorSponsorsList.Where(x => x.ExhibitorId == item.SponsorExhibitorId).FirstOrDefault();
+                        if (ifExhibitorIdFound != null)
+                        {
+                            GroupSponsors groupSponsors = new GroupSponsors();
+                            groupSponsors.HorseId = item.HorseId;
+                            groupSponsors.HorseName = item.HorseName;
+                            groupSponsors.SponsorName = item.Sponsor;
+                            groupSponsors.SponsorType = item.SponsorTypeName;
+                            groupSponsors.TotalReceived = item.SponsorAmount;
+
+                            ifExhibitorIdFound.GroupSponsors.Add(groupSponsors);
+                        }
+                        else
+                        {
+                            GroupExhibitorSponsors groupExhibitorSponsors = new GroupExhibitorSponsors();
+                            groupExhibitorSponsors.ExhibitorId = item.SponsorExhibitorId;
+                            groupExhibitorSponsors.ExhibitorName = item.ContactName;
+                            groupExhibitorSponsors.HorseName = item.HorseName;
+
+                            groupExhibitorSponsors.GroupSponsors = new List<GroupSponsors>();
+                            groupExhibitorSponsors.GroupHorseSponsor = new List<GroupHorseSponsors>();
+                            GroupSponsors groupSponsors = new GroupSponsors();
+                            groupSponsors.HorseId = item.HorseId;
+                            groupSponsors.HorseName = item.HorseName;
+                            groupSponsors.SponsorName = item.Sponsor;
+                            groupSponsors.SponsorType = item.SponsorTypeName;
+                            groupSponsors.TotalReceived = item.SponsorAmount;
+
+                            groupExhibitorSponsors.GroupSponsors.Add(groupSponsors);
+                            groupExhibitorSponsorsList.Add(groupExhibitorSponsors);
+                        }
+                    }
+                }
+
+                foreach (var item in groupExhibitorSponsorsList)
+                {
+                    if (item.GroupSponsors.Count() >= 1)
+                    {
+                        foreach (var groupSponsorsItem in item.GroupSponsors)
+                        {
+                            if (item.GroupHorseSponsor.Count == 0)
+                            {
+                                GroupHorseSponsors groupHorseSponsors1 = new GroupHorseSponsors();
+                                groupHorseSponsors1.HorseId = groupSponsorsItem.HorseId;
+                                groupHorseSponsors1.HorseName = groupSponsorsItem.HorseName;
+
+                                groupHorseSponsors1.groupSponsorsList = new List<GroupSponsors>();
+                                groupHorseSponsors1.groupSponsorsList.Add(groupSponsorsItem);
+
+                                item.GroupHorseSponsor.Add(groupHorseSponsors1);
+                            }
+                            else
+                            {
+                                var checkIfHorseIdContains = item.GroupHorseSponsor.Where(x => x.HorseId == groupSponsorsItem.HorseId).FirstOrDefault();
+                                if (checkIfHorseIdContains != null)
+                                {
+                                    checkIfHorseIdContains.groupSponsorsList.Add(groupSponsorsItem);
+                                }
+                                else
+                                {
+                                    GroupHorseSponsors groupHorseSponsors1 = new GroupHorseSponsors();
+                                    groupHorseSponsors1.HorseId = groupSponsorsItem.HorseId;
+                                    groupHorseSponsors1.HorseName = groupSponsorsItem.HorseName;
+
+                                    groupHorseSponsors1.groupSponsorsList = new List<GroupSponsors>();
+                                    groupHorseSponsors1.groupSponsorsList.Add(groupSponsorsItem);
+
+                                    item.GroupHorseSponsor.Add(groupHorseSponsors1);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                getAllSponsorsOfExhibitor.getGroupExhibitorSponsorsList = groupExhibitorSponsorsList;
+                //getAllSponsorsOfExhibitor.getSponsorsOfExhibitors = getSponsorsOfExhibitors1;
                 getAllSponsorsOfExhibitor.TotalRecords = getSponsorsOfExhibitors.Count();
             }
             return getAllSponsorsOfExhibitor;

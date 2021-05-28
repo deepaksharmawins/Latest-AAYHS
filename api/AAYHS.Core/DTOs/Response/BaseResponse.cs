@@ -34,6 +34,7 @@ namespace AAYHS.Core.DTOs.Response
         public ClassSponsorListResponse ClassSponsorListResponse { get; set; }
 
         public ExhibitorResponse ExhibitorResponse { get; set; }
+        public GroupExhibitorSponsors GroupExhibitorSponsors { get; set; }
         public ExhibitorListResponse ExhibitorListResponse { get; set; }
         public SponsorExhibitorListResponse SponsorExhibitorListResponse { get; set; }
         

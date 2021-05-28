@@ -26,7 +26,7 @@ namespace AAYHS.Core.DTOs.Response
         public string Address { get; set; }
         public string City { get; set; }
         public List<ExhibitorStallAssignmentResponse> exhibitorStallAssignmentResponses { get; set; }
-
+        public List<GroupExhibitorSponsors> getGroupExhibitorSponsorsList1 { get; set; }
     }
     public class FilterExhibitorResponse
     {
@@ -152,6 +152,7 @@ namespace AAYHS.Core.DTOs.Response
     public class GetAllSponsorsOfExhibitor
     {
         public List<GetSponsorsOfExhibitor> getSponsorsOfExhibitors { get; set; }
+        public List<GroupExhibitorSponsors> getGroupExhibitorSponsorsList { get; set; }
         public int TotalRecords { get; set; }
     }
     public class GetSponsorForExhibitor
@@ -266,5 +267,42 @@ namespace AAYHS.Core.DTOs.Response
     {
         public int YearlyMaintainenceFeeId { get; set; }
         public string FeeName { get; set; }
+    }
+
+    public class GroupExhibitorSponsors
+    {
+        public int ExhibitorId { get; set; }
+        public string ExhibitorName { get; set; }
+        public string HorseName { get; set; }
+        public List<GroupSponsors> GroupSponsors { get; set; }
+        public List<GroupHorseSponsors> GroupHorseSponsor { get; set; }
+        public int TotalRecords { get; set; }
+    }
+
+    public class GroupSponsors
+    {
+        public int HorseId { get; set; }
+        public string HorseName { get; set; }
+        public string SponsorName { get; set; }
+        public string SponsorType{ get; set; }
+        public decimal TotalReceived { get; set; }
+    }
+
+    public class GroupExhibitorSponsorsResponse
+    {
+        public List<GroupExhibitorSponsors> groupExhibitorSponsors { get; set; }
+        public int TotalRecords { get; set; }
+    }
+
+    public class GroupHorseSponsors
+    {
+        public GroupHorseSponsors()
+        {
+            groupSponsorsList = new List<GroupSponsors>();
+        }
+        public int HorseId { get; set; }
+        public string HorseName { get; set; }
+        public List<GroupSponsors> groupSponsorsList { get; set; }
+
     }
 }
