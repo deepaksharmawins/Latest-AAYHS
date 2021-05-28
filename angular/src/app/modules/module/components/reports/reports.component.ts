@@ -105,6 +105,10 @@ export class ReportsComponent implements OnInit {
   exhibitorsList: any;
   exhibitorsSponsors: any;
 
+  AssignedStallsData: any[]=[];
+  AllStallsData: any[]=[];
+  UnAssignedStallData: any[]=[];
+
   constructor(private reportService: ReportService, private dialog: MatDialog,
     private classService: ClassService,
     private snackBar: MatSnackbarComponent,
@@ -117,8 +121,8 @@ export class ReportsComponent implements OnInit {
     this.getAllClasses();
     this.getAllSponsors();
     this.getAllAssignedStalls();
-    this.getFilterExhibitors();
-    this.getAllSponsorsOfExhibitors();
+    //this.getFilterExhibitors();
+    //this.getAllSponsorsOfExhibitors();
   }
 
 
@@ -176,7 +180,6 @@ export class ReportsComponent implements OnInit {
         this.loading = false;
       }, error => {
         this.loading = false;
-
       }
       )
       resolve();
@@ -274,6 +277,7 @@ export class ReportsComponent implements OnInit {
       else if (this.reportName == "summary") {
         this.getYearShowSummary()
       }
+
       else if (this.reportName == "exhibitoradssponsor") {
         this.GetExhibiorAdsSponsorReport()
       }
@@ -295,10 +299,10 @@ export class ReportsComponent implements OnInit {
         }
       }
 
-
       else if (this.reportName == "nonexhibitorsummarysponsordistribution") {
         this.GetNonExhibiorSummarySponsorDistributionsReport()
       }
+
       else if (this.reportName == "Stall") {
         if (this.TypeOfStallReport == "getallStallList") {
         this.getallStallList();
@@ -309,6 +313,10 @@ export class ReportsComponent implements OnInit {
         else if (this.TypeOfStallReport == "getAssignedStallList") {
         this.getAssignedStallList();
         }
+      }
+
+      else if (this.reportName == "MasterExhibitor"){
+        this.getFilterExhibitors();
       }
     }
   }
@@ -330,9 +338,6 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-
-
-
   GetExhibiorAdsSponsorReport() {
     return new Promise((resolve, reject) => {
       this.loading = true;
@@ -349,7 +354,6 @@ export class ReportsComponent implements OnInit {
       resolve();
     });
   }
-
 
   getProgramSheet(id) {
     return new Promise((resolve, reject) => {
@@ -480,11 +484,6 @@ export class ReportsComponent implements OnInit {
 
   }
 
-
-
-
-
-
   downloadProgramSheet(): void {
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(10);
@@ -577,8 +576,6 @@ export class ReportsComponent implements OnInit {
     this.setPrintReportOptions("ProgramSheet", this.reportType, doc);
 
   }
-
-
 
   getPaddockSheet(id) {
     return new Promise((resolve, reject) => {
@@ -720,6 +717,16 @@ export class ReportsComponent implements OnInit {
     else if (type == "getAssignedStallList") {
       this.TypeOfStallReport = type;
     }
+    else if (type == "orderByBirthYear") {
+      this.filterBaseRequest.OrderBy = type;
+    }
+    else if (type == "orderByLastName") {
+      this.filterBaseRequest.OrderBy = type;
+    }
+    else if (type == "Id") {
+      this.filterBaseRequest.OrderBy = type;
+    }
+    
   }
 
   selectReport(i, report) {
@@ -940,7 +947,6 @@ export class ReportsComponent implements OnInit {
     this.setPrintReportOptions("ClassResults", this.reportType, doc);
 
   }
-
 
   downloadNSBAClassResultsReport() {
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
@@ -1462,7 +1468,6 @@ export class ReportsComponent implements OnInit {
 
   }
 
-
   getAssignedStallList(){
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(8);
@@ -1792,7 +1797,6 @@ export class ReportsComponent implements OnInit {
     }
   }
 
-
   getExhibtorSponsorsDistributionList(id) {
     return new Promise((resolve, reject) => {
       this.loading = true;
@@ -1877,6 +1881,7 @@ export class ReportsComponent implements OnInit {
     this.setPrintReportOptions("ExhibtorSponsorsDistribution", this.reportType, doc);
 
   }
+
   downloadSingleExhibtorSponsorsDistributionListReport() {
 
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
@@ -1917,6 +1922,7 @@ export class ReportsComponent implements OnInit {
     }
 
   }
+
   downloadExhibtorSponsoredAdsReport() {
 
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
@@ -1989,6 +1995,7 @@ export class ReportsComponent implements OnInit {
       resolve();
     });
   }
+
   getFilteredNonExhibitorSponsor(value) {
     this.nonExhibitorSponsorDistributorId = Number(value)
 
@@ -2098,7 +2105,6 @@ export class ReportsComponent implements OnInit {
 
   }
 
-
   openStallDiagram(buttontype: string) {
     let config = new MatDialogConfig();
     config = {
@@ -2184,10 +2190,6 @@ export class ReportsComponent implements OnInit {
     }
   }
 
-
-  AssignedStallsData: any[]=[];
-  AllStallsData: any[]=[];
-  UnAssignedStallData: any[]=[];
   getAllAssignedStalls() {
     this.stallService.getAllAssignedStalls().subscribe((data: any) => {
       if (data) {
@@ -2207,7 +2209,6 @@ export class ReportsComponent implements OnInit {
     })
   }
 
-  
   allStalls() {
     for (let index = 1; index <= 1012; index++) {
       debugger
@@ -2250,20 +2251,60 @@ export class ReportsComponent implements OnInit {
     //console.log("AllStallsData", this.AllStallsData);
   }
 
-
   getFilterExhibitors() {
     return new Promise<void>((resolve, reject) => {
       this.loading = true;
       this.exhibitorService.getFilterExhibitors(this.filterBaseRequest).subscribe(response => {
+       if (response.Data.exhibitorResponses != null) {
         this.exhibitorsList = response.Data.exhibitorResponses;
         this.loading = false;
-        //console.log("this.exhibitorsList", this.exhibitorsList);
+        console.log("this.exhibitorsList", this.exhibitorsList);
+        this.pdfFilterExhibitors();
+       }
       }, error => {
         this.loading = false;
       }
       )
       resolve();
     });
+  }
+
+  pdfFilterExhibitors(){
+    let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
+    doc.setFontSize(8);
+    let y = 8;
+    doc.text('Print Date :', 160, 8)
+    doc.text(String(moment(new Date()).format('MM-DD-yyyy')), 180, 8)
+    doc.line(0, 10, 300, 10);
+
+    //var text = String('&nbsp<b>Stall and Occupants</b>');
+    // var text = String('&nbsp<b>Unassigned Stalls</b>');
+     var textWidth = doc.getStringUnitWidth("") * doc.internal.getFontSize() / doc.internal.scaleFactor;
+     var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+    // doc.fromHTML(text, textOffset, 10);
+
+    let pageHeight = doc.internal.pageSize.height;
+    //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>Master Exhibitor List - High-Level Report (#113)</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>________________________________________________</b>'), textOffset, 15)
+
+    doc.autoTable({
+      body: this.exhibitorsList,
+      columns:
+        [
+          { header: 'Exhibitor ID', dataKey: 'ExhibitorId' },
+          { header: 'Exhibitor Name', dataKey: 'FirstName' },
+          { header: 'Exhibitor Address', dataKey: 'Address' },
+          { header: 'Exhibitor Email Address', dataKey: 'PrimaryEmail' },
+          { header: 'Phone Number', dataKey: 'Phone' },
+          { header: 'Birth Year', dataKey: 'BirthYear' },
+          { header: 'Group Name', dataKey: 'GroupName' },
+        ],
+      margin: { vertical: 35, horizontal: 10 },
+      startY: 30
+    })
+
+    this.setPrintReportOptions("exhibitorsListReport", this.reportType, doc);
   }
 
   getAllSponsorsOfExhibitors() {
@@ -2319,5 +2360,4 @@ export class ReportsComponent implements OnInit {
 
     this.setPrintReportOptions("allstallsreport", "display", doc);
   }
-
 }

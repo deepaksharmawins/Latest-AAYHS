@@ -31,18 +31,74 @@
               
                     <tbody>
 
-
                         <tr *ngIf="Exhibitors">
-                            <td (click)="selectReport(17,'AllSponsor')" [ngClass]="{'blueRow': selectedRowIndex == 17}">
-                                <div class="mmReportList">Exhibitor Sponsor Incentive Report (#115)
+                            <td (click)="selectReport(18,'MasterExhibitor')" [ngClass]="{'blueRow': selectedRowIndex == 18}">
+                                <div class="mmReportList">Master Exhibitor List - High-Level Report (#113)
                                     <span id="downarrow33" style="display: block;"  (click)="showpopupbox('showpopupbox33','downarrow33','uparrow33')">
                                         <i class="fa fa-caret-down" aria-hidden="true"></i>
                                     </span>
                                     <span id="uparrow33" style="display: none;" (click)="hidepopupbox('showpopupbox33','uparrow33','downarrow33')">
                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
                                     </span>
-    
                                     <div class="mmHoverContent" id="showpopupbox33">
+                                        <div class="prePostField mb-4 multiCheckBtn">
+                                           <div class="row">
+                                            <div class="form-group col-md-4">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="all"
+                                                        (change)="checkChange($event.target.value,'orderByBirthYear')" name="mmr">
+                                                    <span class="checkmark"></span>By Birth Year
+                                                </label>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="one" name="mmr"
+                                                        (change)="checkChange($event.target.value,'orderByLastName')">
+                                                    <span class="checkmark"></span>By Last Name
+                                                </label>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="Id" name="mmr"
+                                                        (change)="checkChange($event.target.value,'Id')">
+                                                    <span class="checkmark"></span>By Id
+                                                </label>
+                                            </div>
+                                           </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <button type="button"
+                                (click)="setreportType('display','MasterExhibitor')" class="icon"><span></span>
+                                <i class="fa fa-eye" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('email','MasterExhibitor')" class="icon"><span></span>
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('print','MasterExhibitor')" class="icon"><span></span>
+                                <i class="fa fa-print" aria-hidden="true"></i></button>
+
+                                <button type="button"
+                                (click)="setreportType('download','MasterExhibitor')" class="icon"><span></span> 
+                                <i class="fa fa-download" aria-hidden="true"></i></button>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="Exhibitors">
+                            <td (click)="selectReport(17,'AllSponsor')" [ngClass]="{'blueRow': selectedRowIndex == 17}">
+                                <div class="mmReportList">Exhibitor Sponsor Incentive Report (#115)
+                                    <!-- <span id="downarrow33" style="display: block;"  (click)="showpopupbox('showpopupbox33','downarrow33','uparrow33')">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </span>
+                                    <span id="uparrow33" style="display: none;" (click)="hidepopupbox('showpopupbox33','uparrow33','downarrow33')">
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </span> -->
+                                    <!-- <div class="mmHoverContent" id="showpopupbox33">
                                         <div class="prePostField mb-4 multiCheckBtn">
                                            <div class="row">
                                             <div class="form-group col-md-6">
@@ -61,27 +117,11 @@
                                             </div>
                                            </div>
                                         </div>
-
-                                    </div>
+                                    </div> -->
                                 </div>
                             </td>
 
                             <td>
-                                <!-- <button type="button"
-                                (click)="setreportType('display','result')" class="icon"><span></span>getUnassignStallList
-                                <i class="fa fa-eye" aria-hidden="true"></i></button> -->
-                                <!-- <button type="button"
-                                (click)="getAssignedStallList()" class="icon"><span></span>
-                                <i class="fa fa-eye" aria-hidden="true">Assign</i></button>
-
-                                <button type="button"
-                                (click)="getallStallList()" class="icon"><span></span>
-                                <i class="fa fa-eye" aria-hidden="true">All Stall</i></button>
-
-                                <button type="button"
-                                (click)="getUnassignStallList()" class="icon"><span></span>
-                                <i class="fa fa-eye" aria-hidden="true">UnAssign Stall</i></button> -->
-
                                 <button type="button"
                                 (click)="setreportType('display','Stall')" class="icon"><span></span>
                                 <i class="fa fa-eye" aria-hidden="true"></i></button>
@@ -98,9 +138,7 @@
                                 (click)="setreportType('download','Stall')" class="icon"><span></span> 
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
-
                         </tr>
-
 
                         <tr *ngIf="Exhibitors">
                             <td (click)="selectReport(16,'Stall')" [ngClass]="{'blueRow': selectedRowIndex == 16}">
@@ -178,8 +216,7 @@
 
                         </tr>
 
-
-                        <tr *ngIf="Exhibitors">
+                        <!-- <tr *ngIf="Exhibitors">
                             <td (click)="selectReport(15,'Stall')" [ngClass]="{'blueRow': selectedRowIndex == 15}">
                                 <div class="mmReportList">Stall Assignments List (#114)
                                     <span id="downarrow99" style="display: block;"  (click)="showpopupbox('showpopupbox99','downarrow99','uparrow99')">
@@ -221,21 +258,6 @@
                             </td>
 
                             <td>
-                                <!-- <button type="button"
-                                (click)="setreportType('display','result')" class="icon"><span></span>getUnassignStallList
-                                <i class="fa fa-eye" aria-hidden="true"></i></button> -->
-                                <!-- <button type="button"
-                                (click)="getAssignedStallList()" class="icon"><span></span>
-                                <i class="fa fa-eye" aria-hidden="true">Assign</i></button>
-
-                                <button type="button"
-                                (click)="getallStallList()" class="icon"><span></span>
-                                <i class="fa fa-eye" aria-hidden="true">All Stall</i></button>
-
-                                <button type="button"
-                                (click)="getUnassignStallList()" class="icon"><span></span>
-                                <i class="fa fa-eye" aria-hidden="true">UnAssign Stall</i></button> -->
-
                                 <button type="button"
                                 (click)="setreportType('display','Stall')" class="icon"><span></span>
                                 <i class="fa fa-eye" aria-hidden="true"></i></button>
@@ -253,10 +275,7 @@
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
 
-                        </tr>
-
-
-
+                        </tr> -->
 
                         <tr *ngIf="Classes">
                             <td (click)="selectReport(0,'result')" [ngClass]="{'blueRow': selectedRowIndex == 0}">
@@ -709,7 +728,6 @@
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr> -->
-
 
                         <!-- <tr>
                             <td (click)="selectReport(11,'nonexhibitorsummarysponsordistribution')" [ngClass]="{'blueRow': selectedRowIndex == 11}">
