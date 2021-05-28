@@ -120,9 +120,9 @@ export class ReportsComponent implements OnInit {
   ngOnInit(): void {
     this.getAllClasses();
     this.getAllSponsors();
-    this.getAllAssignedStalls();
+    //this.getAllAssignedStalls();
     //this.getFilterExhibitors();
-    //this.getAllSponsorsOfExhibitors();
+    this.getAllSponsorsOfExhibitors();
   }
 
 
@@ -726,7 +726,7 @@ export class ReportsComponent implements OnInit {
     else if (type == "Id") {
       this.filterBaseRequest.OrderBy = type;
     }
-    
+
   }
 
   selectReport(i, report) {
@@ -2202,7 +2202,7 @@ export class ReportsComponent implements OnInit {
           // stall.Type = element.BookedByType
           this.AssignedStallsData.push(element);
         });
-       
+
         //console.log("getAllAssignedStalls", this.AssignedStallsData)
         this.allStalls();
       }
@@ -2311,7 +2311,8 @@ export class ReportsComponent implements OnInit {
     return new Promise<void>((resolve, reject) => {
       this.loading = true;
       this.exhibitorService.getAllSponsorsOfExhibitors().subscribe(response => {
-        this.exhibitorsSponsors = response.Data.getSponsorsOfExhibitors;
+        debugger
+        this.exhibitorsSponsors = response.Data.getGroupExhibitorSponsorsList;
         this.loading = false;
         console.log("this.exhibitorSponsors", this.exhibitorsSponsors)
         this.SponsorsOfExhibitors();
@@ -2323,8 +2324,9 @@ export class ReportsComponent implements OnInit {
       resolve();
     })
   }
-  
+
   SponsorsOfExhibitors(){
+    debugger
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(8);
     let y = 8;
@@ -2343,20 +2345,46 @@ export class ReportsComponent implements OnInit {
     doc.fromHTML(String('<b>Exhibitor Sponsor Incentive Ads (#114)</b>'), textOffset, 15)
     doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
 
-    doc.autoTable({
-      body: this.exhibitorsSponsors,
-      columns:
-        [
-          { header: 'Exhibitor ID', dataKey: 'SponsorExhibitorId' },
-          { header: 'Exhibitor Name', dataKey: 'ContactName' },
-          { header: 'Horse Name', dataKey: 'HorseName' },
-          { header: 'Sponsor Name', dataKey: 'Sponsor' },
-          { header: 'Total Received', dataKey: 'SponsorAmount' },
-          { header: 'Sponsor Type', dataKey: 'SponsorTypeName' },
-        ],
-      margin: { vertical: 35, horizontal: 10 },
-      startY: 30
-    })
+    this.exhibitorsSponsors.forEach(element => {
+      let id = element.ExhibitorId.toString()
+      doc.text(id, 10, 40)
+      doc.text(element.ExhibitorName, 30, 40)
+      element.GroupHorseSponsor.forEach(x => {
+        doc.text(x.HorseName, 90, 40)
+        doc.autoTable({
+          head: [['SponsorName', 'SponsorType', 'TotalReceived']],
+          body: x.groupSponsorsList,
+          columns:
+            [
+              { header: 'SponsorName', dataKey: 'SponsorName' },
+              { header: 'SponsorType', dataKey: 'SponsorType' },
+              { header: 'TotalReceived', dataKey: 'TotalReceived' }
+            ],
+          margin: { vertical: 35, horizontal: 10 },
+          startY: 30
+        })
+      });
+      doc.addPage()
+    });
+
+
+    // this.exhibitorsSponsors.forEach(element => {
+    //   let exhibitorId = element.ExhibitorId.toString()
+
+    //   let exhibitorName = element.ExhibitorName.toString()
+
+    //   let groupHorseSponsor = element.GroupHorseSponsor
+    //   groupHorseSponsor.forEach(element1 => {
+    //   doc.text(exhibitorId, 10, 40)
+    //   doc.text(exhibitorName, 30, 40)
+
+    //   let horseName = element1.HorseName.toString()
+    //   doc.text(horseName, 90, 40)
+    //   doc.
+    //   });
+
+    //   doc.addPage()
+    // });
 
     this.setPrintReportOptions("allstallsreport", "display", doc);
   }
