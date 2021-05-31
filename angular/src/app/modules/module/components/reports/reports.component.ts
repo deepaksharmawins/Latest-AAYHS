@@ -2328,7 +2328,7 @@ export class ReportsComponent implements OnInit {
   SponsorsOfExhibitors(){
     debugger
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
-    doc.setFontSize(8);
+    doc.setFontSize(11);
     let y = 8;
     doc.text('Print Date :', 160, 8)
     doc.text(String(moment(new Date()).format('MM-DD-yyyy')), 180, 8)
@@ -2337,57 +2337,40 @@ export class ReportsComponent implements OnInit {
     //var text = String('&nbsp<b>Stall and Occupants</b>');
     // var text = String('&nbsp<b>Unassigned Stalls</b>');
      var textWidth = doc.getStringUnitWidth("") * doc.internal.getFontSize() / doc.internal.scaleFactor;
-     var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+     var textOffset = (doc.internal.pageSize.width - textWidth) / 3;
     // doc.fromHTML(text, textOffset, 10);
 
     let pageHeight = doc.internal.pageSize.height;
     //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
     doc.fromHTML(String('<b>Exhibitor Sponsor Incentive Ads (#114)</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>______________________________________</b>'), textOffset, 15)
 
     this.exhibitorsSponsors.forEach(element => {
       let id = element.ExhibitorId.toString()
-      doc.text(id, 10, 40)
-      //doc.text(element.ExhibitorName, 160, 8)
-      element.GroupHorseSponsor.forEach(x => {
-        doc.text(x.HorseName,160, 8)
-        doc.text(element.ExhibitorName, 160, 8)
+     let element1 =element;
+     element1.GroupHorseSponsor.forEach(x => {
+      let x1 =x;
+      doc.autoTable({
+        head: [[id, element1.ExhibitorName, x1.HorseName]],
+        margin: { vertical: 55, horizontal: 10 },
+        startY: 40
+      })
 
-        doc.autoTable({
-          head: [['SponsorName', 'SponsorType', 'TotalReceived']],
-          body: x.groupSponsorsList,
-          columns:
-            [
-              { header: 'SponsorName', dataKey: 'SponsorName' },
-              { header: 'SponsorType', dataKey: 'SponsorType' },
-              { header: 'TotalReceived', dataKey: 'TotalReceived' }
-            ],
-          margin: { vertical: 55, horizontal: 10 },
-          startY: 60
-        })
-      });
+      doc.autoTable({
+        head: [['SponsorName', 'SponsorType', 'TotalReceived']],
+        body: x1.groupSponsorsList,
+        columns:
+          [
+            { header: 'SponsorName', dataKey: 'SponsorName' },
+            { header: 'SponsorType', dataKey: 'SponsorType' },
+            { header: 'TotalReceived', dataKey: 'TotalReceived' }
+          ],
+        margin: { vertical: 55, horizontal: 10 },
+        startY: 50
+      })
       doc.addPage()
     });
-
-
-    // this.exhibitorsSponsors.forEach(element => {
-    //   let exhibitorId = element.ExhibitorId.toString()
-
-    //   let exhibitorName = element.ExhibitorName.toString()
-
-    //   let groupHorseSponsor = element.GroupHorseSponsor
-    //   groupHorseSponsor.forEach(element1 => {
-    //   doc.text(exhibitorId, 10, 40)
-    //   doc.text(exhibitorName, 30, 40)
-
-    //   let horseName = element1.HorseName.toString()
-    //   doc.text(horseName, 90, 40)
-    //   doc.
-    //   });
-
-    //   doc.addPage()
-    // });
-
+    });
     this.setPrintReportOptions("allstallsreport", "display", doc);
   }
 }
