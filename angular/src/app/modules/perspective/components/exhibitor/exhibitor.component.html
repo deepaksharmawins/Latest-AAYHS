@@ -303,14 +303,36 @@
                                                     <option [ngValue]="null" disabled="true">
                                                         Select Group
                                                     </option>
-                                                   
+
                                                     <option *ngFor="let group of groups" [value]="group.GroupId">
                                                         {{group.GroupName}}
                                                     </option>
                                                 </select>
 
                                             </div>
+                                            <div class="form-group">
+                                              <label>Assign stall </label>
+                                            <mat-form-field class="example-full-width">
+                                              <input type="text"
+                                                     placeholder="Pick one"
+                                                     aria-label="Number"
+                                                     matInput
+                                                     [formControl]="myControl"
+                                                     [matAutocomplete]="auto">
+                                              <mat-autocomplete #auto="matAutocomplete">
+                                                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                                                  {{option}}
+                                                </mat-option>
+                                              </mat-autocomplete>
+                                            </mat-form-field>
+                                            </div>
+                                            <div class="form-group">
+                                              <input type="radio" id="male" name="gender" value="male">
+                                              <label for="male">Horse</label><br>
+                                              <input type="radio" id="female" name="gender" value="female">
+                                              <label for="female">tack</label><br>
 
+                                            </div>
                                             <div class="quantityWrapper mt-3">
                                                 <div class="form-group">
                                                     <label>Horse Stall Quantity</label>
