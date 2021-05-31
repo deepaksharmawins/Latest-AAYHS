@@ -300,6 +300,8 @@ namespace AAYHS.Core.DTOs.Response
         {
             groupSponsorsList = new List<GroupSponsors>();
         }
+        public int ExhibitorId { get; set; }
+        public string ExhibitorName { get; set; }
         public int HorseId { get; set; }
         public string HorseName { get; set; }
         public List<GroupSponsors> groupSponsorsList { get; set; }

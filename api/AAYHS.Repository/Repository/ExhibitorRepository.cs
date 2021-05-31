@@ -484,6 +484,10 @@ namespace AAYHS.Repository.Repository
                                 GroupHorseSponsors groupHorseSponsors1 = new GroupHorseSponsors();
                                 groupHorseSponsors1.HorseId = groupSponsorsItem.HorseId;
                                 groupHorseSponsors1.HorseName = groupSponsorsItem.HorseName;
+                                groupHorseSponsors1.ExhibitorId = item.ExhibitorId;
+                                groupHorseSponsors1.ExhibitorName = item.ExhibitorName;
+
+
 
                                 groupHorseSponsors1.groupSponsorsList = new List<GroupSponsors>();
                                 groupHorseSponsors1.groupSponsorsList.Add(groupSponsorsItem);
@@ -495,6 +499,8 @@ namespace AAYHS.Repository.Repository
                                 var checkIfHorseIdContains = item.GroupHorseSponsor.Where(x => x.HorseId == groupSponsorsItem.HorseId).FirstOrDefault();
                                 if (checkIfHorseIdContains != null)
                                 {
+                                    checkIfHorseIdContains.ExhibitorId = item.ExhibitorId;
+                                    checkIfHorseIdContains.ExhibitorName = item.ExhibitorName;
                                     checkIfHorseIdContains.groupSponsorsList.Add(groupSponsorsItem);
                                 }
                                 else
@@ -502,6 +508,8 @@ namespace AAYHS.Repository.Repository
                                     GroupHorseSponsors groupHorseSponsors1 = new GroupHorseSponsors();
                                     groupHorseSponsors1.HorseId = groupSponsorsItem.HorseId;
                                     groupHorseSponsors1.HorseName = groupSponsorsItem.HorseName;
+                                    groupHorseSponsors1.ExhibitorId = item.ExhibitorId;
+                                    groupHorseSponsors1.ExhibitorName = item.ExhibitorName;
 
                                     groupHorseSponsors1.groupSponsorsList = new List<GroupSponsors>();
                                     groupHorseSponsors1.groupSponsorsList.Add(groupSponsorsItem);
