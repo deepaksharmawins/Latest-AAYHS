@@ -2348,9 +2348,11 @@ export class ReportsComponent implements OnInit {
     this.exhibitorsSponsors.forEach(element => {
       let id = element.ExhibitorId.toString()
       doc.text(id, 10, 40)
-      doc.text(element.ExhibitorName, 30, 40)
+      //doc.text(element.ExhibitorName, 160, 8)
       element.GroupHorseSponsor.forEach(x => {
-        doc.text(x.HorseName, 90, 40)
+        doc.text(x.HorseName,160, 8)
+        doc.text(element.ExhibitorName, 160, 8)
+
         doc.autoTable({
           head: [['SponsorName', 'SponsorType', 'TotalReceived']],
           body: x.groupSponsorsList,
@@ -2360,8 +2362,8 @@ export class ReportsComponent implements OnInit {
               { header: 'SponsorType', dataKey: 'SponsorType' },
               { header: 'TotalReceived', dataKey: 'TotalReceived' }
             ],
-          margin: { vertical: 35, horizontal: 10 },
-          startY: 30
+          margin: { vertical: 55, horizontal: 10 },
+          startY: 60
         })
       });
       doc.addPage()
