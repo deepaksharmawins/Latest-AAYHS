@@ -32,7 +32,7 @@ export class ExhibitorStallComponent implements OnInit {
     public dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
-
+debugger
     if (this.data != null && this.data != undefined) {
 
       this.exhibitorAssignedStalls = this.data.exhibitorStallAssignment != null

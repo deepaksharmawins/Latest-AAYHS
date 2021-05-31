@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-
 import { FormControl } from "@angular/forms";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
@@ -32,6 +31,7 @@ import 'jspdf-autotable';
 import { UserOptions } from 'jspdf-autotable';
 import * as jsPDF from 'jspdf';
 import { DatePipe } from '@angular/common';
+import { StallService } from 'src/app/core/services/stall.service';
 
 interface jsPDFWithPlugin extends jsPDF {
   autoTable: (options: UserOptions) => jsPDF;
@@ -214,7 +214,8 @@ export class ExhibitorComponent implements OnInit {
     private data: GlobalService,
     private sponsorService: SponsorService,
     private reportService: ReportService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private stallService:StallService
   ) { }
 
   ngOnInit(): void {
@@ -230,6 +231,7 @@ export class ExhibitorComponent implements OnInit {
     //this.getAllAdTypes();
     this.getDocumentTypes();
     this.getAllSponsorAdTypes();
+    this.filter();
 
   }
 
@@ -1065,14 +1067,14 @@ debugger
   setSponsorType(id) {
     this.sponsortypeId = Number(id);
     this.typeList = [];
-    this.typeId = null; 
+    this.typeId = null;
     this.addnumber = null;
     this.adTypeId=null;
     if (this.sponsorTypes != null && this.sponsorTypes != undefined && this.sponsortypeId != null && this.sponsortypeId > 0) {
 
       var sponsorTypename = this.sponsorTypes.filter((x) => { return x.GlobalCodeId == this.sponsortypeId; });
       this.sponsortypeName=sponsorTypename[0].CodeName;
-      
+
       if (sponsorTypename[0].CodeName == "Class") {
         this.showClasses = true;
         this.showAds = false;
@@ -1385,6 +1387,7 @@ debugger
     );
     dialogRef.afterClosed().subscribe(dialogResult => {
 
+debugger
       const result: any = dialogResult;
       if (result && result.submitted == true) {
         this.exhibitorStallAssignmentResponses = [];
@@ -1742,7 +1745,7 @@ debugger
     var stateandzip = this.ExhibitorRegistrationReportResponse.getAAYHSContactInfo.StateZipcode != null
       && this.ExhibitorRegistrationReportResponse.getAAYHSContactInfo.StateZipcode != undefined
       ? this.ExhibitorRegistrationReportResponse.getAAYHSContactInfo.StateZipcode : ""
-    
+
       doc.text(cityname+", "+ stateandzip, 120, y + 5)
 
 
@@ -2023,7 +2026,7 @@ debugger
       , 180, finalY);
 
 
-      
+
 
 
     if (this.reportType == "display") {
@@ -2919,6 +2922,101 @@ debugger
 
       )
     }
+  }
+
+  myControl = new FormControl();
+  options: any[] = [];
+  filteredOptions: Observable<any[]>;
+  Stalls(){
+
+    for (let index = 1; index < 1012; index++) {
+      this.options.push(index.toString())
+    }
+
+    console.log("not",this.options)
+
+    debugger
+  }
+  filter(){
+    this.getAllAssignedStalls()
+    this.Stalls()
+    this.filteredOptions = this.myControl.valueChanges
+    .pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
+  }
+  private _filter(value: any): any[] {
+    const filterValue = value;
+    return this.options.filter(option => option.includes(filterValue));
+  }
+  AssignedStallsData: any[]=[];
+  AllStallsData: any[]=[];
+  UnAssignedStallData: any[]=[];
+  getAllAssignedStalls() {
+    this.stallService.getAllAssignedStalls().subscribe((data: any) => {
+      if (data) {
+        debugger
+
+        data.Data.stallResponses.forEach(element => {
+          // let stall = new StallModel();
+          // stall.Occupant = element.BookedByName
+          // stall.StallNo = element.StallId
+          // stall.Type = element.BookedByType
+          this.AssignedStallsData.push(element);
+          console.log(this.AssignedStallsData)
+        });
+
+        //console.log("getAllAssignedStalls", this.AssignedStallsData)
+        this.allStalls();
+      }
+    })
+  }
+
+  allStalls() {
+    for (let index = 1; index <= 1012; index++) {
+      debugger
+
+      let checkIfFound:any[]
+        checkIfFound   = this.AssignedStallsData.filter(x => x.StallId == index);
+      debugger
+      if (checkIfFound.length>0) {
+        // let stall = new StallModel();
+        // stall.Occupant = checkIfFound.Occupant;
+        // stall.StallNo = checkIfFound.StallNo;
+        // stall.Type = checkIfFound.Type;
+        let foundObj = {BookedByName: checkIfFound[0].BookedByName,
+        BookedByType: checkIfFound[0].BookedByType,
+        ExhibitorId: checkIfFound[0].ExhibitorId,
+        GroupId: checkIfFound[0].GroupId,
+        StallAssignmentId: checkIfFound[0].StallAssignmentId,
+        StallAssignmentTypeId: checkIfFound[0].StallAssignmentTypeId,
+        StallId: checkIfFound[0].StallId}
+
+        this.AllStallsData.push(foundObj)
+      }
+      else {
+        // let stall = new StallModel();
+        // stall.Occupant = "";
+        // stall.StallNo = index + 1;
+        // stall.Type = "";
+
+        let notFountobj = {BookedByName: "",
+        BookedByType: "",
+        ExhibitorId: 0,
+        GroupId: 0,
+        StallAssignmentId: 0,
+        StallAssignmentTypeId: 0,
+        StallId: index}
+debugger
+        this.options.splice(index,1);
+
+        this.UnAssignedStallData.push(notFountobj);
+        this.AllStallsData.push(notFountobj);
+      }
+    }
+    //console.log("AllStallsData", this.AllStallsData);
+    console.log("filtered",this.options)
   }
 
 }
