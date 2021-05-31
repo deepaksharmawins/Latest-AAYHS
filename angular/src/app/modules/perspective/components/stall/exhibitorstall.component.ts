@@ -119,7 +119,7 @@ debugger
       }, error => {
         this.loading = false;
       })
-      resolve();
+     // resolve();
     });
   }
 
