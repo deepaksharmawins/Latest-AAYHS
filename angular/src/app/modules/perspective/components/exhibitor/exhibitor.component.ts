@@ -3027,81 +3027,103 @@ debugger
     //console.log("filtered", this.options)
   }
 
-  xray(){
+  xray() {
     debugger
-    for (var index = 1; index <= 1012 ; index++) {
+    for (var index = 1; index <= 1012; index++) {
       let ifFoundFilterData = this.AssignedStallsData.filter(x => x.StallId == index);
-      if(ifFoundFilterData.length > 0){
+      if (ifFoundFilterData.length > 0) {
       }
-      else{
+      else {
         this.options.push(stringify(index))
       }
     }
     console.log("Legasov options", this.options)
     this.filteredOptions = this.myControl.valueChanges
-    .pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
   }
 
   sendDataToAssignAutoComplete() {
-      let emptyObj = {
-        BookedByName: "",
-        ExhibitorId: 0,
-        GroupId: 0,
-        StallAssignmentDate: "",
-        StallAssignmentId: 0,
-        StallAssignmentTypeId: 0,
-        StallId: 0
-      }
-  
-      emptyObj.ExhibitorId = this.selectedExhibitorId??0,
+    let emptyObj = {
+      BookedByName: "",
+      ExhibitorId: 0,
+      GroupId: 0,
+      StallAssignmentDate: "",
+      StallAssignmentId: 0,
+      StallAssignmentTypeId: 0,
+      StallId: 0
+    }
+
+    emptyObj.ExhibitorId = this.selectedExhibitorId ?? 0,
       emptyObj.BookedByName = "",
       emptyObj.GroupId = 0,
-      emptyObj.StallAssignmentDate =  moment(this.minDate).format("yyyy/MM/DD"),
+      emptyObj.StallAssignmentDate = moment(new Date()).format("YYYY-MM-DDTHH:mm:ss"),
       emptyObj.StallAssignmentId = Number(this.optionStallId),
       emptyObj.StallAssignmentTypeId = this.SetSelectedSTallTypeID,
       emptyObj.StallId = Number(this.optionStallId);
-  
-      this.assignStallThroughAutoComplete(emptyObj);
+
+    this.assignStallThroughAutoComplete(emptyObj);
   }
 
-  assignStallThroughAutoComplete(exhibitorAssignedStalls){
+  assignStallThroughAutoComplete(exhibitorAssignedStalls) {
     debugger
-      //this.exhibitorStallAssignmentResponses = [];
-      this.exhibitorStallAssignmentResponses.push(exhibitorAssignedStalls);
+    //this.exhibitorStallAssignmentResponses = [];
+    this.exhibitorStallAssignmentResponses.push(exhibitorAssignedStalls);
 
-      var horseStalltype = this.StallTypes.filter(x => x.CodeName == "HorseStall");
-      var tackStalltype = this.StallTypes.filter(x => x.CodeName == "TackStall");
-debugger
-      if (this.exhibitorStallAssignmentResponses != null && this.exhibitorStallAssignmentResponses.length > 0) {
-        this.horsestalllength = this.exhibitorStallAssignmentResponses.filter(x => x.StallAssignmentTypeId
-                                                                == horseStalltype[0].GlobalCodeId).length;
-        this.tackstalllength = this.exhibitorStallAssignmentResponses.filter(x => x.StallAssignmentTypeId
-                                                                == tackStalltype[0].GlobalCodeId).length;
-      }
-      else {
-        this.horsestalllength = 0;
-        this.tackstalllength = 0;
-      }
-      console.log("this.exhibitorStallAssignmentResponses", this.exhibitorStallAssignmentResponses);
+    var horseStalltype = this.StallTypes.filter(x => x.CodeName == "HorseStall");
+    var tackStalltype = this.StallTypes.filter(x => x.CodeName == "TackStall");
+    debugger
+    if (this.exhibitorStallAssignmentResponses != null && this.exhibitorStallAssignmentResponses.length > 0) {
+      this.horsestalllength = this.exhibitorStallAssignmentResponses.filter(x => x.StallAssignmentTypeId
+        == horseStalltype[0].GlobalCodeId).length;
+      this.tackstalllength = this.exhibitorStallAssignmentResponses.filter(x => x.StallAssignmentTypeId
+        == tackStalltype[0].GlobalCodeId).length;
+    }
+    else {
+      this.horsestalllength = 0;
+      this.tackstalllength = 0;
+    }
+    console.log("this.exhibitorStallAssignmentResponses", this.exhibitorStallAssignmentResponses);
   }
 
-  SetSelectedSTallTypeID:number = 0;
-  optionStallId:number = 0;
-  getSelectedStallType(stallTypeId:any){
+  SetSelectedSTallTypeID: number = 0;
+  optionStallId: number = 0;
+  RadioReset1: null;
+  RadioReset2: null;
+  getSelectedStallType(stallTypeId: any) {
     this.SetSelectedSTallTypeID = stallTypeId;
   }
 
-  assignStallToExhibitor(){
+  assignStallToExhibitor() {
+
+    if (this.optionStallId > 0) {
+      this.options = this.options.filter(option => option != this.optionStallId)
+      this.filteredOptions = this.myControl.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => this._filter(value))
+        );
+      this.RadioReset1 = null;
+      this.RadioReset2 = null;
+      var StallName = "";
+      if (this.SetSelectedSTallTypeID == 3009) {
+        StallName = "Horse Stall"
+      }
+      else if (this.SetSelectedSTallTypeID == 3010) {
+        StallName = "Tack Stall"
+      }
+      this.snackBar.openSnackBar("Stall Id " + this.optionStallId.toString() + " Assigned As " + StallName, 'Close', 'green-snackbar');
+      console.log("assignStallToExhibitor this.options", this.options);
+    }
     this.sendDataToAssignAutoComplete();
   }
 
-  getSelectedOption(option){
-if (option > 0) {
-  this.optionStallId = option;
-}
+  getSelectedOption(option) {
+    if (option > 0) {
+      this.optionStallId = option;
+    }
   }
 
 }

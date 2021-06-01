@@ -217,6 +217,39 @@
 
 
 
+                                            <div class="form-group">
+                                                <label>Assign stall </label>
+                                              <mat-form-field class="example-full-width">
+                                                <input type="text"
+                                                #AssignStall
+                                                       placeholder="Pick one"
+                                                       aria-label="Number"
+                                                       matInput
+                                                       [formControl]="myControl"
+                                                       [matAutocomplete]="auto">
+                                                <mat-autocomplete #auto="matAutocomplete">
+                                                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option" 
+                                                  (onSelectionChange)="getSelectedOption(option);">
+                                                    {{option}}
+                                                  </mat-option>
+                                                </mat-autocomplete>
+                                              </mat-form-field>
+                                              </div>
+                                              <div class="form-group">
+                                                <div class="row">
+                                                  <input type="radio" [(ngModel)]="RadioReset1" id="StallTypeHorse" name="StallType" value="RadioReset1"(click)="getSelectedStallType(3009)">
+                                                  <label for="Horse" >Horse</label><br>
+                                                </div>
+                                                <div class="row">
+                                                  <input type="radio" [(ngModel)]="RadioReset2" id="StallTypeTack" name="StallType" value="RadioReset2" (click)="getSelectedStallType(3010)">
+                                                  <label for="Tack">Tack</label><br>
+                                                </div>
+                                              </div>
+                                              <div class="form-group">
+                                                  <button type="button" (click)="assignStallToExhibitor();AssignStall.value=''"
+                                                  class="btn btn-red btnCss roundBtn whitebg">
+                                                  Assign Stall</button>
+                                                </div>
 
 
 

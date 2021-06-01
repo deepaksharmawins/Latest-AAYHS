@@ -120,9 +120,9 @@ export class ReportsComponent implements OnInit {
   ngOnInit(): void {
     this.getAllClasses();
     this.getAllSponsors();
-    //this.getAllAssignedStalls();
+    this.getAllAssignedStalls();
     //this.getFilterExhibitors();
-    this.getAllSponsorsOfExhibitors();
+    //this.getAllSponsorsOfExhibitors();
   }
 
 
@@ -304,19 +304,24 @@ export class ReportsComponent implements OnInit {
       }
 
       else if (this.reportName == "Stall") {
+        debugger
         if (this.TypeOfStallReport == "getallStallList") {
+          //this.allStalls();
         this.getallStallList();
         }
         else if (this.TypeOfStallReport == "getUnassignStallList") {
         this.getUnassignStallList()
         }
         else if (this.TypeOfStallReport == "getAssignedStallList") {
+          this.getAllAssignedStalls();
         this.getAssignedStallList();
         }
       }
-
       else if (this.reportName == "MasterExhibitor"){
         this.getFilterExhibitors();
+      }
+      else if (this.reportName == "ExhibitorSponsorIncentiveReport") {
+        this.getAllSponsorsOfExhibitors()
       }
     }
   }
@@ -2270,6 +2275,7 @@ export class ReportsComponent implements OnInit {
   }
 
   pdfFilterExhibitors(){
+    debugger
     let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(8);
     let y = 8;
@@ -2280,7 +2286,7 @@ export class ReportsComponent implements OnInit {
     //var text = String('&nbsp<b>Stall and Occupants</b>');
     // var text = String('&nbsp<b>Unassigned Stalls</b>');
      var textWidth = doc.getStringUnitWidth("") * doc.internal.getFontSize() / doc.internal.scaleFactor;
-     var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+     var textOffset = (doc.internal.pageSize.width - textWidth) / 3;
     // doc.fromHTML(text, textOffset, 10);
 
     let pageHeight = doc.internal.pageSize.height;

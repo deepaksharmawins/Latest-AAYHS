@@ -314,6 +314,7 @@
                                               <label>Assign stall </label>
                                             <mat-form-field class="example-full-width">
                                               <input type="text"
+                                              #AssignStall
                                                      placeholder="Pick one"
                                                      aria-label="Number"
                                                      matInput
@@ -328,17 +329,19 @@
                                             </mat-form-field>
                                             </div>
                                             <div class="form-group">
-                                              <input type="radio" id="StallTypeHorse" name="StallType" value="3010"(click)="getSelectedStallType(3009)">
-                                              <label for="Horse" >Horse</label><br>
-                                              <input type="radio" id="StallTypeTack" name="StallType" value="3010" (click)="getSelectedStallType(3010)">
-                                              <label for="Tack">Tack</label><br>
-
+                                              <div class="row">
+                                                <input type="radio" [(ngModel)]="RadioReset1" id="StallTypeHorse" name="StallType" value="RadioReset1"(click)="getSelectedStallType(3009)">
+                                                <label for="Horse" >Horse</label><br>
+                                              </div>
+                                              <div class="row">
+                                                <input type="radio" [(ngModel)]="RadioReset2" id="StallTypeTack" name="StallType" value="RadioReset2" (click)="getSelectedStallType(3010)">
+                                                <label for="Tack">Tack</label><br>
+                                              </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="Tack">Assign</label><br>
-                                                <button type="button" (click)="assignStallToExhibitor()"
+                                                <button type="button" (click)="assignStallToExhibitor();AssignStall.value=''"
                                                 class="btn btn-red btnCss roundBtn whitebg">
-                                                Stall</button>
+                                                Assign Stall</button>
                                               </div>
                                             <div class="quantityWrapper mt-3">
                                                 <div class="form-group">
