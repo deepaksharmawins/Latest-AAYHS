@@ -4,9 +4,10 @@
 
 export const environment = {
     production: false,
-    //baseApiUrl: "http://92.204.135.120:8094/api/",
-    baseApiUrl: "https://localhost:44386/api/",
-    filesUrl:"https:/localhost:5001"
+    baseApiUrl: "http://92.204.135.120:8094/api/",
+    filesUrl:"http://92.204.135.120:8094"
+    //baseApiUrl: "https://localhost:44386/api/",
+    //filesUrl:"https:/localhost:5001"
 }
 /*
  * For easier debugging in development mode, you can import the following file
