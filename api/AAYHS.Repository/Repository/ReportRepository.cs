@@ -1869,6 +1869,10 @@ namespace AAYHS.Repository.Repository
             var yearlyMainId = _ObjContext.YearlyMaintainence.Where(x => x.IsActive == true
                                 && x.IsDeleted == false).FirstOrDefault();
 
+            var allIncentivedata = _ObjContext.SponsorIncentives.Where(x => x.IsActive == true);
+            var getIncentivedata = _ObjContext.YearlyStatementText.Where(x => x.IsDeleted == false);
+            var preClassdata = _ObjContext.ExhibitorClass.Where(x => x.IsActive == true && x.IsDeleted == false);
+
             GetAAYHSContactInfo getAAYHSContactInfo = new GetAAYHSContactInfo();
 
             getAAYHSContactInfo = (from contactInfo in _ObjContext.AAYHSContact
@@ -1991,7 +1995,7 @@ namespace AAYHS.Repository.Repository
                 preClassStallFee = classEntryFee.Where(x => x.TimeFrame == "Pre").Select(x => x.Amount).FirstOrDefault();
 
             }
-
+            
             foreach (var exhibitor1 in exhibitorInfo)
             {
                 ExhibitorsHorseAndSponsors exhibitorsHorse = new ExhibitorsHorseAndSponsors();
@@ -2004,15 +2008,15 @@ namespace AAYHS.Repository.Repository
 
                     foreach (var item in exhibitorHorseSponsor)
                     {
-                        var allIncentive = _ObjContext.SponsorIncentives.Where(x => item.TotalAmount >= x.SponsorAmount && x.IsActive==true && x.YearlyMaintenanceId==yearlyMainId.YearlyMaintainenceId);
+                        var allIncentive = allIncentivedata.Where(x => item.TotalAmount >= x.SponsorAmount && x.IsActive==true && x.YearlyMaintenanceId==yearlyMainId.YearlyMaintainenceId);
                         RefundableCosts refundableCosts = new RefundableCosts();
                         ShowCosts showCosts = new ShowCosts();
                         if (allIncentive.Count() != 0)
                         {
                             var maxIncentive = allIncentive.Max(x => x.SponsorAmount);
                             var checkIncentive = allIncentive.FirstOrDefault(x => x.SponsorAmount == maxIncentive);
-                            var getIncentive = _ObjContext.YearlyStatementText.Where(x => x.StatementNumber == "3a" &&
-                                              x.Incentive == checkIncentive.Award && x.IsDeleted == false).FirstOrDefault();
+                            var getIncentive = getIncentivedata.Where(x => x.StatementNumber == "3a" &&
+                                              x.Incentive == checkIncentive.Award && yearlyMainId.YearlyMaintainenceId == x.YearlyMaintenanceId && x.IsDeleted == false).FirstOrDefault();
 
                             if (getIncentive != null)
                             {
@@ -2023,7 +2027,7 @@ namespace AAYHS.Repository.Repository
                             }
 
                         }
-                        var preClasses = _ObjContext.ExhibitorClass.Where(x => x.ExhibitorId == exhibitor1.ExhibitorId && x.HorseId == item.HorseId &&
+                        var preClasses = preClassdata.Where(x => x.ExhibitorId == exhibitor1.ExhibitorId && x.HorseId == item.HorseId &&
                                          x.Date <= yearlyMainId.PreEntryCutOffDate && x.IsActive == true && x.IsDeleted == false).ToList();
 
                         showCosts.ExhibitorId = exhibitor1.ExhibitorId;
