@@ -737,11 +737,12 @@ updateReportInfo(data,index){
     return false;
   }
 
-  // if(String(this.statementText[index].statementText).length>450)
-  // {
-  //   this.snackBar.openSnackBar("Only 450 characters allowed", 'Close', 'red-snackbar');
-  //   return false;
-  // }
+  debugger
+  if(!(this.statementText[index].statementText))
+  {
+    this.snackBar.openSnackBar("Please Update Statement Text", 'Close', 'red-snackbar');
+    return false;
+  }
 
  
   return new Promise((resolve, reject) => {   

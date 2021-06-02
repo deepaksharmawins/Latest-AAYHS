@@ -1361,6 +1361,15 @@ export class GroupComponent implements OnInit {
     finalY = finalY + 10;
 
 
+    var reporttext = "''If you have any questions or concerns please contact us at soon as possible at youthhorseshow@gmail.com.''"
+    
+    var lMargin = 10; //left margin in mm
+    var rMargin = 10; //right margin in mm
+    var pdfInMM = 210;  // width of A4 in mm
+    var lines = doc.splitTextToSize(reporttext, (pdfInMM - lMargin - rMargin));
+    doc.text(lMargin,(finalY-3), lines);
+
+
     doc.autoTable({
       body: this.ExhibitorGroupInformationReportResponse.exhibitorDetails,
       columns:

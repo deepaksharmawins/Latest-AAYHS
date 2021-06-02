@@ -2,14 +2,14 @@
 <div class="container">
     <!-- Modal -->
     <div class="modal fade" id="myModal" role="dialog">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+      <div class="modal-dialog modal-lg pt-4">
+        <div class="modal-content mt-5">
           <div class="modal-header">
             <h4 class="modal-title">Other Reports</h4>
           </div>
           <div class="modal-body">
             <form #reportForm="ngForm" (ngSubmit)="reportForm.valid && download()">
-                <div class="gridTable addBlueStrip">
+                <div class="gridTable">
                     <div class="table-responsive">
                         <table class="table table-bordered tableBodyScroll">
                             <thead>

@@ -341,6 +341,7 @@ export class StatementsComponent implements OnInit {
 
       this.reportService.getExhibitorsSponsorRefundReportForAllExhibitors().subscribe(response => {
         if (response.Data != null && response.Data != undefined) {
+          console.log("getExhibitorsSponsorRefundReportForAllExhibitors",response.Data)
           this.ExhibitorSponsorRefundReportResponse.push(response.Data);
           this.saveExhibitorSponsorRefundReportPDF();
         }
@@ -776,7 +777,7 @@ export class StatementsComponent implements OnInit {
       var pdfInMM = 210;  // width of A4 in mm
       var lines = doc.splitTextToSize(reporttext, (pdfInMM - lMargin - rMargin));
       doc.text(lMargin, y + 125, lines);
-      doc.setFontStyle('italic')
+      //doc.setFontStyle('italic')
 
       doc.autoTable({
         body: reportdata.exhibitorDetails,
@@ -1021,28 +1022,59 @@ export class StatementsComponent implements OnInit {
             doc.text("REFUNDABLE SHOW COSTS", 10, finalY + 20)
             doc.text("Incentive" + info.refundableCosts.Incentive, 10, finalY + 25)
             var splitText = doc.splitTextToSize(info.refundableCosts.IncentiveText != null ? info.refundableCosts.IncentiveText : '', 180)
+            if (splitText) {
+              console.log("splitText", splitText);
+            var dim = doc.getTextDimensions(splitText);
+            console.log("dim",dim.h);
+            }
             doc.text(splitText, 10, finalY + 30)
             doc.line(0, finalY + 3, 300, finalY + 3);
             doc.setLineWidth(5.0);
           }
 
-          doc.text("Exhibitor #", 30, finalY + 45)
-          doc.text(String(info.ExhibitorId), 50, finalY + 45)
+          if (dim) {
+            var splitText = doc.splitTextToSize(info.refundableCosts.IncentiveText != null ? info.refundableCosts.IncentiveText : '', 180)
+            //console.log("splitText", splitText);
+            var dim = doc.getTextDimensions(splitText);
+            //console.log("dim",dim.h);
 
-          doc.text("Pre-Entries Classes", 30, finalY + 50)
-          doc.text('$' + String(info.showCosts.ClassFee), 150, finalY + 50)
+            doc.text("Exhibitor #", 30, finalY + (dim.h + 40))
+          doc.text(String(info.ExhibitorId), 50, finalY + (dim.h + 40))
 
-          doc.text("Box Stall", 30, finalY + 55)
-          doc.text('$' + String(info.showCosts.HorseStallFee), 150, finalY + 55)
+          doc.text("Pre-Entries Classes", 30, finalY + (dim.h + 45))
+          doc.text('$' + String(info.showCosts.ClassFee), 150, finalY + (dim.h + 45))
 
-          doc.text("Tack Stall", 30, finalY + 60)
-          doc.text('$' + String(info.showCosts.TackStallFee), 150, finalY + 60)
+          doc.text("Box Stall", 30, finalY + (dim.h + 50))
+          doc.text('$' + String(info.showCosts.HorseStallFee), 150, finalY + (dim.h + 50))
 
-          doc.text("Program", 30, finalY + 65)
-          doc.text('$' + String(info.showCosts.ProgramFee), 150, finalY + 65)
+          doc.text("Tack Stall", 30, finalY + (dim.h + 55))
+          doc.text('$' + String(info.showCosts.TackStallFee), 150, finalY + (dim.h + 55))
 
-          doc.text("Total", 30, finalY + 70)
-          doc.text('$' + String(info.TotalShowCost), 150, finalY + 70)
+          doc.text("Program", 30, finalY + (dim.h + 60))
+          doc.text('$' + String(info.showCosts.ProgramFee), 150, finalY + (dim.h + 60))
+
+          doc.text("Total", 30, finalY + (dim.h + 65))
+          doc.text('$' + String(info.TotalShowCost), 150, finalY + (dim.h + 65))
+          }
+          else{
+            doc.text("Exhibitor #", 30, finalY + 40)
+          doc.text(String(info.ExhibitorId), 50, finalY + 40)
+
+          doc.text("Pre-Entries Classes", 30, finalY + 45)
+          doc.text('$' + String(info.showCosts.ClassFee), 150, finalY + 45)
+
+          doc.text("Box Stall", 30, finalY + 50)
+          doc.text('$' + String(info.showCosts.HorseStallFee), 150, finalY + 50)
+
+          doc.text("Tack Stall", 30, finalY + 55)
+          doc.text('$' + String(info.showCosts.TackStallFee), 150, finalY + 55)
+
+          doc.text("Program", 30, finalY + 60)
+          doc.text('$' + String(info.showCosts.ProgramFee), 150, finalY + 60)
+
+          doc.text("Total", 30, finalY + 65)
+          doc.text('$' + String(info.TotalShowCost), 150, finalY + 65)
+          }
 
           var lastrecord = reportdata.horsesSponsors[reportdata.horsesSponsors.length - 1];
           if (lastrecord === info) {

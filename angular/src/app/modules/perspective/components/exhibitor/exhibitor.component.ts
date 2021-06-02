@@ -291,6 +291,7 @@ export class ExhibitorComponent implements OnInit {
 
 
   highlight(id, i) {
+    debugger
     this.resetForm()
     this.selectedRowIndex = i;
     this.getbilledFeesSummary(id);
@@ -1665,7 +1666,7 @@ debugger
       this.reportService.getExhibitorRegistrationReport(Number(this.selectedExhibitorId)).subscribe(response => {
         if (response.Data != null && response.Data != undefined) {
           this.ExhibitorRegistrationReportResponse = response.Data;
-        //  //console.log("this.ExhibitorRegistrationReportResponse", this.ExhibitorRegistrationReportResponse);
+          console.log("this.ExhibitorRegistrationReportResponse", this.ExhibitorRegistrationReportResponse);
           this.saveExhibitorRegistrationReportPDF();
         }
         else {
@@ -1862,9 +1863,7 @@ debugger
 
 
 
-      var reporttext = this.ExhibitorRegistrationReportResponse.ReportText != null &&
-      this.ExhibitorRegistrationReportResponse.ReportText != undefined ?
-        this.ExhibitorRegistrationReportResponse.ReportText : "";
+      var reporttext = this.ExhibitorRegistrationReportResponse.ReportText != null &&  this.ExhibitorRegistrationReportResponse.ReportText != undefined ? this.ExhibitorRegistrationReportResponse.ReportText : "";
 
       reporttext = reporttext.replace("      ", " ");
       reporttext = reporttext.replace("     ", " ");
@@ -1879,6 +1878,14 @@ debugger
       var lines = doc.splitTextToSize(reporttext, (pdfInMM - lMargin - rMargin));
       doc.text(lMargin, y + 70, lines);
 
+    if (this.ExhibitorRegistrationReportResponse.ReportText != null && this.ExhibitorRegistrationReportResponse.ReportText != undefined) {
+      debugger
+      var splitText = doc.splitTextToSize(this.ExhibitorRegistrationReportResponse.ReportText != null ? this.ExhibitorRegistrationReportResponse.ReportText : '', 180)
+      if (splitText) {
+        var dim = doc.getTextDimensions(splitText);
+      }
+    }
+      
 
     doc.autoTable({
       body: this.ExhibitorRegistrationReportResponse.horseClassDetails,
@@ -1892,7 +1899,7 @@ debugger
 
         ],
       margin: { vertical: 35, horizontal: 10 },
-      startY: y + 75
+      startY: (y + 70 + dim.h)
     })
 
     let finalY = (doc as any).lastAutoTable.finalY + 10;

@@ -1,4 +1,26 @@
-.whitebg{
-    background-color: #fff;
-    border: 1px solid #ccc;
+// .whitebg{
+//     background-color: #fff;
+//     border: 1px solid #ccc;
+// }
+
+.assignStallWrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-flow: wrap;
+    .formControl{
+        margin-right: 10px;
+        input{
+            top: 2px;
+            position: relative;
+            margin-right: 5px;
+        }
+        
+    }
+    @media(max-width:991px) {
+        button{
+            margin-top: 10px;
+        }
+    }
+    
 }
