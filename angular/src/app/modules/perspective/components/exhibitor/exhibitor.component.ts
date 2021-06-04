@@ -33,6 +33,7 @@ import * as jsPDF from 'jspdf';
 import { DatePipe } from '@angular/common';
 import { StallService } from 'src/app/core/services/stall.service';
 import { stringify } from '@angular/compiler/src/util';
+import { renderFlagCheckIfStmt } from '@angular/compiler/src/render3/view/template';
 
 interface jsPDFWithPlugin extends jsPDF {
   autoTable: (options: UserOptions) => jsPDF;
@@ -1365,6 +1366,14 @@ debugger
   }
 
   openStallDiagram(buttontype: string) {
+    if(this.selectedArray.length>0){
+      this.selectedArray.forEach(element => {
+       let data= this.UnassignedStallNumbers.filter(x=>x.toString()==element);
+       if(data)
+       this.UnassignedStallNumbers= this.UnassignedStallNumbers.filter(x=>x.toString()!=element);
+      });
+    }
+    debugger
     let config = new MatDialogConfig();
     config = {
       position: {
@@ -1384,7 +1393,7 @@ debugger
       },
 
     };
-
+console.log("config",config);
     const dialogRef = this.dialog.open(ExhibitorStallComponent, config,
 
     );
@@ -3109,11 +3118,12 @@ debugger
     this.SetSelectedSTallTypeID = stallTypeId;
   }
 
+  selectedArray:any[]=[]
   assignStallToExhibitor() {
 debugger
 if (this.optionStallId == 0)
 {
-
+   
   this.snackBar.openSnackBar('This stall not found or booked', 'Close', 'red-snackbar');
   return false
 }
@@ -3123,6 +3133,9 @@ if (this.SetSelectedSTallTypeID== 0)
   return false
 }
     if (this.optionStallId > 0) {
+    
+      if( !this.selectedArray.some(x=>x==this.optionStallId.toString())){
+      this.selectedArray.push(this.optionStallId)}
       this.options = this.options.filter(option => option != this.optionStallId)
       this.filteredOptions = this.myControl.valueChanges
         .pipe(
@@ -3150,18 +3163,37 @@ if (this.SetSelectedSTallTypeID== 0)
     }
   }
 
-addunassignedStall(){
-  this.UnassignedStallNumbers.forEach((element:any) => {
-    if(this.options.some(option => option =!element))//1002
-   this.options.forEach(element2 => {
-     
-   });
-  });
-  this.filteredOptions = this.myControl.valueChanges
-    .pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
-}
+  addunassignedStall() {
+    this.UnassignedStallNumbers.forEach((element: string) => {
+      debugger
+      if (this.options.some(option => option = !element))//1002
+        //var data=element.toString()
+        debugger
+      var indexPos = this.optionsOrginalData.findIndex(x => x == element)
+
+      if (typeof this.options[indexPos] === 'undefined') {
+        // does not exist
+        this.options.push(element)
+      }
+      else {
+        // does exist
+        // this.options[indexPos].unshift(element);
+        this.options.splice(indexPos, 0, element.toString());
+        console.log("addunassignedStall options", this.options)
+      }
+
+    });
+    debugger
+    console.log("this.exhibitorStallAssignmentResponses", this.exhibitorStallAssignmentResponses);
+    console.log("this.UnassignedStallNumbers before", this.UnassignedStallNumbers);
+    this.UnassignedStallNumbers = [];
+    console.log("this.UnassignedStallNumbers after", this.UnassignedStallNumbers);
+    console.log("this.StallTypes", this.StallTypes);
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+  }
 }
 
