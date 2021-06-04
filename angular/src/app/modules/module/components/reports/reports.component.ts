@@ -2208,7 +2208,7 @@ export class ReportsComponent implements OnInit {
           this.AssignedStallsData.push(element);
         });
 
-        //console.log("getAllAssignedStalls", this.AssignedStallsData)
+        console.log("getAllAssignedStalls", this.AssignedStallsData)
         this.allStalls();
       }
     })
@@ -2226,6 +2226,15 @@ export class ReportsComponent implements OnInit {
         // stall.Occupant = checkIfFound.Occupant;
         // stall.StallNo = checkIfFound.StallNo;
         // stall.Type = checkIfFound.Type;
+
+        if (checkIfFound[0].StallAssignmentTypeId == 3009) {
+          checkIfFound[0].BookedByType = "Horse"
+        }
+        else
+        {
+          checkIfFound[0].BookedByType = "Tack"
+        }
+
         let foundObj = {BookedByName: checkIfFound[0].BookedByName,
         BookedByType: checkIfFound[0].BookedByType,
         ExhibitorId: checkIfFound[0].ExhibitorId,
@@ -2242,7 +2251,7 @@ export class ReportsComponent implements OnInit {
         // stall.StallNo = index + 1;
         // stall.Type = "";
 
-        let notFountobj = {BookedByName: "",
+        let notFountobj = {BookedByName: "UnAssigned",
         BookedByType: "",
         ExhibitorId: 0,
         GroupId: 0,
@@ -2274,9 +2283,52 @@ export class ReportsComponent implements OnInit {
     });
   }
 
+  getexhibitorsList() {
+    
+  }
+
+  downloadExcelFile () {
+    return new Promise<void>((resolve, reject) => {
+      this.loading = true;
+      this.exhibitorService.getFilterExhibitors(this.filterBaseRequest).subscribe(response => {
+       if (response.Data.exhibitorResponses != null) {
+        this.exhibitorsList = response.Data.exhibitorResponses;
+        this.loading = false;
+
+
+        //  json data to export
+     //  Column headings, separated by commas, each comma is separated by a cell
+     let str = `Exhibitor ID,Exhibitor Name,Exhibitor Address,Exhibitor Email Address,Phone Number,Birth Year,Group Name\n`
+     //  Add \ tto prevent tables from displaying scientific notation or other formats
+     for (let i = 0; i < this.exhibitorsList.length; i++) {
+       for (let item in this.exhibitorsList[i]) {
+         str += `${this.exhibitorsList[i][item] + '\t'},`
+       }
+       str += '\n'
+     }
+     //  Encodeuriccomponent solves Chinese code disorder
+     let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str)
+     //  If the browser recognizes that the path of a label is a file, it will download the file automatically
+     let link = document.createElement('a') 
+     link.href = uri
+     //  Name the downloaded file
+     link.download = 'Master-Exhibitor-List-High-Level-Report(#113).csv'
+     document.body.appendChild(link)
+     link.click()
+     document.body.removeChild(link)
+
+       }
+      }, error => {
+        this.loading = false;
+      }
+      )
+      resolve();
+    });
+   }
+
   pdfFilterExhibitors(){
     debugger
-    let doc = new jsPDF("p", "mm", "a4") as jsPDFWithPlugin;
+    let doc = new jsPDF("l", "mm", "a4") as jsPDFWithPlugin;
     doc.setFontSize(8);
     let y = 8;
     doc.text('Print Date :', 160, 8)
@@ -2292,14 +2344,15 @@ export class ReportsComponent implements OnInit {
     let pageHeight = doc.internal.pageSize.height;
     //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
     doc.fromHTML(String('<b>Master Exhibitor List - High-Level Report (#113)</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>________________________________________________</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>__________________________________________</b>'), textOffset, 15)
+
 
     doc.autoTable({
       body: this.exhibitorsList,
       columns:
         [
           { header: 'Exhibitor ID', dataKey: 'ExhibitorId' },
-          { header: 'Exhibitor Name', dataKey: 'FirstName' },
+          { header: 'Exhibitor Name', dataKey: 'LastName' },
           { header: 'Exhibitor Address', dataKey: 'Address' },
           { header: 'Exhibitor Email Address', dataKey: 'PrimaryEmail' },
           { header: 'Phone Number', dataKey: 'Phone' },
@@ -2349,7 +2402,7 @@ export class ReportsComponent implements OnInit {
     let pageHeight = doc.internal.pageSize.height;
     //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
     doc.fromHTML(String('<b>Exhibitor Sponsor Incentive Ads (#114)</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>______________________________________</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>_________________________________</b>'), textOffset, 15)
 
     this.exhibitorsSponsors.forEach(element => {
       let id = element.ExhibitorId.toString()
@@ -2357,9 +2410,10 @@ export class ReportsComponent implements OnInit {
      element1.GroupHorseSponsor.forEach(x => {
       let x1 =x;
       doc.autoTable({
-        head: [[id, element1.ExhibitorName, x1.HorseName]],
+        head: [["Id : " +id, "Exhibitor Name : " + element1.ExhibitorName, "Horse Name : " + x1.HorseName]],
         margin: { vertical: 55, horizontal: 10 },
-        startY: 40
+        startY: 40,
+        styles: { fillColor: "#FFFFFF",textColor:"#000000" },
       })
 
       doc.autoTable({

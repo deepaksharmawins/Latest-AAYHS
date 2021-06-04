@@ -131,7 +131,7 @@ export class StallComponent implements OnInit {
   }
 
   assignStall(stallId) {
-
+debugger
     var checkIngroupassigned = this.groupAssignedStalls.filter((x) => { return x.StallId == stallId });
     var checkInAllassigned = this.allAssignedStalls.filter((x) => { return x.StallId == stallId });
 
@@ -208,6 +208,7 @@ export class StallComponent implements OnInit {
       panelClass: 'full-screen-modal',
       data: { modalData: data, StallTypes: this.StallTypes }
     };
+    debugger
 
     const dialogRef = this.dialog.open(AssignStallModalComponent, config);
 

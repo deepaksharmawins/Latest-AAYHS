@@ -29,6 +29,7 @@ export class AssignStallModalComponent implements OnInit {
     public dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
+    debugger
     this.StallNumber = this.data.modalData.SelectedStallId;
     this.AssignedToName = this.data.modalData.BookedByName;
     this.showAssign = this.data.modalData.Assigned;
@@ -39,7 +40,7 @@ export class AssignStallModalComponent implements OnInit {
 
     this.stallTypes = this.data.StallTypes;
     this.buttontype = this.data.buttontype;
-    if (this.StallNumber == 2051 || this.StallNumber == 2045 || this.StallNumber == 2132 || this.StallNumber == 2138) {
+    if (this.StallNumber == 2051 || this.StallNumber == 2045 || this.StallNumber == 2132 || this.StallNumber == 2138 ||  this.StallNumber == 2025 || this.StallNumber == 2019) {
       var tackstalltype = this.stallTypes.filter(x => x.CodeName == "TackStall");
       this.setStallType(tackstalltype[0].GlobalCodeId);
       this.DisableHorseType = true;

@@ -1393,6 +1393,9 @@ debugger
 debugger
       const result: any = dialogResult;
       if (result && result.submitted == true) {
+        if(result.data.unassignedStallNumbers.length>0){
+          this.addunassignedStall()
+        }
         console.log("result.submitted",result.submitted );
         console.log("result.data.exhibitorAssignedStalls",result.data.exhibitorAssignedStalls) 
         this.exhibitorStallAssignmentResponses = [];
@@ -2937,6 +2940,7 @@ debugger
 
   myControl = new FormControl();
   options: any[] = [];
+  optionsOrginalData: any[] = [];
   filteredOptions: Observable<any[]>;
   // Stalls(){
 
@@ -3042,9 +3046,11 @@ debugger
       }
       else {
         this.options.push(stringify(index))
+        this.optionsOrginalData.push(stringify(index))
       }
     }
     console.log("Legasov options", this.options)
+    console.log("Legasov optionsOrginalData", this.optionsOrginalData)
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
@@ -3104,7 +3110,18 @@ debugger
   }
 
   assignStallToExhibitor() {
+debugger
+if (this.optionStallId == 0)
+{
 
+  this.snackBar.openSnackBar('This stall not found or booked', 'Close', 'red-snackbar');
+  return false
+}
+if (this.SetSelectedSTallTypeID== 0)
+{
+  this.snackBar.openSnackBar('Please select the stall type', 'Close', 'red-snackbar');
+  return false
+}
     if (this.optionStallId > 0) {
       this.options = this.options.filter(option => option != this.optionStallId)
       this.filteredOptions = this.myControl.valueChanges
@@ -3133,5 +3150,18 @@ debugger
     }
   }
 
+addunassignedStall(){
+  this.UnassignedStallNumbers.forEach((element:any) => {
+    if(this.options.some(option => option =!element))//1002
+   this.options.forEach(element2 => {
+     
+   });
+  });
+  this.filteredOptions = this.myControl.valueChanges
+    .pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
+}
 }
 
