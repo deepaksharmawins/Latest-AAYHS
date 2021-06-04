@@ -197,3 +197,32 @@
           color: #000;
           font-weight: 500;
       }
+.stallAssignWrap{
+  table{
+    th{
+      color:#fff;
+      background-color: #273992;
+    }
+    td{
+      .icon {
+        i {
+          font-size: 22px;
+        }
+      }
+      .mmReportList {
+        text-align: center;
+      }
+    }
+  }
+}
+.mmReportList{
+  .mmHoverContent {
+    min-width: 360px;
+    @media(max-width:480px){
+      min-width: 200px;
+    }
+    .prePostField {
+      max-width:inherit;
+    }
+  }
+}

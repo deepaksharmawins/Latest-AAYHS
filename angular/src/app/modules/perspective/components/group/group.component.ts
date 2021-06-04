@@ -652,6 +652,15 @@ export class GroupComponent implements OnInit {
   }
 
   openStallDiagram(buttontype: string) {
+    if(this.selectedArray.length>0){
+      this.selectedArray.forEach(element => {
+       let data= this.UnassignedStallNumbers.filter(x=>x.toString()==element);
+       if(data){
+       this.UnassignedStallNumbers= this.UnassignedStallNumbers.filter(x=>x.toString()!=element);
+       this.selectedArray= this.selectedArray.filter(x=>x.toString()!=element);
+      }
+      });
+    }
     let config = new MatDialogConfig();
     config = {
       position: {
@@ -679,6 +688,7 @@ export class GroupComponent implements OnInit {
 
       const result: any = dialogResult;
       if (result && result.submitted == true) {
+        this.addunassignedStall()
         this.groupStallAssignmentResponses = [];
         this.groupStallAssignmentResponses = result.data.groupAssignedStalls;
         this.UnassignedStallNumbers = result.data.unassignedStallNumbers;
@@ -1470,6 +1480,7 @@ export class GroupComponent implements OnInit {
 
   myControl = new FormControl();
   options: any[] = [];
+  optionsOrginalData: any[] = [];
   filteredOptions: Observable<any[]>;
   filter(){
    
@@ -1560,6 +1571,7 @@ export class GroupComponent implements OnInit {
       }
       else {
         this.options.push(stringify(index))
+        this.optionsOrginalData.push(stringify(index))
       }
     }
     console.log("Legasov options", this.options)
@@ -1620,9 +1632,30 @@ export class GroupComponent implements OnInit {
     this.SetSelectedSTallTypeID = stallTypeId;
   }
 
+  selectedArray:any[]=[]
   assignStallToExhibitor() {
+    if (this.optionStallId == 0) {
+
+      this.snackBar.openSnackBar('This stall not found or booked', 'Close', 'red-snackbar');
+      return false
+    }
+
+    if (this.SetSelectedSTallTypeID == 0) {
+      this.snackBar.openSnackBar('Please select the stall type', 'Close', 'red-snackbar');
+      return false
+    }
+
+    if (this.selectedArray.some(x => x == this.optionStallId.toString())) {
+      this.snackBar.openSnackBar('This stall not found or booked', 'Close', 'red-snackbar');
+      return false
+    }
 
     if (this.optionStallId > 0) {
+
+      if (!this.selectedArray.some(x => x == this.optionStallId.toString())) {
+        this.selectedArray.push(this.optionStallId)
+      }
+
       this.options = this.options.filter(option => option != this.optionStallId)
       this.filteredOptions = this.myControl.valueChanges
         .pipe(
@@ -1648,6 +1681,33 @@ export class GroupComponent implements OnInit {
     if (option > 0) {
       this.optionStallId = option;
     }
+  }
+
+
+  addunassignedStall() {
+    this.UnassignedStallNumbers.forEach((element: string) => {
+      debugger
+      if (this.options.some(option => option = !element))//1002
+        debugger
+      var indexPos = this.optionsOrginalData.findIndex(x => x == element)
+
+      if (typeof this.options[indexPos] === 'undefined') {
+        // does not exist
+        this.options.push(element)
+      }
+      else {
+        // does exist
+        this.options.splice(indexPos, 0, element.toString());
+      }
+
+    });
+    debugger
+    this.UnassignedStallNumbers = [];
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
   }
 
 }
