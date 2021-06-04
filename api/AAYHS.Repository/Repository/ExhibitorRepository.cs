@@ -88,12 +88,14 @@ namespace AAYHS.Repository.Repository
 
         public FilterExhibitorResponseListResponse GetFilterExhibitors(FilterExhibitorRequest filterExhibitorRequest)
         {
+            var groupNames = _context.Groups.Where(x => x.IsActive == true && x.IsDeleted == false).ToList();
             IEnumerable<FilterExhibitorResponse> exhibitorResponses = null;
             FilterExhibitorResponseListResponse exhibitorListResponses = new FilterExhibitorResponseListResponse();
             exhibitorResponses = (from exhibitor in _context.Exhibitors
                                   join address in _context.Addresses on exhibitor.AddressId equals address.AddressId
                                   join state in _context.States on address.StateId equals state.StateId
-                                  where exhibitor.IsActive == true && exhibitor.IsDeleted == false
+                                  //join exhibitorGroup in _context.GroupExhibitors on exhibitor.ExhibitorId equals exhibitorGroup.ExhibitorId
+                                  //join groupName in _context.Groups on exhibitorGroup.GroupId equals groupName.GroupName
                                   where exhibitor.IsActive == true && exhibitor.IsDeleted == false
                                   select new FilterExhibitorResponse
                                   {
@@ -110,22 +112,28 @@ namespace AAYHS.Repository.Repository
                                       SecondaryEmail = exhibitor.SecondaryEmail,
                                       Phone = exhibitor.Phone,
                                       Address = address.Address + ", " + address.City + ", " + state.Name + ", " + address.ZipCode,
-                                      GroupName = (from x in _context.Exhibitors join grpEX in _context.GroupExhibitors on x.ExhibitorId equals grpEX.ExhibitorId 
-                                                   join grp in _context.Groups on grpEX.GroupId equals grp.GroupId where grpEX.ExhibitorId == x.ExhibitorId select grp.GroupName).FirstOrDefault()
+                                      GroupId = _context.GroupExhibitors.Where(x => x.ExhibitorId == exhibitor.ExhibitorId && x.IsActive == true && x.IsDeleted == false).FirstOrDefault().GroupId,
                                   }).ToList();
+
+
             if (exhibitorResponses.Count() > 0)
             {
                 if (filterExhibitorRequest.OrderBy == "orderByBirthYear")
                 {
                     exhibitorListResponses.exhibitorResponses = exhibitorResponses.OrderBy(x => x.BirthYear).ToList();
                 }
-                else if(filterExhibitorRequest.OrderBy == "orderByLastName")
+                else if (filterExhibitorRequest.OrderBy == "orderByLastName")
                 {
                     exhibitorListResponses.exhibitorResponses = exhibitorResponses.OrderBy(x => x.LastName).ToList();
                 }
                 else if (filterExhibitorRequest.OrderBy == "Id")
                 {
                     exhibitorListResponses.exhibitorResponses = exhibitorResponses.ToList();
+                }
+
+                for (int i = 0; i < exhibitorListResponses.exhibitorResponses.Count(); i++)
+                {
+                    exhibitorListResponses.exhibitorResponses[i].GroupName = groupNames.Where(x => x.GroupId == exhibitorListResponses.exhibitorResponses[i].GroupId).FirstOrDefault()?.GroupName??"";
                 }
             }
 
