@@ -274,13 +274,21 @@
                                               <div class="form-group">
                                                 <div class="assignStallWrap">
                                                     <div class="formControl">
-                                                        <input type="radio" [(ngModel)]="RadioReset1" id="StallTypeHorse" name="StallType" value="RadioReset1"(click)="getSelectedStallType(3009)">
-                                                        <label for="Horse" >Horse</label>
-                                                    </div>
-                                                    <div class="formControl">
-                                                        <input type="radio" [(ngModel)]="RadioReset2" id="StallTypeTack" name="StallType" value="RadioReset2" (click)="getSelectedStallType(3010)">
-                                                        <label for="Tack">Tack</label>
-                                                    </div>
+                                                        <label class="radioBtn">
+                                                          <input type="radio" [(ngModel)]="RadioReset1" id="StallTypeHorse" name="StallType" value="RadioReset1"(click)="getSelectedStallType(3009)">
+                                                          <span for="Horse" class="checkmark"></span>Horse
+                                                        </label>
+                                                          <!-- <input type="radio" [(ngModel)]="RadioReset1" id="StallTypeHorse" name="StallType" value="RadioReset1"(click)="getSelectedStallType(3009)">
+                                                          <label for="Horse" >Horse</label> -->
+                                                      </div>
+                                                      <div class="formControl">
+                                                        <label class="radioBtn">
+                                                          <input type="radio" [(ngModel)]="RadioReset2" id="StallTypeTack" name="StallType" value="RadioReset2" (click)="getSelectedStallType(3010)">
+                                                          <span for="Horse" class="checkmark"></span>Horse
+                                                        </label>
+                                                          <!-- <input type="radio" [(ngModel)]="RadioReset2" id="StallTypeTack" name="StallType" value="RadioReset2" (click)="getSelectedStallType(3010)">
+                                                          <label for="Tack">Tack</label> -->
+                                                      </div>
                                                     <button type="button" (click)="assignStallToExhibitor();AssignStall.value=''"
                                                     class="btn btn-red btnCss roundBtn whitebg">
                                                     Assign Stall</button>
