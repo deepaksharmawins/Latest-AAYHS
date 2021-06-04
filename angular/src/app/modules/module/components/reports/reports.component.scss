@@ -1,0 +1,23 @@
+#PerspectiveId {
+  padding: 5px 22px 5px 10px;
+  border: 1px solid #a0b8f9;
+  border-radius: 5px;
+  &:focus{
+    outline:none;
+  }
+}
+.prePostField{
+  &.multiCheckBtn {
+    flex-flow: wrap;
+    max-width: inherit;
+    .unassignedwrap {
+      word-break: break-all;
+
+    }
+  }
+}
+.mmReportList {
+  .mmHoverContent {
+    min-width: 370px;
+  }
+}

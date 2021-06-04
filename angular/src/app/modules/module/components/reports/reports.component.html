@@ -16,7 +16,7 @@
             Other Reports</button>
     </div>
 </div>
-    
+
 </div>
 <form #reportForm="ngForm" (ngSubmit)="reportForm.valid && download()">
     <div class="gridTable addBlueStrip">
@@ -28,7 +28,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-              
+
                     <tbody>
 
                         <tr *ngIf="Exhibitors">
@@ -84,10 +84,10 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','MasterExhibitor')" class="icon"><span></span> 
+                                (click)="setreportType('download','MasterExhibitor')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                                 <button type="button"
-                                (click)="downloadExcelFile('MasterExhibitor')" class="icon"><span></span> 
+                                (click)="downloadExcelFile('MasterExhibitor')" class="icon"><span></span>
                                 <i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
                             </td>
                         </tr>
@@ -138,7 +138,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','ExhibitorSponsorIncentiveReport')" class="icon"><span></span> 
+                                (click)="setreportType('download','ExhibitorSponsorIncentiveReport')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr>
@@ -152,25 +152,25 @@
                                     <span id="uparrow99" style="display: none;" (click)="hidepopupbox('showpopupbox99','uparrow99','downarrow99')">
                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
                                     </span>
-    
+
                                     <div class="mmHoverContent" id="showpopupbox99">
                                         <div class="prePostField mb-4 multiCheckBtn">
                                            <div class="row">
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-md-4">
                                                 <label class="radioBtn">
                                                     <input type="radio" value="all"
                                                         (change)="checkChange($event.target.value,'getallStallList')" name="mmr">
                                                     <span class="checkmark"></span>All
                                                 </label>
                                             </div>
-                                            <div class="form-group col-md-5">
-                                                <label class="radioBtn">
+                                            <div class="form-group col-md-4">
+                                                <label class="radioBtn unassignedwrap">
                                                     <input type="radio" value="one" name="mmr"
                                                         (change)="checkChange($event.target.value,'getUnassignStallList')">
                                                     <span class="checkmark"></span>Unassigned
                                                 </label>
                                             </div>
-                                            <div class="form-group col-md-5">
+                                            <div class="form-group col-md-4">
                                                 <label class="radioBtn">
                                                     <input type="radio" value="one" name="mmr"
                                                         (change)="checkChange($event.target.value,'getAssignedStallList')">
@@ -213,7 +213,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','Stall')" class="icon"><span></span> 
+                                (click)="setreportType('download','Stall')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
 
@@ -228,7 +228,7 @@
                                     <span id="uparrow99" style="display: none;" (click)="hidepopupbox('showpopupbox99','uparrow99','downarrow99')">
                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
                                     </span>
-    
+
                                     <div class="mmHoverContent" id="showpopupbox99">
                                         <div class="prePostField mb-4 multiCheckBtn">
                                            <div class="row">
@@ -274,7 +274,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','Stall')" class="icon"><span></span> 
+                                (click)="setreportType('download','Stall')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
 
@@ -289,7 +289,7 @@
                                     <span id="uparrow102" style="display: none;" (click)="hidepopupbox('showpopupbox102','uparrow102','downarrow102')">
                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
                                     </span>
-    
+
                                     <div class="mmHoverContent" id="showpopupbox102">
                                         <div class="prePostField mb-4 multiCheckBtn">
                                             <div class="form-group">
@@ -346,14 +346,14 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','result')" class="icon"><span></span> 
+                                (click)="setreportType('download','result')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
 
                         </tr>
 
                         <tr *ngIf="Classes">
-                            <td  (click)="selectReport(1,'nsbaclassresult')" 
+                            <td  (click)="selectReport(1,'nsbaclassresult')"
                             [ngClass]="{'blueRow': selectedRowIndex == 1}">
                                 <div class="mmReportList">NSBA Classes Results ( #102a )
                                 </div>
@@ -373,7 +373,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','nsbaclassresult')" class="icon"><span></span> 
+                                (click)="setreportType('download','nsbaclassresult')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
 
@@ -398,7 +398,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','entries')" class="icon"><span></span> 
+                                (click)="setreportType('download','entries')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr>
@@ -412,7 +412,7 @@
                                     <span id="uparrow23" style="display: none;" (click)="hidepopupbox('showpopupbox23','uparrow23','downarrow23')">
                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
                                     </span>
-    
+
                                     <div class="mmHoverContent" id="showpopupbox23">
                                         <div class="prePostField mb-4 multiCheckBtn">
                                             <div class="form-group">
@@ -472,7 +472,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','paddock')" class="icon"><span></span> 
+                                (click)="setreportType('download','paddock')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr>
@@ -495,7 +495,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','patron')" class="icon"><span></span> 
+                                (click)="setreportType('download','patron')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr>
@@ -509,7 +509,7 @@
                                     <span id="uparrow25" style="display: none;" (click)="hidepopupbox('showpopupbox25','uparrow25','downarrow25')">
                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
                                     </span>
-    
+
                                     <div class="mmHoverContent" id="showpopupbox25">
                                         <div class="prePostField mb-4 multiCheckBtn">
                                             <div class="form-group">
@@ -565,7 +565,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','program')" class="icon"><span></span> 
+                                (click)="setreportType('download','program')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr>
@@ -588,7 +588,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','summary')" class="icon"><span></span> 
+                                (click)="setreportType('download','summary')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr>
@@ -611,7 +611,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','administrative')" class="icon"><span></span> 
+                                (click)="setreportType('download','administrative')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr>
@@ -634,7 +634,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','nsba')" class="icon"><span></span> 
+                                (click)="setreportType('download','nsba')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr>
@@ -658,7 +658,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','nsbaclasses')" class="icon"><span></span> 
+                                (click)="setreportType('download','nsbaclasses')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr> -->
@@ -673,7 +673,7 @@
                                     <span id="uparrow109" style="display: none;" (click)="hidepopupbox('showpopupbox109','uparrow109','downarrow109')">
                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
                                     </span>
-    
+
                                     <div class="mmHoverContent" id="showpopupbox109">
                                         <div class="prePostField mb-4 multiCheckBtn">
                                             <div class="form-group">
@@ -727,7 +727,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','nonExhibitorSponsorDistributionList')" class="icon"><span></span> 
+                                (click)="setreportType('download','nonExhibitorSponsorDistributionList')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr> -->
@@ -750,11 +750,11 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','nonexhibitorsummarysponsordistribution')" class="icon"><span></span> 
+                                (click)="setreportType('download','nonexhibitorsummarysponsordistribution')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr> -->
-                       
+
                         <!-- <tr>
                             <td (click)="selectReport(12,'nonexhibitorsummarysponsordistribution')" [ngClass]="{'blueRow': selectedRowIndex == 12}">
                                 <div class="mmReportList">Exhibitor Sponsored Ads Report( #111 )</div>
@@ -773,11 +773,11 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','exhibitorSponsoredAds')" class="icon"><span></span> 
+                                (click)="setreportType('download','exhibitorSponsoredAds')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr> -->
- 
+
                         <!-- <tr>
                             <td (click)="selectReport(13,'nonexhibitoradssponsor')" [ngClass]="{'blueRow': selectedRowIndex == 13}">
                                 <div class="mmReportList">Non -Exhibitor Sponsored Ads Report( #111a )</div>
@@ -796,7 +796,7 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','nonexhibitoradssponsor')" class="icon"><span></span> 
+                                (click)="setreportType('download','nonexhibitoradssponsor')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr> -->
@@ -820,21 +820,21 @@
                                 <i class="fa fa-print" aria-hidden="true"></i></button>
 
                                 <button type="button"
-                                (click)="setreportType('download','exhibitoradssponsor')" class="icon"><span></span> 
+                                (click)="setreportType('download','exhibitoradssponsor')" class="icon"><span></span>
                                 <i class="fa fa-download" aria-hidden="true"></i></button>
                             </td>
                         </tr>
 
-        
+
 
                     </tbody>
-               
+
             </table>
 
 
             </div>
         </div>
-    
+
 </form>
 <div class="loaderWrapper" *ngIf="loading">
     <div class="loader"></div>
