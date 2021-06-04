@@ -310,24 +310,6 @@
                                                 </select>
 
                                             </div>
-                                            <div class="form-group">
-                                              <label>Assign stall </label>
-                                            <mat-form-field class="example-full-width">
-                                              <input type="text"
-                                              #AssignStall
-                                                     placeholder="Pick one"
-                                                     aria-label="Number"
-                                                     matInput
-                                                     [formControl]="myControl"
-                                                     [matAutocomplete]="auto">
-                                              <mat-autocomplete #auto="matAutocomplete">
-                                                <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
-                                                (onSelectionChange)="getSelectedOption(option);">
-                                                  {{option}}
-                                                </mat-option>
-                                              </mat-autocomplete>
-                                            </mat-form-field>
-                                            </div>
 
                                         </div>
                                         <div class="offset-xl-3 col-xl-9 col-md-12 col-sm-12">
@@ -360,6 +342,24 @@
                                               </div>
                                               <div class="manualAssignment">
                                                 <h2>Manual Assignment</h2>
+                                                <div class="form-group assignStallWrap">
+                                                  <label>Assign stall </label>
+                                                <mat-form-field class="example-full-width">
+                                                  <input type="text"
+                                                  #AssignStall
+                                                         placeholder="Pick one"
+                                                         aria-label="Number"
+                                                         matInput
+                                                         [formControl]="myControl"
+                                                         [matAutocomplete]="auto">
+                                                  <mat-autocomplete #auto="matAutocomplete">
+                                                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
+                                                    (onSelectionChange)="getSelectedOption(option);">
+                                                      {{option}}
+                                                    </mat-option>
+                                                  </mat-autocomplete>
+                                                </mat-form-field>
+                                                </div>
                                                 <div class="form-group">
                                                   <div class="assignStallWrap">
                                                       <div class="formControl">
