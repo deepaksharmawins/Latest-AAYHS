@@ -42,7 +42,7 @@
             </div>
         </div>
     </div>
-  
+
 
 
 
@@ -60,13 +60,13 @@
             </tbody>
         </table>
     </div>
-   
+
     <div class="sponTabbing">
 
 
         <div class="tab-content">
             <div class="tab-pane  active" id="home">
-                <mat-tab-group #tabGroup> 
+                <mat-tab-group #tabGroup>
                     <mat-tab class="nav-link active nav nav-tabs" label="Group Info">
 
                         <form #groupInfoForm="ngForm" name="groupInfoForm"
@@ -138,54 +138,6 @@
                                             </div>
 
 
-                                            <div class="row">
-                                                <div class="col-md-7">
-                                                    <div class="form-group">
-                                                        <label>City <span>*</span></label>
-                                                        <!-- <input  autocomplete="new-password"
-                                                         class="form-control" required placeholder="City" name="city"
-                                                        #city="ngModel" [(ngModel)]="seletedCityName" (keyup)="filterCities($event.target.value,true)"
-                                                        value="{{seletedCityName}}" type="search" [matAutocomplete]="cityauto">
-        
-                                                        <mat-autocomplete #cityauto="matAutocomplete">
-                                                            <mat-option *ngFor="let option of cityfilteredOptions"
-                                                            [value]="option.Name" (onSelectionChange)="getFileredZipCodes(option.Name,option.CityId,$event);">
-                                                                {{ option.Name }}  </mat-option> </mat-autocomplete> -->
-                                                                <input type="text" class="form-control" placeholder="City"
-															#city="ngModel" name="city" [(ngModel)]="groupInfo.City"
-                                                            required />
-                                                            
-                                                        <span class="help-block" *ngIf="groupInfo.City==null && (city.touched || groupInfoForm.submitted)">
-                                                            City is required</span>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-md-5">
-                                                    <div class="form-group">
-                                                        <label>Zip Code<span>*</span></label>
-                                                        <!-- <select required class="form-control" placeholder="Zip Code" #zipcodeid="ngModel" name="zipcodeid"
-                                                             [(ngModel)]="groupInfo.ZipCodeId" (change)="getZipNumber($event)">
-                                                            <option value="null" disabled="true" [selected]="true">
-                                                                Select Zip Code
-                                                            </option>
-                                                            <option *ngFor="let code of zipCodesResponse"
-                                                                [value]="code.ZipCodeId">{{code.ZipCode}}
-                                                            </option>
-                                                        </select> -->
-
-                                                        <input type="text" appOnlynumber class="form-control"
-                                                        placeholder="Zip Code" maxlength="5" #zipcode="ngModel"
-                                                        name="zipcode" [(ngModel)]="groupInfo.ZipCode" required />
-                                                            
-                                                        <span class="help-block"
-                                                            *ngIf="zipcode.errors?.required && (zipcode.touched || groupInfoForm.submitted)">
-                                                            Zip Code is required
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                            </div>
                                         </div>
 
 
@@ -228,13 +180,99 @@
                                                        [formControl]="myControl"
                                                        [matAutocomplete]="auto">
                                                 <mat-autocomplete #auto="matAutocomplete">
-                                                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option" 
+                                                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
                                                   (onSelectionChange)="getSelectedOption(option);">
                                                     {{option}}
                                                   </mat-option>
                                                 </mat-autocomplete>
                                               </mat-form-field>
+                                            </div>
+
+
+                                            <div class="row">
+                                              <div class="col-md-7">
+                                                  <div class="form-group">
+                                                      <label>City <span>*</span></label>
+                                                      <!-- <input  autocomplete="new-password"
+                                                       class="form-control" required placeholder="City" name="city"
+                                                      #city="ngModel" [(ngModel)]="seletedCityName" (keyup)="filterCities($event.target.value,true)"
+                                                      value="{{seletedCityName}}" type="search" [matAutocomplete]="cityauto">
+
+                                                      <mat-autocomplete #cityauto="matAutocomplete">
+                                                          <mat-option *ngFor="let option of cityfilteredOptions"
+                                                          [value]="option.Name" (onSelectionChange)="getFileredZipCodes(option.Name,option.CityId,$event);">
+                                                              {{ option.Name }}  </mat-option> </mat-autocomplete> -->
+                                                              <input type="text" class="form-control" placeholder="City"
+                            #city="ngModel" name="city" [(ngModel)]="groupInfo.City"
+                                                          required />
+
+                                                      <span class="help-block" *ngIf="groupInfo.City==null && (city.touched || groupInfoForm.submitted)">
+                                                          City is required</span>
+                                                  </div>
                                               </div>
+
+
+                                              <div class="col-md-5">
+                                                  <div class="form-group">
+                                                      <label>Zip Code<span>*</span></label>
+                                                      <!-- <select required class="form-control" placeholder="Zip Code" #zipcodeid="ngModel" name="zipcodeid"
+                                                           [(ngModel)]="groupInfo.ZipCodeId" (change)="getZipNumber($event)">
+                                                          <option value="null" disabled="true" [selected]="true">
+                                                              Select Zip Code
+                                                          </option>
+                                                          <option *ngFor="let code of zipCodesResponse"
+                                                              [value]="code.ZipCodeId">{{code.ZipCode}}
+                                                          </option>
+                                                      </select> -->
+
+                                                      <input type="text" appOnlynumber class="form-control"
+                                                      placeholder="Zip Code" maxlength="5" #zipcode="ngModel"
+                                                      name="zipcode" [(ngModel)]="groupInfo.ZipCode" required />
+
+                                                      <span class="help-block"
+                                                          *ngIf="zipcode.errors?.required && (zipcode.touched || groupInfoForm.submitted)">
+                                                          Zip Code is required
+                                                      </span>
+                                                  </div>
+                                              </div>
+
+                                          </div>
+
+
+
+                                        </div>
+
+
+                                        <div class="offset-xl-3 col-xl-9 col-md-12 col-sm-12">
+                                          <div class="diagramWraper d-flex">
+                                            <div class="graphicalAssignment">
+                                              <h2>Graphical Assignment</h2>
+                                              <div class="quantityWrapper mt-3">
+                                                  <div class="form-group">
+                                                      <label>Horse Stall Quantity</label>
+                                                      <div class="uantityField stallQuantity">
+                                                          <input type="text" class="form-control"
+                                                              [value]="horsestalllength" />
+                                                          <button type="button" (click)="openStallDiagram('horse')"
+                                                              class="btn btn-red btnCss roundBtn whitebg">Stall</button>
+                                                      </div>
+                                                  </div>
+                                                  <div class="divideLine"></div>
+                                                  <div class="form-group mb-0">
+                                                      <label>Tack Stall Quantity</label>
+                                                      <div class="uantityField stallQuantity">
+                                                          <input type="text" class="form-control"
+                                                              [value]="tackstalllength" />
+                                                          <button type="button" (click)="openStallDiagram('tack')"
+                                                              class="btn btn-red btnCss roundBtn whitebg">
+                                                              Stall</button>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                            </div>
+
+                                            <div class="manualAssignment">
+                                              <h2>Manual Assignment</h2>
                                               <div class="form-group">
                                                 <div class="assignStallWrap">
                                                     <div class="formControl">
@@ -248,33 +286,13 @@
                                                     <button type="button" (click)="assignStallToExhibitor();AssignStall.value=''"
                                                     class="btn btn-red btnCss roundBtn whitebg">
                                                     Assign Stall</button>
-                                                </div>                                                
-                                              </div>  
-
-                                            <div class="quantityWrapper">
-                                                <div class="form-group">
-                                                    <label>Horse Stall Quantity</label>
-                                                    <div class="uantityField stallQuantity">
-                                                        <input type="text" class="form-control"
-                                                            [value]="horsestalllength" />
-                                                        <button type="button" (click)="openStallDiagram('horse')"
-                                                            class="btn btn-red btnCss roundBtn whitebg">Stall</button>
-                                                    </div>
                                                 </div>
-                                                <div class="divideLine"></div>
-                                                <div class="form-group mb-0">
-                                                    <label>Tack Stall Quantity</label>
-                                                    <div class="uantityField stallQuantity">
-                                                        <input type="text" class="form-control"
-                                                            [value]="tackstalllength" />
-                                                        <button type="button" (click)="openStallDiagram('tack')"
-                                                            class="btn btn-red btnCss roundBtn whitebg">
-                                                            Stall</button>
-                                                    </div>
-                                                </div>
+                                              </div>
                                             </div>
+                                          </div>
                                         </div>
-                                        <div class="col-sm-12">
+
+                                        <div class="col-sm-12 mt-3">
                                             <div class="buttons text-right mb-3">
                                                 <button (click)='tabGroup.selectedIndex = 1'
                                                     class="btn btn-red btnCss roundBtn">Next</button>
@@ -338,7 +356,7 @@
                                                             (click)="confirmRemoveGroupExhibitor($event,i,list.GroupExhibitorId)">
                                                             <span></span> <i class="fa fa-trash-o"
                                                                 aria-hidden="true"></i>
-                                                        </button> 
+                                                        </button>
                                                     </td>-->
                                                 </tr>
                                             </tbody>
@@ -418,13 +436,13 @@
 
                                                             <button *ngIf="updatemode==true && updateRowIndex==i"
                                                                 type="button" class="icon"
-                                                                (click)="updateGroupFinancialsAmount($event,i,list.GroupFinancialId,list.TimeFrameName)"> 
+                                                                (click)="updateGroupFinancialsAmount($event,i,list.GroupFinancialId,list.TimeFrameName)">
                                                                 <span></span> <i class="fa fa-edit"
                                                                 aria-hidden="true"></i>
                                                             </button>
                                                             <button *ngIf="updatemode==true && updateRowIndex==i"
                                                                 type="button" class="icon"
-                                                                (click)="cancelUpdateFinancialsAmount($event,i,list.GroupFinancialId)"> 
+                                                                (click)="cancelUpdateFinancialsAmount($event,i,list.GroupFinancialId)">
                                                                 <span></span> <i class="fa fa-times-circle"
                                                                 aria-hidden="true"></i>
                                                             </button>
@@ -440,7 +458,7 @@
                                                     </tr>
                                                     <tr id="groupFinancialsentry">
                                                         <td data-label="Date">{{currentDate | date:'MM-dd-yyyy'}}</td>
-                                                       
+
                                                         <td data-label="Pre/Post">
                                                             <div class="prePostField">
                                                                 <label *ngFor="let fee of TimeFrameTypes;let i=index"
@@ -478,7 +496,7 @@
                                                             </span>
                                                         </td>
 
-                                                     
+
 
                                                         <td data-label="Amount">
 
@@ -488,7 +506,7 @@
                                                                 #groupAmountControl="ngModel"
                                                                 (change)="setFinancialsAmount($event.target.value)">
 
-                                                            <span class="help-block" *ngIf="(groupFinancialForm.submitted || groupAmountControl.touched) 
+                                                            <span class="help-block" *ngIf="(groupFinancialForm.submitted || groupAmountControl.touched)
                                             && groupAmountControl.invalid">Please select amount
                                                             </span>
 
@@ -565,7 +583,7 @@
                                                                 aria-hidden="true"></i></button>
 
                                                         <button type="button"
-                                                        (click)="setreportType('download','GroupStatementReport')" class="icon"><span></span> 
+                                                        (click)="setreportType('download','GroupStatementReport')" class="icon"><span></span>
                                                         <i class="fa fa-download"
                                                                 aria-hidden="true"></i></button>
                                                     </td>
@@ -574,12 +592,12 @@
                                         </perfect-scrollbar>
                                     </table>
 
-                                
+
                                     <div class="actionBtn text-right mb-3 mt-3">
                                         <button type="button" (click)='tabGroup.selectedIndex = 2'
-                                           
+
                                         class="btn btn-red btnCss roundBtn">Previous</button>
-                                     
+
 
                                     </div>
                                 </div>

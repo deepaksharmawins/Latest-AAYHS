@@ -1,7 +1,7 @@
 <div class="innerContent">
                 <div class="row">
                     <div class="col-sm-12">
-                        
+
                         <mat-tab-group #tabGroup class="sponTabbing mt-4" (selectedTabChange)="changeTab();">
                             <mat-tab class="nav-link active nav nav-tabs tab-content" id="PermanentStall" label="Permanent Stall">
                                 <div class="card increaseHeight">
@@ -19,50 +19,50 @@
                                                                 <td style="white-space: pre;">&nbsp;&nbsp;</td>
                                                             </tr>
                                                             <tr>
-                                                               
+
                                                                 <td (click)="assignStall(1002)" id="stall_1002">1002</td>
                                                             </tr>
                                                             <tr>
-                                                               
+
                                                                 <td (click)="assignStall(1003)" id="stall_1003">1003</td>
                                                             </tr>
                                                             <tr>
-                                                               
+
                                                                 <td (click)="assignStall(1004)" id="stall_1004">1004</td>
                                                             </tr>
                                                             <tr>
-                                                               
+
                                                                 <td (click)="assignStall(1005)" id="stall_1005">1005</td>
                                                             </tr>
                                                             <tr>
-                                                               
+
                                                                 <td (click)="assignStall(1006)" id="stall_1006">1006</td>
                                                             </tr>
                                                             <tr>
-                                                               
+
                                                                 <td (click)="assignStall(1007)" id="stall_1007">1007</td>
                                                             </tr>
                                                             <tr>
-                                                               
+
                                                                 <td (click)="assignStall(1008)" id="stall_1008">1008</td>
                                                             </tr>
                                                             <tr>
-                                                               
+
                                                                 <td (click)="assignStall(1009)" id="stall_1009">1009</td>
                                                             </tr>
                                                             <tr>
-                                                               
+
                                                                 <td (click)="assignStall(1010)" id="stall_1010">1010</td>
                                                             </tr>
                                                             <tr>
-                                                                
+
                                                                 <td (click)="assignStall(1011)" id="stall_1011">1011</td>
                                                             </tr>
                                                             <tr>
-                                                                
+
                                                                 <td (click)="assignStall(1012)" id="stall_1012">1012</td>
                                                             </tr>
-                                                            
+
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -834,7 +834,7 @@
                                                             </tr>
                                                         </tbody>
                                                     </table>
-                                                
+
                                                 </div>
                                             </div>
 
@@ -2124,7 +2124,7 @@
                                                                 <td (click)="assignStall(150)" id="stall_150">150</td>
                                                                 <td (click)="assignStall(121)" id="stall_121">121</td>
                                                             </tr>
-                                        
+
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -2909,7 +2909,7 @@
                                                             <tr>
                                                                 <td (click)="assignStall(2187)" id="stall_2187">2187</td>
                                                                 <td (click)="assignStall(2204)" id="stall_2204">2204</td>
-                                        
+
                                                             </tr>
                                                             <tr>
                                                                 <td (click)="assignStall(2188)" id="stall_2188">2188</td>
@@ -2955,7 +2955,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td (click)="assignStall(2209)" id="stall_2209">2209</td>
-                                                                
+
                                                             </tr>
                                                             <tr>
                                                                 <td (click)="assignStall(2210)" id="stall_2210">2210</td>
@@ -3005,6 +3005,26 @@
                                 </div>
                             </mat-tab>
 
+                            <!--Stall Assignments-->
+
+                            <mat-tab class="nav-link active nav nav-tabs" id="PortableStall" label="Stall Assignments">
+                              <div class="card increaseHeight">
+                                  <div class="card-body">
+                                      <div class="stallWrapper">
+
+                                          <div class="stallDiagram">
+                                            Stall Assignments
+                                          </div>
+
+                                      </div>
+                                  </div>
+                                </div>
+                            </mat-tab>
+
+
+
+
+
                         </mat-tab-group>
 
                     </div>
@@ -3036,5 +3056,5 @@
     <div class="labelCol">
     <label>Assignment Type : </label><span>{{hoverStallType}}</span>
     </div>
-    
+
     </div>
