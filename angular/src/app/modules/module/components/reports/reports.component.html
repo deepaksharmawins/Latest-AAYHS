@@ -95,32 +95,45 @@
                         <tr *ngIf="Exhibitors">
                             <td (click)="selectReport(17,'AllSponsor')" [ngClass]="{'blueRow': selectedRowIndex == 17}">
                                 <div class="mmReportList">Exhibitor Sponsor Incentive Report (#115)
-                                    <!-- <span id="downarrow33" style="display: block;"  (click)="showpopupbox('showpopupbox33','downarrow33','uparrow33')">
+                                    <span id="downarrow331" style="display: block;"  (click)="showpopupbox('showpopupbox331','downarrow331','uparrow331')">
                                         <i class="fa fa-caret-down" aria-hidden="true"></i>
                                     </span>
-                                    <span id="uparrow33" style="display: none;" (click)="hidepopupbox('showpopupbox33','uparrow33','downarrow33')">
+                                    <span id="uparrow331" style="display: none;" (click)="hidepopupbox('showpopupbox331','uparrow331','downarrow331')">
                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
-                                    </span> -->
-                                    <!-- <div class="mmHoverContent" id="showpopupbox33">
+                                    </span>
+                                    <div class="mmHoverContent" id="showpopupbox331">
                                         <div class="prePostField mb-4 multiCheckBtn">
-                                           <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <label class="radioBtn">
-                                                    <input type="radio" value="all"
-                                                        (change)="checkChange($event.target.value,'getallStallList')" name="mmr">
-                                                    <span class="checkmark"></span>All
-                                                </label>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label class="radioBtn">
+                                                        <input type="radio" [(ngModel)]="RadioReset1" value="RadioReset1" (change)="checkChange($event.target.value,'getallExhibitorList')"
+                                                            name="mmr">
+                                                        <span class="checkmark"></span>All
+                                                    </label>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="ExhibitorList" class="mr-4">Choose a Exhibitor:</label>
+                                                    <select name="Exhibitor" id="ExhibitorId" class="form-group" (change)="getExhibitor($event.target.value)">
+                                                        <option value="0">Choose a Exhibitor</option>
+                                                        <option *ngFor="let exhibitor of exhibitorsListForFilter" [value]="exhibitor.ExhibitorId">
+                                                            {{exhibitor.FirstName}} {{exhibitor.LastName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div class="form-group col-md-6">
-                                                <label class="radioBtn">
-                                                    <input type="radio" value="one" name="mmr"
-                                                        (change)="checkChange($event.target.value,'getUnassignStallList')">
-                                                    <span class="checkmark"></span>One
-                                                </label>
-                                            </div>
-                                           </div>
                                         </div>
-                                    </div> -->
+
+                                        <!-- <div class="form-group">
+                                            <div class="col-md-6">
+                                                <label for="ExhibitorList" class="mr-4">Choose a Exhibitor:</label>
+                                                <select name="Exhibitor" id="ExhibitorId" class="form-group" (change)="getExhibitor($event.target.value)">
+                                                    <option *ngFor="let exhibitor of exhibitorsListForFilter" [value]="exhibitor.ExhibitorId">
+                                                        {{exhibitor.FirstName}} {{exhibitor.LastName}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div> -->
+                                    </div>
                                 </div>
                             </td>
 

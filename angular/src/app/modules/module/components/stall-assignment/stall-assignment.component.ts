@@ -104,6 +104,7 @@ counter(i: number) {
 }
   
   changeTab() {
+    this.closehoverbox();
     if (this.allAssignedStalls != null && this.allAssignedStalls != undefined && this.allAssignedStalls.length > 0) {
       this.allAssignedStalls.forEach(data => {
         var s_id = String('stall_' + data.StallId);
@@ -118,6 +119,7 @@ counter(i: number) {
         }
       });
     }
+    
   }
 
   ShowStallDetail(val) {
@@ -339,6 +341,10 @@ counter(i: number) {
         else if (this.TypeOfStallReport == "getAssignedStallList") {
           this.getAllAssignedStalls1();
           this.getAssignedStallList();
+        }
+        else
+        {
+          this.getallStallList();
         }
       }
     }

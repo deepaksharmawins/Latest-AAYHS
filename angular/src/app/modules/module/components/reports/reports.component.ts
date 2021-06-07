@@ -23,6 +23,15 @@ export class StallModel {
   Occupant: string;
   Type: string;
 }
+export class ExhibitorModel {
+  ExhibitorID: number;
+  ExhibitorName: string;
+  ExhibitorAddress: string;
+  ExhibitorEmail:string;
+  PhoneNumber:number;
+  BirthYear:number;
+  GroupName:number;
+}
 
 @Component({
   selector: 'app-reports',
@@ -34,6 +43,7 @@ export class ReportsComponent implements OnInit {
   entriesPerClassReport: any;
   classesList: any;
   classresultsclassesList: any;
+  exhibitorresultsList: any;
   paddocksheetclassesList: any;
   programsheetclassesList: any;
   sponsorsList: any;
@@ -41,7 +51,7 @@ export class ReportsComponent implements OnInit {
   selectedresultClasssname = "";
   allResultClass: boolean = true;
   YearShowSummary: any;
-
+  RadioReset1: null;
   paddockClassId: any = null;
   selectedpaddockClasssname = "";
   allPaddockClass: boolean = true
@@ -59,7 +69,7 @@ export class ReportsComponent implements OnInit {
 
   exhibitorSponsoredAdslist: any;
   allNonExhibitorSponsorAdlist: any;
-
+  ExhibitorListForExcel : any[] = [];
   selectedRowIndex: any;
   reportName: any;
   reportType: any;
@@ -86,6 +96,15 @@ export class ReportsComponent implements OnInit {
     OrderBy: '',
   };
 
+  baseRequestForFilter: BaseRecordFilterRequest = {
+    Page: 1,
+    Limit: 5,
+    OrderBy: 'ExhibitorId',
+    OrderByDescending: true,
+    AllRecords: true,
+    SearchTerm: null
+  };
+
 
   baseSponsorRequest: BaseRecordFilterRequest = {
     Page: 1,
@@ -103,8 +122,9 @@ export class ReportsComponent implements OnInit {
   YearlyMaintenance: boolean = true;
   TypeOfStallReport: any;
   exhibitorsList: any;
+  exhibitorsSponsorsOrginal: any;
   exhibitorsSponsors: any;
-
+  exhibitorsListForFilter: any[]=[];
   AssignedStallsData: any[]=[];
   AllStallsData: any[]=[];
   UnAssignedStallData: any[]=[];
@@ -121,6 +141,7 @@ export class ReportsComponent implements OnInit {
     this.getAllClasses();
     this.getAllSponsors();
     this.getAllAssignedStalls();
+    this.getAllExhibitorsForFilter();
     //this.getFilterExhibitors();
     //this.getAllSponsorsOfExhibitors();
   }
@@ -304,7 +325,6 @@ export class ReportsComponent implements OnInit {
       }
 
       else if (this.reportName == "Stall") {
-        debugger
         if (this.TypeOfStallReport == "getallStallList") {
           //this.allStalls();
         this.getallStallList();
@@ -316,12 +336,17 @@ export class ReportsComponent implements OnInit {
           this.getAllAssignedStalls();
         this.getAssignedStallList();
         }
+        else
+        {
+          this.getallStallList();
+        }
       }
       else if (this.reportName == "MasterExhibitor"){
         this.getFilterExhibitors();
       }
       else if (this.reportName == "ExhibitorSponsorIncentiveReport") {
-        this.getAllSponsorsOfExhibitors()
+            this.RadioReset1 = null;
+            this.getAllSponsorsOfExhibitors()
       }
     }
   }
@@ -689,6 +714,7 @@ export class ReportsComponent implements OnInit {
 
   }
 
+  GetAllExhibitor:boolean = false;
   checkChange(value, type) {
     if (type == "result") {
       this.allResultClass = value == "all" ? true : false
@@ -731,7 +757,11 @@ export class ReportsComponent implements OnInit {
     else if (type == "Id") {
       this.filterBaseRequest.OrderBy = type;
     }
-
+    else if (type == "getallExhibitorList") {
+        this.GetAllExhibitor = true;
+        this.SelectedExhibitorID = 0;
+      this.hidepopupbox('showpopupbox331','uparrow331','downarrow331')
+    }
   }
 
   selectReport(i, report) {
@@ -1021,6 +1051,19 @@ export class ReportsComponent implements OnInit {
 
     if (this.classesList != null && this.classesList != undefined && this.classesList.length > 0) {
       this.classresultsclassesList = this.classesList.filter(option =>
+        option.Name.toLowerCase().includes(val.toLowerCase())
+        || (option.AgeGroup.toString()).includes(val.toLowerCase()));
+    }
+
+  }
+
+  filterExhibitorResult(val, makeresultclassnull) {
+    if (makeresultclassnull == true) {
+      this.resultClassId = null;
+    }
+
+    if (this.classesList != null && this.classesList != undefined && this.classesList.length > 0) {
+      this.exhibitorresultsList = this.classesList.filter(option =>
         option.Name.toLowerCase().includes(val.toLowerCase())
         || (option.AgeGroup.toString()).includes(val.toLowerCase()));
     }
@@ -2266,6 +2309,9 @@ export class ReportsComponent implements OnInit {
   }
 
   getFilterExhibitors() {
+    if (this.filterBaseRequest.OrderBy == "" || this.filterBaseRequest.OrderBy == undefined || this.filterBaseRequest.OrderBy == null) {
+      this.filterBaseRequest.OrderBy = "Id"
+    }
     return new Promise<void>((resolve, reject) => {
       this.loading = true;
       this.exhibitorService.getFilterExhibitors(this.filterBaseRequest).subscribe(response => {
@@ -2287,44 +2333,61 @@ export class ReportsComponent implements OnInit {
     
   }
 
-  downloadExcelFile () {
+  downloadExcelFile() {
     return new Promise<void>((resolve, reject) => {
       this.loading = true;
       this.exhibitorService.getFilterExhibitors(this.filterBaseRequest).subscribe(response => {
-       if (response.Data.exhibitorResponses != null) {
-        this.exhibitorsList = response.Data.exhibitorResponses;
-        this.loading = false;
+        if (response.Data.exhibitorResponses != null) {
+          this.exhibitorsList = response.Data.exhibitorResponses;
+          this.loading = false;
 
+          for (let index = 0; index < this.exhibitorsList.length; index++) {
+            const element = this.exhibitorsList[index];
+            var filterObjectForExcel = {
+              'ExhibitorID': element.ExhibitorId,
+              'ExhibitorName': element.LastName,
+              'ExhibitorAddress': element.Address,
+              'ExhibitorEmail': element.PrimaryEmail,
+              'PhoneNumber': element.Phone,
+              'BirthYear': element.BirthYear,
+              'GroupName': element.GroupName,
+            };
+            this.ExhibitorListForExcel.push(filterObjectForExcel);
+          }
+          //  Column headings, separated by commas, each comma is separated by a cell
+          let str = `Exhibitor ID,Exhibitor Name,Address,City,State,Pincode,Exhibitor Email Address,Phone Number,Birth Year,Group Name\n`
 
-        //  json data to export
-     //  Column headings, separated by commas, each comma is separated by a cell
-     let str = `Exhibitor ID,Exhibitor Name,Exhibitor Address,Exhibitor Email Address,Phone Number,Birth Year,Group Name\n`
-     //  Add \ tto prevent tables from displaying scientific notation or other formats
-     for (let i = 0; i < this.exhibitorsList.length; i++) {
-       for (let item in this.exhibitorsList[i]) {
-         str += `${this.exhibitorsList[i][item] + '\t'},`
-       }
-       str += '\n'
-     }
-     //  Encodeuriccomponent solves Chinese code disorder
-     let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str)
-     //  If the browser recognizes that the path of a label is a file, it will download the file automatically
-     let link = document.createElement('a') 
-     link.href = uri
-     //  Name the downloaded file
-     link.download = 'Master-Exhibitor-List-High-Level-Report(#113).csv'
-     document.body.appendChild(link)
-     link.click()
-     document.body.removeChild(link)
+          //  Add \ tto prevent tables from displaying scientific notation or other formats
+          for (let i = 0; i < this.ExhibitorListForExcel.length; i++) {
+            debugger
+            for (let item in this.ExhibitorListForExcel[i]) {
+              debugger
+              str += `${this.ExhibitorListForExcel[i][item] + '\t'},`
+            }
+            str += '\n'
+          }
 
-       }
+          let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str)
+
+          //  If the browser recognizes that the path of a label is a file, it will download the file automatically
+          let link = document.createElement('a')
+          link.href = uri
+
+          //  Name the downloaded file
+          link.download = 'Master-Exhibitor-List-High-Level-Report(#113).csv'
+
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+
+        }
       }, error => {
         this.loading = false;
       }
       )
       resolve();
     });
-   }
+  }
 
   pdfFilterExhibitors(){
     debugger
@@ -2373,7 +2436,6 @@ export class ReportsComponent implements OnInit {
         debugger
         this.exhibitorsSponsors = response.Data.getGroupExhibitorSponsorsList;
         this.loading = false;
-        console.log("this.exhibitorSponsors", this.exhibitorsSponsors)
         this.SponsorsOfExhibitors();
       }, error => {
         this.loading = false;
@@ -2403,34 +2465,129 @@ export class ReportsComponent implements OnInit {
     //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
     doc.fromHTML(String('<b>Exhibitor Sponsor Incentive Ads (#114)</b>'), textOffset, 15)
     doc.fromHTML(String('<b>_________________________________</b>'), textOffset, 15)
-
     this.exhibitorsSponsors.forEach(element => {
       let id = element.ExhibitorId.toString()
-     let element1 =element;
-     element1.GroupHorseSponsor.forEach(x => {
-      let x1 =x;
-      doc.autoTable({
-        head: [["Id : " +id, "Exhibitor Name : " + element1.ExhibitorName, "Horse Name : " + x1.HorseName]],
-        margin: { vertical: 55, horizontal: 10 },
-        startY: 40,
-        styles: { fillColor: "#FFFFFF",textColor:"#000000" },
-      })
+      if (this.SelectedExhibitorID == 0) {
+        let element1 = element;
+        element1.GroupHorseSponsor.forEach(x => {
+          let x1 = x;
+          doc.autoTable({
+            head: [["Id : " + id, "Exhibitor Name : " + element1.ExhibitorName, "Horse Name : " + x1.HorseName]],
+            margin: { vertical: 55, horizontal: 10 },
+            startY: 40,
+            styles: { fillColor: "#FFFFFF", textColor: "#000000" },
+          })
 
-      doc.autoTable({
-        head: [['SponsorName', 'SponsorType', 'TotalReceived']],
-        body: x1.groupSponsorsList,
-        columns:
-          [
-            { header: 'SponsorName', dataKey: 'SponsorName' },
-            { header: 'SponsorType', dataKey: 'SponsorType' },
-            { header: 'TotalReceived', dataKey: 'TotalReceived' }
-          ],
-        margin: { vertical: 55, horizontal: 10 },
-        startY: 50
-      })
-      doc.addPage()
+          doc.autoTable({
+            head: [['SponsorName', 'SponsorType', 'TotalReceived']],
+            body: x1.groupSponsorsList,
+            columns:
+              [
+                { header: 'SponsorName', dataKey: 'SponsorName' },
+                { header: 'SponsorType', dataKey: 'SponsorType' },
+                { header: 'TotalReceived', dataKey: 'TotalReceived' }
+              ],
+            margin: { vertical: 55, horizontal: 10 },
+            startY: 50
+          })
+          doc.addPage()
+        });
+      }
+      else {
+        debugger
+        if (id == this.SelectedExhibitorID) {
+          let element1 = element;
+          element1.GroupHorseSponsor.forEach(x => {
+            let x1 = x;
+            doc.autoTable({
+              head: [["Id : " + id, "Exhibitor Name : " + element1.ExhibitorName, "Horse Name : " + x1.HorseName]],
+              margin: { vertical: 55, horizontal: 10 },
+              startY: 40,
+              styles: { fillColor: "#FFFFFF", textColor: "#000000" },
+            })
+
+            doc.autoTable({
+              head: [['SponsorName', 'SponsorType', 'TotalReceived']],
+              body: x1.groupSponsorsList,
+              columns:
+                [
+                  { header: 'SponsorName', dataKey: 'SponsorName' },
+                  { header: 'SponsorType', dataKey: 'SponsorType' },
+                  { header: 'TotalReceived', dataKey: 'TotalReceived' }
+                ],
+              margin: { vertical: 55, horizontal: 10 },
+              startY: 50
+            })
+            doc.addPage()
+          });
+        }
+      }
     });
-    });
+    
     this.setPrintReportOptions("allstallsreport", "display", doc);
+  }
+
+  getAllExhibitorsForFilter() {
+    return new Promise<void>((resolve, reject) => {
+      this.loading = true;
+      this.exhibitorService.getAllExhibitors(this.baseRequestForFilter).subscribe(response => {
+        this.exhibitorsListForFilter = response.Data.exhibitorResponses;
+        console.log("this.exhibitorsListForFilter",this.exhibitorsListForFilter)
+        this.loading = false;
+      }, error => {
+        this.loading = false;
+      }
+      )
+      resolve();
+    });
+  }
+
+  SelectedExhibitorID:number =0;
+  getExhibitor(val:number) {
+    if (val>0) {
+      this.SelectedExhibitorID = val;
+    this.hidepopupbox('showpopupbox331','uparrow331','downarrow331')
+    }
+  }
+  getAllExhibitorsFilter(){
+    return new Promise<void>((resolve, reject) => {
+      this.loading = true;
+      this.exhibitorService.getAllExhibitors(this.baseRequestForFilter).subscribe(response => {
+        var objForArray = [{
+          'Address': "",
+          'AddressId': 0,
+          'BackNumber': 0,
+          'BirthYear': 0,
+          'City': null,
+          'CityId': 0,
+          'ExhibitorId': 0,
+          'FirstName': "",
+          'GroupId': 0,
+          'GroupName': null,
+          'IsDoctorNote': false,
+          'IsNSBAMember': false,
+          'LastName': "",
+          'Phone': "",
+          'PrimaryEmail': "",
+          'QTYProgram': 0,
+          'SecondaryEmail': null,
+          'StateId': null,
+          'ZipCode': null,
+          'exhibitorStallAssignmentResponses': null,
+          'getGroupExhibitorSponsorsList1': null,
+        }]
+
+        this.exhibitorsSponsors = response.Data.exhibitorResponses;
+        this.exhibitorsSponsors = this.exhibitorsSponsors.filter(x => x.ExhibitorId == this.SelectedExhibitorID)
+        this.exhibitorsSponsors.push(objForArray);
+        console.log("this.exhibitorsListForFilter",this.exhibitorsListForFilter)
+        this.loading = false;
+        this.SponsorsOfExhibitors();
+      }, error => {
+        this.loading = false;
+      }
+      )
+      resolve();
+    });
   }
 }
