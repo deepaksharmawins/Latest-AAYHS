@@ -59,14 +59,14 @@ export class ReportsComponent implements OnInit {
   programClassId: any = null;
   selectedprogramClasssname = "";
   allProgramClass: boolean = true;
-
+  filteredExhibitorsList2: any;
   nonExhibitorSponsorDistributorId: any = null;
   selectednonExhibitorSponsorDistributorName = "";
   allnonExhibitorSponsorDistributors: boolean = true;
-
+  selectedexhibitorsponsorrefundname: string = "";
   nonExhibitorSponsorDistributorReport: any;
   filteredSponsorList: any;
-
+  LinkedExhibitorSponsorRefundID: number = null;
   exhibitorSponsoredAdslist: any;
   allNonExhibitorSponsorAdlist: any;
   ExhibitorListForExcel : any[] = [];
@@ -129,6 +129,21 @@ export class ReportsComponent implements OnInit {
   AllStallsData: any[]=[];
   UnAssignedStallData: any[]=[];
 
+
+  allExhibitorSponsorConfirm: boolean = true;
+  allExhibitorSponsorRefund: boolean = true;
+  allGroupStatement: boolean = true;
+  filteredExhibitorsList: any;
+
+  exhibitorBaseRequest: BaseRecordFilterRequest = {
+    Page: 1,
+    Limit: 5,
+    OrderBy: 'ExhibitorId',
+    OrderByDescending: true,
+    AllRecords: true,
+    SearchTerm: null
+  };
+
   constructor(private reportService: ReportService, private dialog: MatDialog,
     private classService: ClassService,
     private snackBar: MatSnackbarComponent,
@@ -142,6 +157,7 @@ export class ReportsComponent implements OnInit {
     this.getAllSponsors();
     this.getAllAssignedStalls();
     this.getAllExhibitorsForFilter();
+    this.getAllExhibitors();
     //this.getFilterExhibitors();
     //this.getAllSponsorsOfExhibitors();
   }
@@ -760,7 +776,19 @@ export class ReportsComponent implements OnInit {
     else if (type == "getallExhibitorList") {
         this.GetAllExhibitor = true;
         this.SelectedExhibitorID = 0;
+        //this.RadioReset1 = null;
       this.hidepopupbox('showpopupbox331','uparrow331','downarrow331')
+    }
+    else if (type == "exhibitorsponsorrefund1") {
+      this.allExhibitorSponsorRefund = true;
+      this.allGroupStatement = true;
+      this.SelectedExhibitorID = 0;
+      this.allExhibitorSponsorConfirm = true;
+    }
+     else if (type == "exhibitorsponsorrefund2") {
+      this.allExhibitorSponsorRefund = false;
+      this.allGroupStatement = false;
+      this.allExhibitorSponsorConfirm = true;
     }
   }
 
@@ -1525,15 +1553,15 @@ export class ReportsComponent implements OnInit {
     doc.line(0, 10, 300, 10);
 
     //var text = String('&nbsp<b>Stall and Occupants</b>');
-    var text = String('&nbsp<b>Assigned</b>');
+    var text = String('&nbsp<b></b>');
     var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-    var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+    var textOffset = (doc.internal.pageSize.width - textWidth) / 3;
     doc.fromHTML(text, textOffset, 10);
 
     let pageHeight = doc.internal.pageSize.height;
     //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>Stall and Occupants</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>Assigned Stall and Occupants</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>__________________________</b>'), textOffset, 15)
 
     doc.autoTable({
       body: this.AssignedStallsData,
@@ -1559,15 +1587,15 @@ export class ReportsComponent implements OnInit {
     doc.line(0, 10, 300, 10);
 
     //var text = String('&nbsp<b>Stall and Occupants</b>');
-    var text = String('&nbsp<b>All</b>');
+    var text = String('&nbsp&nbsp<b></b>');
     var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
     var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
     doc.fromHTML(text, textOffset, 10);
 
     let pageHeight = doc.internal.pageSize.height;
     //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>Stall and Occupants</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>All Stall and Occupants</b>'), textOffset, 19)
+    doc.fromHTML(String('<b>____________________</b>'), textOffset, 19)
 
     doc.autoTable({
       body: this.AllStallsData,
@@ -1593,15 +1621,15 @@ export class ReportsComponent implements OnInit {
     doc.line(0, 10, 300, 10);
 
     //var text = String('&nbsp<b>Stall and Occupants</b>');
-    var text = String('&nbsp<b>Unassigned Stalls</b>');
+    var text = String('&nbsp<b></b>');
     var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-    var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+    var textOffset = (doc.internal.pageSize.width - textWidth) / 3;
     doc.fromHTML(text, textOffset, 10);
 
     let pageHeight = doc.internal.pageSize.height;
     //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>Stall and Occupants</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>Unassigned Stalls Stall and Occupants</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>_________________________________</b>'), textOffset, 15)
 
     doc.autoTable({
       body: this.UnAssignedStallData,
@@ -2472,7 +2500,7 @@ export class ReportsComponent implements OnInit {
         element1.GroupHorseSponsor.forEach(x => {
           let x1 = x;
           doc.autoTable({
-            head: [["Id : " + id, "Exhibitor Name : " + element1.ExhibitorName, "Horse Name : " + x1.HorseName]],
+            head: [["Id: " + id, "Exhibitor Name: " + element1.ExhibitorName, "Horse Name: " + x1.HorseName]],
             margin: { vertical: 55, horizontal: 10 },
             startY: 40,
             styles: { fillColor: "#FFFFFF", textColor: "#000000" },
@@ -2532,7 +2560,25 @@ export class ReportsComponent implements OnInit {
       this.loading = true;
       this.exhibitorService.getAllExhibitors(this.baseRequestForFilter).subscribe(response => {
         this.exhibitorsListForFilter = response.Data.exhibitorResponses;
+        //this.filteredExhibitorsList2 = response.Data.exhibitorResponses;
         console.log("this.exhibitorsListForFilter",this.exhibitorsListForFilter)
+        //console.log("this.filteredExhibitorsList2",this.filteredExhibitorsList2)
+        this.loading = false;
+      }, error => {
+        this.loading = false;
+      }
+      )
+      resolve();
+    });
+  }
+
+  getAllExhibitors() {
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+      this.exhibitorService.getAllExhibitors(this.exhibitorBaseRequest).subscribe(response => {
+        this.exhibitorsList = response.Data.exhibitorResponses;
+        this.filteredExhibitorsList = response.Data.exhibitorResponses;
+        this.filteredExhibitorsList2 = response.Data.exhibitorResponses;
         this.loading = false;
       }, error => {
         this.loading = false;
@@ -2589,5 +2635,27 @@ export class ReportsComponent implements OnInit {
       )
       resolve();
     });
+  }
+
+  filterExhibitorSponsorRefund(val: any, makeexhibitornull: boolean) {
+
+    if (makeexhibitornull == true) {
+      this.LinkedExhibitorSponsorRefundID = null;
+    }
+
+    if (this.exhibitorsList != null && this.exhibitorsList != undefined && this.exhibitorsList.length > 0) {
+      this.filteredExhibitorsList2 = this.exhibitorsList.filter(option =>
+        option.FirstName.toLowerCase().includes(val.toLowerCase())
+        || option.LastName.toLowerCase().includes(val.toLowerCase()));
+    }
+  }
+
+  getFilteredExhibitorSponsorRefund(id: number, event: any) {
+
+    if (event.isUserInput) {
+      this.LinkedExhibitorSponsorRefundID = id;
+      this.SelectedExhibitorID = id;
+      this.hidepopupbox('showpopupbox331','uparrow331','downarrow331')
+    }
   }
 }

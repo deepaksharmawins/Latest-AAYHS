@@ -101,7 +101,7 @@
                                     <span id="uparrow331" style="display: none;" (click)="hidepopupbox('showpopupbox331','uparrow331','downarrow331')">
                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
                                     </span>
-                                    <div class="mmHoverContent" id="showpopupbox331">
+                                    <!-- <div class="mmHoverContent" id="showpopupbox331">
                                         <div class="prePostField mb-4 multiCheckBtn">
                                             <div class="row">
                                                 <div class="form-group col-md-6">
@@ -122,18 +122,94 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div> -->
 
-                                        <!-- <div class="form-group">
-                                            <div class="col-md-6">
-                                                <label for="ExhibitorList" class="mr-4">Choose a Exhibitor:</label>
-                                                <select name="Exhibitor" id="ExhibitorId" class="form-group" (change)="getExhibitor($event.target.value)">
-                                                    <option *ngFor="let exhibitor of exhibitorsListForFilter" [value]="exhibitor.ExhibitorId">
-                                                        {{exhibitor.FirstName}} {{exhibitor.LastName}}
-                                                    </option>
-                                                </select>
+                                    <!-- <div class="mmHoverContent" id="showpopupbox331">
+                                        <div class="prePostField mb-4 multiCheckBtn">
+                                            <div class="form-group">
+                                                <label class="radioBtn">
+                                                    <input type="radio" [(ngModel)]="RadioReset1" value="RadioReset1" (change)="checkChange($event.target.value,'getallExhibitorList')" name="mmr">
+                                                    <span class="checkmark"></span>All
+                                                </label>
                                             </div>
-                                        </div> -->
+                                            <div class="form-group">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="one" name="mmr"
+                                                        (change)="checkChange($event.target.value,'result')">
+                                                    <span class="checkmark"></span>One Class
+                                                </label>
+                                                <label class="radioBtn">
+                                                    <input type="radio" [(ngModel)]="RadioReset1" value="RadioReset1"  (change)="checkChange($event.target.value,'exhibitorsponsorrefund')" name="mmr">
+                                                    <span class="checkmark"></span>One Exhibitor
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+
+                                            <input class="form-control" placeholder="Select Exhibitor"
+                                                name="exhibitorsponsorrefund" #exhibitorsponsorrefund="ngModel"
+                                                [(ngModel)]="selectedexhibitorsponsorrefundname"
+                                                (keyup)="filterExhibitorSponsorRefund($event.target.value,true)"
+                                                value="{{selectedexhibitorsponsorrefundname}}" autocomplete="new-password"
+                                                type="search" [matAutocomplete]="ExhibitorSponsorRefundauto">
+    
+    
+                                            <mat-autocomplete #ExhibitorSponsorRefundauto="matAutocomplete">
+                                                <mat-option *ngFor="let exhibitor of filteredExhibitorsList2"
+                                                    [value]="exhibitor.FirstName"
+                                                    (onSelectionChange)="getFilteredExhibitorSponsorRefund(exhibitor.ExhibitorId,$event);">
+                                                    {{exhibitor.FirstName}} {{exhibitor.LastName}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+    
+                                        </div>
+
+                                    </div> -->
+
+                                    <div class="mmHoverContent" id="showpopupbox331">
+                                        <div class="prePostField mb-4 multiCheckBtn">
+                                            <div class="form-group">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="all"
+                                                        [checked]="allExhibitorSponsorRefund==true"
+                                                        (change)="checkChange($event.target.value,'exhibitorsponsorrefund1')"
+                                                        name="mmr5">
+                                                    <span class="checkmark"></span>All
+                                                </label>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="radioBtn">
+                                                    <input type="radio" value="one" name="mmr6"
+                                                        [checked]="allExhibitorSponsorRefund==false"
+                                                        (change)="checkChange($event.target.value,'exhibitorsponsorrefund2')">
+                                                    <span class="checkmark"></span>One Exhibitors
+                                                </label>
+                                            </div>
+                                        </div>
+    
+    
+                                        <div class="form-group">
+    
+                                            <input class="form-control" placeholder="Select Exhibitor"
+                                                name="exhibitorsponsorrefund" #exhibitorsponsorrefund="ngModel"
+                                                [(ngModel)]="selectedexhibitorsponsorrefundname"
+                                                (keyup)="filterExhibitorSponsorRefund($event.target.value,true)"
+                                                value="{{selectedexhibitorsponsorrefundname}}" autocomplete="new-password"
+                                                type="search" [matAutocomplete]="ExhibitorSponsorRefundauto">
+    
+    
+                                            <mat-autocomplete #ExhibitorSponsorRefundauto="matAutocomplete">
+                                                <mat-option *ngFor="let exhibitor of filteredExhibitorsList2"
+                                                    [value]="exhibitor.FirstName"
+                                                    (onSelectionChange)="getFilteredExhibitorSponsorRefund(exhibitor.ExhibitorId,$event);">
+                                                    {{exhibitor.FirstName}} {{exhibitor.LastName}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+    
+                                        </div>
+    
                                     </div>
+
                                 </div>
                             </td>
 

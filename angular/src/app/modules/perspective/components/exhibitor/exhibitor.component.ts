@@ -1399,7 +1399,7 @@ debugger
 
     );
     dialogRef.afterClosed().subscribe(dialogResult => {
-
+      debugger
       const result: any = dialogResult;
       if (result && result.submitted == true) {
         if(result.data.unassignedStallNumbers.length>0){
@@ -2978,7 +2978,6 @@ debugger
     this.stallService.getAllAssignedStalls().subscribe((data: any) => {
       if (data) {
         debugger
-
         data.Data.stallResponses.forEach(element => {
           // let stall = new StallModel();
           // stall.Occupant = element.BookedByName
@@ -3175,7 +3174,7 @@ debugger
 
       if (typeof this.options[indexPos] === 'undefined') {
         // does not exist
-        this.options.push(element)
+        this.options.push(element.toString())
       }
       else {
         // does exist
