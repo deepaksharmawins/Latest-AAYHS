@@ -312,6 +312,7 @@ export class ExhibitorComponent implements OnInit {
     this.ExhibitorSponsorConfirmationReportResponse = null;
 
     this.getSponsorRefunds(id)
+    this.myControl.reset();
   }
 
   resetForm() {
