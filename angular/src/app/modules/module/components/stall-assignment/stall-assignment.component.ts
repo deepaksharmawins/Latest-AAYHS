@@ -406,15 +406,15 @@ counter(i: number) {
     doc.line(0, 10, 300, 10);
 
     //var text = String('&nbsp<b>Stall and Occupants</b>');
-    var text = String('&nbsp<b>All</b>');
+    var text = String('&nbsp&nbsp<b></b>');
     var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
     var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
     doc.fromHTML(text, textOffset, 10);
 
     let pageHeight = doc.internal.pageSize.height;
     //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>Stall and Occupants</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>All Stall and Occupants</b>'), textOffset, 19)
+    doc.fromHTML(String('<b>____________________</b>'), textOffset, 19)
 
     doc.autoTable({
       body: this.AllStallsData,
@@ -440,15 +440,15 @@ counter(i: number) {
     doc.line(0, 10, 300, 10);
 
     //var text = String('&nbsp<b>Stall and Occupants</b>');
-    var text = String('&nbsp<b>Unassigned Stalls</b>');
+    var text = String('&nbsp<b></b>');
     var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-    var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+    var textOffset = (doc.internal.pageSize.width - textWidth) / 3;
     doc.fromHTML(text, textOffset, 10);
 
     let pageHeight = doc.internal.pageSize.height;
     //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>Stall and Occupants</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>Unassigned Stalls Stall and Occupants</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>_________________________________</b>'), textOffset, 15)
 
     doc.autoTable({
       body: this.UnAssignedStallData,
@@ -474,15 +474,15 @@ counter(i: number) {
     doc.line(0, 10, 300, 10);
 
     //var text = String('&nbsp<b>Stall and Occupants</b>');
-    var text = String('&nbsp<b>Assigned</b>');
+    var text = String('&nbsp<b></b>');
     var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-    var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+    var textOffset = (doc.internal.pageSize.width - textWidth) / 3;
     doc.fromHTML(text, textOffset, 10);
 
     let pageHeight = doc.internal.pageSize.height;
     //doc.fromHTML(String('<b>Assigned</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>Stall and Occupants</b>'), textOffset, 15)
-    doc.fromHTML(String('<b>___________________</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>Assigned Stall and Occupants</b>'), textOffset, 15)
+    doc.fromHTML(String('<b>__________________________</b>'), textOffset, 15)
 
     doc.autoTable({
       body: this.AssignedStallsData,

@@ -2507,7 +2507,7 @@ export class ReportsComponent implements OnInit {
           })
 
           doc.autoTable({
-            head: [['SponsorName', 'SponsorType', 'TotalReceived']],
+            head: [['Sponsor Name', 'Sponsor Type', 'Total Received']],
             body: x1.groupSponsorsList,
             columns:
               [
@@ -2535,7 +2535,7 @@ export class ReportsComponent implements OnInit {
             })
 
             doc.autoTable({
-              head: [['SponsorName', 'SponsorType', 'TotalReceived']],
+              head: [['Sponsor Name', 'Sponsor Type', 'Total Received']],
               body: x1.groupSponsorsList,
               columns:
                 [
